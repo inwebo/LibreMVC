@@ -1,5 +1,9 @@
 <?php
-namespace LibreMVC\Core\Views;
+
+namespace LibreMVC;
+
+use \LibreMVC\Views\Head as Head;
+use \LibreMVC\Views\Template\Parser as Parser;
 /**
  * LibreMVC
  *
@@ -21,7 +25,6 @@ namespace LibreMVC\Core\Views;
  *
  * @category  LibreMVC
  * @package   Views
- * @subpackage ViewBag
  * @copyright Copyright (c) 2005-2012 Inwebo (http://www.inwebo.net)
  * @license   http://http://creativecommons.org/licenses/by-nc-sa/3.0/
  * @version   $Id:$
@@ -38,59 +41,36 @@ namespace LibreMVC\Core\Views;
  * 
  * @category   LibreMVC
  * @package    Views
- * @subpackage ViewBag
  * @copyright  Copyright (c) 1793-2222 Inwebo Veritas (http://www.inwebo.net)
  * @license    http://framework.zend.com/license   BSD License
  * @version    $Id:$
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
- * @static
  */
-class ViewBag {
-
-    /**
-     * Instance unique du ViewBag
-     *
-     * @param object $instance contient l'instance courante.
-     * @static
-     */
-    protected static $instance;
-
-    /**
-     * Constructeur privé.
-     * Pattern singleton
-     */
-    private function __construct() {}
-
-    /**
-     * Retourne l'instance courante d'un objet singleton ViewBag
-     *
-     * @return ViewBag ViewBag courant
-     * @static
-     */
-    public static function get() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-
-        return self::$instance;
+class Views {
+    
+    public $instance;
+    public $controller;
+    public $action;
+    public $md5;
+    public $head;
+    
+    
+    public function __construct( $instance, $controller, $action ) {
+        $this->instance = $instance;
+        $this->controller = $controller;
+        $this->action = $action;
+        $this->md5 = md5($this->instance.$this->controller.$this->action);
+        $this->head = Head::getHeadByHash($this->md5);
     }
-
-    /**
-     * Setter
-     */
-    public function __set($key, $value) {
-        $this->$key = $value;
+   
+    public function render() {
+        return Parser::SharedView( PATH_CURRENT_INCLUDE . 'index.php');
     }
-
-    /**
-     * Getter
-     */
-    public function __get($key) {
-        if (isset($this->$key)) {
-            return $this->$key;
-        }
+    
+    public function renderSharedView( $view ) {
+        $a=is_file($filenamePATH_CURRENT_TPL . "" . $this->controller . '/' . $view . '.php');
+        echo $a;
+        return Parser::SharedView( PATH_CURRENT_TPL . "" . $this->controller . '/' . $view . '.php');
     }
-
 }

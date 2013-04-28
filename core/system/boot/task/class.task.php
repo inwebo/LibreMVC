@@ -1,5 +1,5 @@
 <?php
-namespace LibreMVC\System\Boot;
+namespace LibreMVC\Core\System\Boot;
 
 class Task implements \SplSubject{
 

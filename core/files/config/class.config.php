@@ -42,97 +42,52 @@ namespace LibreMVC\Files;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
-
 class Config
 {
     /**
-     * Contient l'instance courante.
-     *
-     * @var object
+     * @var array Contient les instances de fichier de configuration
      */
-    static $get;
+    private static $_instances = array();
 
     /**
-     * Chemin d'accés au fichier à parser.
-     *
-     * @var string
+     * @var object Toutes les clefs valeurs du fichier ini
      */
-    static $path;
+    private $keys;
 
     /**
-     * Constructeur privé. Est donc un singleton
+     * @var string Chemin du fichier de configuration
      */
-    private function __construct(){}
+    private $file;
 
-    /**
-     * @param $configFile
-     * @param bool $process_sections
-     * @return object
-     * @throws Exception
-     */
-    public static function get($configFile, $process_sections = FALSE)
+    private function __construct($file, $process_sections = true)
     {
-        if ((self::$get = (object)parse_ini_file($configFile, $process_sections)) === false) {
-            throw new Exception('File not found.');
+        if (($config = @parse_ini_file($file, $process_sections)) == false) {
+            throw new Exception('Config file ' . $file . ' not found.');
         } else {
-            self::$path = $configFile;
-        }
-        return self::$get;
-    }
-
-    /**
-     * Corrige l'indentation dans un fichier ini.
-     *
-     * Permet d'avoir le contenu d'un fichier ini correctement formaté.
-     *
-     * @param type $ini_file Chemin d'accés fichier ini
-     * @return String Contenu du fichier ini formaté
-     * @throws Exception si le fichier n'est pas
-     */
-    private static function format($ini_file)
-    {
-        $return = '';
-        if (is_array($ini_file)) {
-            $format = $ini_file;
-        } elseif (is_file($ini_file)) {
-            $format = self::get($ini_file, TRUE);
-        } else {
-            throw new Exception('Can\'t open ini file ' . $ini_file);
-        }
-
-        foreach ($format as $key => $value) {
-
-            if (is_array($value)) {
-                $return .= '[' . $key . ']' . "\n";
-                $maxChar = 0;
-                foreach ($value as $_key => $_value) {
-                    (strlen($_key) > $maxChar) ? $maxChar = strlen($_key) + 1 : NULL;
-                }
-
-                foreach ($value as $_key => $_value) {
-                    ob_start();
-                    $return .= sprintf("%-" . $maxChar . "s", $_key);
-                    $return .= '=';
-                    $return .= ' "' . $_value . '"' . "\n";
-                    ob_end_flush();
-                }
-            } else {
-                $return .= $key . '=' . ' "' . $_value . '"' . "\n";
+            $this->file = $file;
+            $this->keys = (object)$config;
+            if ($process_sections) {
+                $this->keys = self::arrayToObject($this->keys);
             }
+            return $this->keys;
         }
-
-        return $return;
     }
 
-    /**
-     * Setter
-     *
-     * @param String $name
-     * @param String $value
-     */
-    public function __set($name, $value)
+    private static function arrayToObject($inputArray)
     {
-        $this->get(self::$path)->$name = $value;
+        $temp = new StdClass();
+        foreach ($inputArray as $key => $value) {
+            $temp->$key = (object)$value;
+        }
+        return (object)$temp;
+    }
+
+    public static function load($file, $process_section = true)
+    {
+        if (!array_key_exists($file, self::$_instances)) {
+            self::$_instances[$file] = new Config($file, $process_section);
+        }
+        return self::$_instances[$file]->keys;
     }
 
 }

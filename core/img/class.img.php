@@ -6,7 +6,7 @@
  * @subpackage Image
  */
 
-namespace LibreMVC;
+namespace LibreMVC\Core;
 
 use LibreMVC\Img\GdResource as GdResource;
 use LibreMVC\Img\Edit as Edit;

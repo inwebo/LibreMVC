@@ -1,6 +1,6 @@
 <?php
 
-namespace LibreMVC;
+namespace LibreMVC\Core;
 
 class Cache {
 
@@ -96,11 +96,11 @@ class Cache {
         $this->file = $this->setCurrentFile();
 
         if (!file_exists($this->pathDir)) {
-            throw new Exception('Dir ' . $this->pathDir . ' doesn\'t exists ');
+            throw new \Exception('Dir ' . $this->pathDir . ' doesn\'t exists ');
         } elseif (!is_writable($this->pathDir)) {
-            throw new Exception('Dir ' . $this->pathDir . ' isn\'t writable ');
+            throw new \Exception('Dir ' . $this->pathDir . ' isn\'t writable ');
         } elseif (file_exists($this->file) && !is_writable($this->file)) {
-            throw new Exception('File ' . $this->file . ' isn\'t writable ');
+            throw new \Exception('File ' . $this->file . ' isn\'t writable ');
         }
         
         ( $this->htmlComments ) ? $this->setComments() : null;
