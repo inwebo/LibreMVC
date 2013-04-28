@@ -37,7 +37,6 @@ class AutoLoader {
         $j = -1;
         while(isset( self::$poolPaths[++$j] )) {
             $include = new \LibreMVC\Autoloader\Includer($class, "LibreMVC",self::$poolPaths[$j]);
-            echo $include->getPath(false);
             if(is_file($include->getPath(self::$poolPaths[$j]))) {
                 include($include->getPath(self::$poolPaths[$j]));
             }
@@ -67,7 +66,6 @@ class AutoLoader {
                 $inodes->next();
             }
             self::addPool($toInclude);
-            var_dump($toInclude);
         }
 
     }

@@ -30,7 +30,7 @@ class Includer {
     }
 
     public function getPath($pool, $keepPrefix =false ) {
-        return strtolower($pool .'/'. $this->getNameSpaceAsDir( $this->getNameSpace($keepPrefix) )  . '/class.'.$this->fileName.'.php');
+        return strtolower($this->getPool($pool) .'/'. $this->getNameSpaceAsDir( $this->getNameSpace($keepPrefix) )  . '/class.'.$this->fileName.'.php');
     }
 
     protected function getPool($pool) {

@@ -75,17 +75,17 @@ class Config
 
     private static function arrayToObject($inputArray)
     {
-        $temp = new StdClass();
+        $temp = new \StdClass();
         foreach ($inputArray as $key => $value) {
             $temp->$key = (object)$value;
         }
         return (object)$temp;
     }
 
-    public static function load($file, $process_section = true)
+    public static function load($file, $process_section = true, $alias = null)
     {
         if (!array_key_exists($file, self::$_instances)) {
-            self::$_instances[$file] = new Config($file, $process_section);
+            self::$_instances[$file] = new self($file, $process_section);
         }
         return self::$_instances[$file]->keys;
     }
