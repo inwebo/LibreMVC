@@ -36,9 +36,10 @@ class AutoLoader {
     static public function handler( $class ) {
         $j = -1;
         while(isset( self::$poolPaths[++$j] )) {
-            $include = new \LibreMVC\Autoloader\Includer($class, "LibreMVC",self::$poolPaths[$j]);
+            $include = new \LibreMVC\Autoloader\Includer($class, "LibreMVC", self::$poolPaths[$j] );
             if(is_file($include->getPath(self::$poolPaths[$j]))) {
                 include($include->getPath(self::$poolPaths[$j]));
+                return;
             }
         }
     }
@@ -68,5 +69,11 @@ class AutoLoader {
             self::addPool($toInclude);
         }
 
+    }
+
+    static public function getAutoload( $autoloadFile ) {
+        if(is_file($autoloadFile)) {
+            include($autoloadFile);
+        }
     }
 }
