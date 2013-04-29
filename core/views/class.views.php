@@ -69,7 +69,7 @@ class Views {
     }
     
     public function renderSharedView( $view ) {
-        $a=is_file($filenamePATH_CURRENT_TPL . "" . $this->controller . '/' . $view . '.php');
+        $a=is_file(PATH_CURRENT_TPL . "" . $this->controller . '/' . $view . '.php');
         echo $a;
         return Parser::SharedView( PATH_CURRENT_TPL . "" . $this->controller . '/' . $view . '.php');
     }
