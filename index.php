@@ -3,40 +3,53 @@
 include("autoload.php");
 
 
-//$restRoute = new \LibreMCV\Routing\Route();
+// reflection
 /*
-$restRoute->name = "/Routing/Yeah";
-$restRoute->pattern = '/Routing/test[/][:controller][/][:id|Page][/][:action][/][:id][/]';
-\LibreMCV\Routing\RoutesCollection::addRoute($restRoute);
+class foo {
 
-$deepRoute = new \LibreMCV\Routing\Route();
-$deepRoute->name = "";
-$deepRoute->pattern = '/Routing/deep/tree/route[/][:action][/][:id|Page][/]';
-\LibreMCV\Routing\RoutesCollection::addRoute($deepRoute);
+    public $id;
+    private $name;
+
+    public function __construct() {
+
+    }
+
+    public function foo($test, $a, $b) {
+        var_dump( $test.$a.$b);
+    }
+
+    static public function statik() {
+
+    }
+
+    private function bar() {
+
+    }
+
+}
 
 
-// Est atteint lorsque acune route nommée ou aucun pattern correspond
-// Devrait ettre le gestionnaire d'erreur
-$route = new \LibreMCV\Routing\Route();
-$route->pattern = '[/]';
-$route->controller = "Error";
-$route->action = "Http404";
-\LibreMCV\Routing\RoutesCollection::addRoute($route);
+try {
+    \LibreMCV\Mvc::invoker('foo', 'foo',array("hello ", " le ", " world"));
+    new \LibreMCV\Controllers\HomeController();
+}
+catch (Exception $e) {
 
-
-
-echo '<h2>Route</h2>';
-echo ('Mandatory segment : '. $restRoute->extractMandatorySegment()) . "<br>";
-echo ('Pattern : '. $restRoute->pattern . "<br>");
-echo '<h3>As array</h3>';
-var_dump($restRoute->patternToArray());
-echo '<h3>Mandatory As array</h3>';
-var_dump($restRoute->mandatoryToArray());
-
-echo '<h2>Router</h2>';
-$router = new \LibreMCV\Routing\Router($uri, \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
-var_dump($router);
-echo '<h3>Processed route</h3>';
-$processedRoute = $router->route();
-var_dump($processedRoute);
+}
 */
+$ViewBag = \LibreMVC\Views\Template\ViewBag::get();
+
+$ViewBag->title = "Titre d'un paragraff";
+$ViewBag->test = "#Je suis une variable#";
+$ViewBag->array = array('value1', 'value2', 'key'=>'value3');
+$ViewBag->object = new stdClass();
+$ViewBag->object->test = "test";
+$ViewBag->object->test2 = "test2";
+define('CONSTANTE', 'Je suis une constante');
+//var_dump(is_file('template.php'));
+$ViewBag->isTrue =1;
+$ViewBag->isFalse =0;
+$ViewBag->intMin = 4;
+$ViewBag->intMax = 6;
+$parser = new \LibreMVC\Views\Template\Parser('template.php');
+$parser->render();
