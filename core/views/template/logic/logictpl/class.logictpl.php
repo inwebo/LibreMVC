@@ -8,7 +8,6 @@ use LibreMVC\Views\Template\Logic\LogicIf as LogicIf;
 use LibreMVC\Views\Template\Logic\LogicInclude as LogicInclude;
 use LibreMVC\Views\Template\Logic\LogicLoop as LogicLoop;
 use LibreMVC\Views\Template\Logic\LogicNoparse as LogicNoparse;
-use LibreMVC\Views\Template\Logic\LogicTpl as LogicTpl;
 use LibreMVC\Views\Template\Logic\LogicVar as LogicVar;
 use LibreMVC\Views\Template\Parser as Parser;
 use LibreMVC\Views\Template\Tag as Tag;
@@ -64,7 +63,7 @@ use LibreMVC\Views\Template\ViewBag as ViewBag;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
-class LogicTpl extends \LibreMVC\Views\Template\Logic {
+class LogicTpl extends Logic {
 
     /**
      * Inclus et Parse un fichier template.
@@ -79,11 +78,7 @@ class LogicTpl extends \LibreMVC\Views\Template\Logic {
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-        ob_start();
-        $this->buffer = $temp->process();
-        $this->buffer = ob_get_contents();
-        ob_end_clean();
-        return $this->buffer;
+        return $temp->getContent( true );
     }
 
 }
