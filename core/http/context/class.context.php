@@ -67,8 +67,9 @@ class Context {
      * @param bool $trailingSlash Ajout d'un slash final ?
      * @return string Un chemin absolue du système de fichier de l'hôte de l'application courante
      */
-    static public function getBaseDirRealPath( $trailingSlash = true ) {
-        $rp = realpath( __DIR__ );
+    static public function getBaseDirRealPath( $dir, $trailingSlash = true ) {
+        //
+        $rp = realpath( $dir );
         $rp.= ($trailingSlash) ? '/' : '';
         return $rp;
     }
