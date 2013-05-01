@@ -1,7 +1,7 @@
 <?php
 use LibreMVC\Views\Template\ViewBag as ViewBag;
 
-ViewBag::get()->foo = 'bar';
+ViewBag::get()->foo = 'basr';
 ?>
 <h2>{$title}</h2>
 
@@ -39,7 +39,7 @@ Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deseru
     {/loop}
 </ul>
 <hr>
-
+{tpl="sharedview.php"}
 <hr>
 {include="README.md"}{include="READssME.md"}
 <hr>
