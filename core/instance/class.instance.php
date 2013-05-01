@@ -63,10 +63,14 @@ class Instance {
         $this->url = $url;
         $this->baseDir = $baseDir;
         $this->name = $this->getName();
-        $this->realPath = Context::getBaseDirRealPath() . $this->baseDir . $this->name . "/";
+        $this->realPath = Context::getBaseDirRealPath(__DIR__) . $this->baseDir . $this->name . "/";
         $this->baseUrl = Context::getBaseUrl();
         $this->includeUrl = Context::getBaseUrl().$this->baseDir . $this->name . "/";
         $this->uri = Context::getInstanceUri($this->name);
+    }
+
+    static public function current( $baseDir = "sites/" ) {
+        return new self( \LibreMVC\Http\Context::getUrl(), $baseDir );
     }
 
     public function getName() {
@@ -99,6 +103,7 @@ class Instance {
         foreach($stringsToProcess as $k => $v) {
             $processed[$k] = $this->processCallBack($v,$patternArray);
         }
+
         return $processed;
     }
 
