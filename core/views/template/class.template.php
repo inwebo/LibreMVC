@@ -56,6 +56,7 @@ class Template {
      * @throws exception Si le fichier n'est pas lisable
      */
     public function __construct($file) {
+
         $this->file = $file;
         if (!file_exists($this->file)) {
             throw new Exception("Template $this->file does not exist.");
