@@ -27,9 +27,6 @@ class Router {
         while( isset( $this->routeCollection[++$j] ) ) {
             $parser = new UriParser( $this->uri, $this->routeCollection[$j], $this->asserts );
             // @todo developper cette partie finement
-
-            var_dump($parser->assertsResult);
-
             /**
              * @important Est nécessaire pour garder l'unicité des uris. elles doivent être uniques.
              */

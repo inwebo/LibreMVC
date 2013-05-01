@@ -10,18 +10,19 @@ class HomeController extends StandardController {
         parent::__construct();
     }
 
-    public function indexAction() {
-        echo 'Home controller indexAction';
+    public function index() {
+        echo 'l ' . __LINE__ . ' : ' . __FILE__ . '<br>';
+        Views::renderAction();
+    }
+
+    public function test($a) {
+        echo 'l ' . __LINE__ . ' : ' . __FILE__ . '<br>';
+        echo 'Home controller testAction with ' . $a . ' parameters';
         Views::renderAction();
     }
 
     public function pouetAction() {
-        echo __NAMESPACE__;
-        Views::renderAction();
-    }
-
-    public function testAction($a) {
-        echo 'Les parmametres de l invocation = '.$a.'<br>';
+        echo 'l ' . __LINE__ . ' : ' . __FILE__ . '<br>';
         Views::renderAction();
     }
 

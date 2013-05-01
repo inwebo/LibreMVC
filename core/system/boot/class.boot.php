@@ -1,5 +1,6 @@
 <?php
-namespace LibreMVC\System;
+
+namespace LibreMCV\System;
 
 // Sale mais obligatoire a ce stade les classes declarees sont vide
 
@@ -26,7 +27,6 @@ class Boot {
      */
     public function walk() {
         $methods = get_class_methods($this->_steps);
-        var_dump($methods);
         foreach( $methods as  $member ) {
                  $reflectAssertions = new \ReflectionMethod( $this->_steps, $member );
                  $reflectAssertions->invoke( $member );

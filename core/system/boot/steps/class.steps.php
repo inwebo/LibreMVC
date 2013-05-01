@@ -16,16 +16,31 @@ class Steps {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
     }
 
-    static public function routerDispatch() {
-        // 1 - Recuperation de toutes les routes
-
-        //
-    }
-
     static public function includeInstanceAutoloadFile() {
         $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
         $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "home", 'index' );
         \LibreMVC\AutoLoader::getAutoload( $paths['base_autoload'] );
+    }
+
+    static public function routerDispatch() {
+        $restRoute = new \LibreMCV\Routing\Route();
+        $restRoute->name = "";
+        $restRoute->pattern = 'LibreMVC[/][:action][/][:id][/]';
+        $restRoute->controller = '\LibreMCV\Controllers\HomeController';
+        $restRoute->action = 'index';
+        \LibreMCV\Routing\RoutesCollection::addRoute($restRoute);
+
+        $router = new \LibreMCV\Routing\Router( \LibreMCV\Http\Uri::current(), \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
+        $routedRoute = $router->dispatch();
+
+        //var_dump($routedRoute);
+
+
+        \LibreMCV\Mvc::invoker(
+            $routedRoute->controller,
+            $routedRoute->action,
+            $routedRoute->params
+        );
     }
 
 }

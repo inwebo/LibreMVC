@@ -85,7 +85,11 @@ class Header {
         self::disableCache();
         self::disableKeepAlive();
     }
-    
+
+    static public function isAjax() {
+
+    }
+
     public static function hideInfos() {
         header('Server: ');
         header('X-Powered-By: ');
