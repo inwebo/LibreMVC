@@ -38,16 +38,16 @@ use \Exception;
 /**
  * Création d'une connexion à une base de donnée SQLite. La base de donnée DOIT
  * être disponible en lecture, écriture.
- * 
+ *
  * Pour des raisons de sécurité il est conseillé de placer la base de donnée dans
  * un dossier différent du dossier courante.
- * 
+ *
  * <code>
  * <br>
  * // Exemple avec une connexion SQlite<br>
  * $user = new lSQlite( 'db/db.sqlite3' );<br>
  * </code>
- * 
+ *
  * @category   LibreMVC
  * @package    Database
  * @subpackage Driver
@@ -59,18 +59,16 @@ use \Exception;
  * @since      File available since Beta
  * @author     Inwebo Veritas <inwebo@gmail.com>
  */
-class SQlite extends Database {
-    
+class SQlite extends  Database\Driver{
+
     /**
-     * Création d'un nouvel objet PDO.
-     * 
-     * @param String $pathDatabase Le fichier db
-     * @return PDO Connexion valide pdo
-     */ 
+     * @param $filename
+     * @throws Exception
+     */
     public function __construct( $filename ) {
         try {
             $this->resource = new PDO('sqlite:' . $filename);
-            
+
             if( !is_file($filename) && !is_writable($filename) ) {
                 throw new Exception('Database : ' . $filename . ' is not writable or not found.');
             }
@@ -78,7 +76,7 @@ class SQlite extends Database {
                 throw new Exception('Base folder : ' . getcwd() . '/' . dirname($filename) . ' is not writable.');
             }
             else {
-                return $this->resource;    
+                return $this->resource;
             }
         } catch (Exception $error_string) {
             echo $error_string->getMessage();

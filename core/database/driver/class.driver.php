@@ -4,7 +4,7 @@ namespace LibreMVC\Database;
 
 use \stdClass;
 use LibreMVC\Database;
-
+use \PDO as PDO;
 /**
  * LibreMVC
  *
@@ -38,20 +38,20 @@ use LibreMVC\Database;
  * Container d'instance unique de connexion  valide à une base de donnée.
  * Chaque instance de connexion doit être configurées au préalable avec une
  * class de setup.
- * 
+ *
  * La classe implémente le design pattern singleton
- * 
+ *
  * <code>
  * // Exemple avec une connexion SQlite
  * $user = new lSQlite( 'db/db.sqlite3' );
  * $path = new lSQlite( 'db/db2.sqlite3' );
- * 
+ *
  * Driver::setup("user",  $user );<br>
  * Driver::setup("home", $path );<br>
- * 
+ *
  * Driver::get("user")->query('SELECT * FROM user');
  * </code>
- * 
+ *
  * @category   LibreMVC
  * @package    Database
  * @subpackage Driver
@@ -62,50 +62,177 @@ use LibreMVC\Database;
  * @since      File available since Beta
  * @author     Inwebo Veritas <inwebo@gmail.com>
  */
-class Driver {
+abstract class Driver {
+    /**
+     * Options à transmettre à la methode PDO::execute()
+     * @var array
+     * @todo Refactoring -> options
+     */
+    protected $params;
 
     /**
-     * Instances PDO valides nommées.
-     * @var Database
+     * Fetch_style
+     * @var Array
+     * @see http://php.net/manual/fr/pdostatement.fetch.php
      */
-    static private $pool;
+    protected $fetchStyle;
 
     /**
-     * Private constructor
+     * Jeux de résultat de la dernière requête SQL.
+     * @var Mixed
      */
-    private function __construct() {}
+    public $results;
 
     /**
-     * Private magic methode
+     * Object PDOStatement courant
+     * @var PDOStatement
      */
-    private function __clone() {}
+    protected $pdoStatement;
 
     /**
-     * Retourne une instance nommée PDO valid.
-     * 
-     * @param string $name
-     * @return Mixed
+     * Connection database courantes
+     * @var PDO
      */
-    static public function get($name) {
-        if( isset(self::$pool->$name) ) {
-            return self::$pool->$name;
+    public $resource;
+
+    /**
+     * Requête courante
+     * @var String
+     */
+    protected $query;
+
+    public function query($query, $params = NULL, $options = array(PDO::FETCH_ASSOC), $chaining = false) {
+        $this->results = false;
+        $this->pdoStatement = $this->resource->prepare($query);
+        $this->fetchStyle = null;
+        //var_dump( $this->fetchStyle );
+        //Difference entre requete mal formée et retour vide
+        if (!$this->pdoStatement) {
+            trigger_error("Not valid SQL query : " . $query);
+            return false;
+        } else {
+            (!is_null($params) && is_array($params)) ?
+                $this->pdoStatement->execute($params) :
+                $this->pdoStatement->execute();
+
+
+            // N'est pas FETCH_CLASS
+            if( isset($this->fetchStyle) ) {
+                $options = $this->fetchStyle;
+            }
+
+            if (isset($options[0]) && !isset($options[1]) && !isset($options[2])) {
+                $this->pdoStatement->setFetchMode($options[0]);
+            }
+            // Est FETCH_CLASS sans parametre constructeur
+            else if (isset($options[0]) && isset($options[1])) {
+                $this->pdoStatement->setFetchMode($options[0], $options[1]);
+            }
+            // Fetch class params
+            else {
+                $this->pdoStatement->setFetchMode($options[0], $options[1], $options[2]);
+            }
+            $this->results = $this->pdoStatement->fetchAll();
+        }
+        if (!$chaining) {
+            return $this->results;
+        } else {
+            return $this;
         }
     }
 
     /**
-     * Configure une instance PDO $setup ayant comme nom courant $name. $setup
-     * doit étendre la classe abstraite LibreMVC\Database
-     * @param type $name Nom de l'intance courante.
-     * @param \LibreMVC\Database\Database $setup
+     * @return $this
      */
-    static public function setup($name, $setup) {
-        if (!isset(self::$pool) ) {
-            self::$pool = new stdClass();
+    public function toObject() {
+        $this->fetchStyle = array( PDO::FETCH_CLASS );
+        return $this;
+    }
+
+    /**
+     * Met à jour une instance existante de la classe demandée, liant les
+     * colonnes du jeu de résultats aux noms des propriétés de la classe
+     * @return \LibreMVC\Database
+     */
+    public function toSetter() {
+        $this->fetchStyle = array( PDO::FETCH_INTO );
+        return $this;
+    }
+
+    /**
+     * Retourne un tableau indexé par le nom de la colonne comme retourné dans
+     * le jeu de résultats
+     * @return \LibreMVC\Database
+     */
+    public function toAssoc() {
+        $this->fetchStyle = array(PDO::FETCH_ASSOC);
+        return $this;
+    }
+
+    /**
+     * retourne un objet anonyme avec les noms de propriétés qui correspondent
+     * aux noms des colonnes retournés dans le jeu de résultats
+     * @return \LibreMVC\Database
+     */
+    public function toStdClass() {
+        $this->fetchStyle = array(PDO::FETCH_OBJ);
+        return $this;
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="SQL Syntax">
+
+    public function select($fields) {
+        $this->query = "SELECT " . $fields;
+        return $this;
+    }
+
+    public function from($table) {
+        $this->query .= ' FROM ' . Query::toKey($table);
+        return $this;
+    }
+
+    public function where($condition, $params = null) {
+        $this->query .= ' WHERE ' . $condition;
+        (isset($params)) ? $this->params = $params : null;
+
+        return $this;
+    }
+
+    public function table($table, $options = array(PDO::FETCH_ASSOC), $chaining = true) {
+        if( isset($this->fetchStyle) ) {
+            $options = $this->fetchStyle;
+        }
+        $this->query = "SELECT * FROM " . Query::toKey($table);
+        if(!$chaining){
+            return $this->query($this->query, $this->params, $options);
+        }
+        else {
+            return $this;
         }
 
-        if (!isset(self::$pool->$name) && $setup instanceof Database) {
-            self::$pool->$name = $setup;
+    }
+
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="@TODO">
+
+    public function fetchOne($options = array(PDO::FETCH_ASSOC)) {
+        $this->query .= ' LIMIT 1';
+        if( isset($this->fetchStyle) ) {
+            $options = $this->fetchStyle;
+        }
+        $this->query($this->query, $this->params, $options);
+        if (isset($this->results) && is_array($this->results) && count($this->results) === 1) {
+            return $this->results[0];
+        } else {
+            return false;
         }
     }
 
+    public function fetchAll($options = array(PDO::FETCH_ASSOC)) {
+        if( isset($this->fetchStyle) ) {
+            $options = $this->fetchStyle;
+        }
+        $this->query($this->query, $this->params, $options);
+    }
+    // </editor-fold>
 }

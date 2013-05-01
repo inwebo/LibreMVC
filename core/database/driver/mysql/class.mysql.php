@@ -60,26 +60,15 @@ use LibreMVC\Database;
  * @since      File available since Beta
  * @author     Inwebo Veritas <inwebo@gmail.com>
  */
-class MySQL extends Database {
+class MySQL extends  Database\Driver{
 
-    /**
-     * Création d'un nouvel objet PDO. Les transactions se font en UTF-8 Par
-     * default.
-     * 
-     * @param String $host
-     * @param String $database
-     * @param String $username
-     * @param String $passwd
-     * @param Array $options
-     * @return \PDO
-     */
     public function __construct($host, $database, $username, $passwd, $options = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")) {
         try {
             $dsn = 'mysql:host=' . $host . ';dbname=' . $database;
             $this->resource = new PDO($dsn, $username, $passwd, $options);
             return $this->resource;
         } catch (Exception $error_string) {
-             echo $error_string->getMessage();
+            echo $error_string->getMessage();
         }
     }
 }
