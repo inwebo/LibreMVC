@@ -74,15 +74,16 @@ class LogicHref extends \LibreMVC\Views\Template\Logic {
      * @return string Le contenu fichier template modifié par une fonction pcre
      */
     public function process( $match ) {
-        
+
         $this->match = $match;
+
         ob_start();
         if (defined($match[1])) {
             echo 'http://www.google.fr' . $match[1];
         }
         else {
             \LibreMVC\Views\Template\Parser::$trace[] = "Constante $match[1] is not set";
-            return null;
+            echo 'http://www.google.fr';
         }
         $this->buffer = ob_get_contents();
         ob_end_clean();
