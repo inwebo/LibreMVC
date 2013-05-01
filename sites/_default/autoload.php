@@ -3,6 +3,8 @@
 try {
     // Instance modules
     \LibreMVC\Autoloader::addPool("./");
+    \LibreMVC\Autoloader::addPool("controllers");
+    echo '<br>Autoload instance.<br>';
     //new \LibreMCV\Modules\Foo\Bar();
 
 } catch (\Exception $e) {
