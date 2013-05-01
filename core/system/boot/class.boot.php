@@ -1,40 +1,36 @@
 <?php
+namespace LibreMVC\System;
 
-namespace LibreMVC\Core\System;
+// Sale mais obligatoire a ce stade les classes declarees sont vide
 
-use LibreMVC\Core\System\Boot\Task as Task;
+/**
+ * Class Boot
+ *
+ * Recoit un objet disposant de methodes static public. Elles seront ececutees consecutivement dans l'ordre d'appararition
+ * dans le fichier declarant l'objet.
+ *
+ * @package LibreMVC\System
+ */
+class Boot {
 
-class Boot implements \SplObserver{
+    protected $_steps;
 
-    public $tasks;
-
-    public function __construct() {
-        $this->tasks = new \SplObjectStorage();
-        // Construction context http
-
-        // Constantes environnements
-
-        // Chargement ini
-
-        // Erreur handler
-
-        // Db
-
-        // Routing
-
-        // Invokable
-
-        // Is cli
-
-        // View
-
-        new Task( "First task", $this );
-        new Task( "Second task", $this );
-        new Task( "Third task", $this );
+    public function __construct( $steps ) {
+        // valider l'entree
+        $this->_steps = $steps;
+        $this->walk();
     }
 
-    public function update( \SplSubject $subject ) {
-        return true;
+    /**
+     * Process each steps
+     */
+    public function walk() {
+        $methods = get_class_methods($this->_steps);
+        var_dump($methods);
+        foreach( $methods as  $member ) {
+                 $reflectAssertions = new \ReflectionMethod( $this->_steps, $member );
+                 $reflectAssertions->invoke( $member );
+        }
     }
 
 }
