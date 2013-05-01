@@ -8,22 +8,17 @@
  */
 
 namespace LibreMCV\Routing;
+use LibreMVC\Database\Entity;
 
-
-class Route {
+class Route extends  Entity{
     /**
      * @var string route Partie dans l'uri obligatoire.
      */
-    public $name ="";
+    public $name;
     public $pattern;
-    public $controller = "\\LibreMVC\\Core\\Controllers\\RootController";
-    public $action = "index";
+    public $controller;
+    public $action;
     public $params;
-
-    /**
-     * @todo contructeur doit avoir un parametre booleen isCustomClass
-     * Si vrai chargenement depuis le nom de la class, pas par l'autoloader.
-     */
 
     public function extractMandatorySegment() {
         $crochetStart = strpos($this->pattern,"[");
