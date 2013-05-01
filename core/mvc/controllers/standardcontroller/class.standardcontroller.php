@@ -44,39 +44,19 @@ namespace LibreMVC\Mvc\Controllers;
  * @abstract
  */
 abstract class StandardController {
-    
-    /**
-     * Le nom du controller courant.
-     * @var string
-     */
-    public $name;
+
 
     /**
      * 
      */
     public function __construct() {
-        $this->name = self::GetControllerName();
+
     }
 
     /**
      * Action par défaut du controller devrait être surchargée.
      */
-    public function indexAction() {}
-    
-    /**
-     * Retourne le nom du controller courant.
-     * @return String
-     */
-    static protected function GetControllerName() {
-        $namespace = explode("\\", __CLASS__);
-        $name = explode( "Controller", $namespace[count($namespace)-1] );
-        if( isset( $name[0] ) ) {
-            return $name[0];
-        }
-        else {
-            error_log( "Not a valid controller's name" );
-        }
-    }
+    public function index() {}
 
     /**
      * Setter
