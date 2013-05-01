@@ -19,9 +19,9 @@ class MVC {
 
     public function __construct( $class, $method, $parameters ) {
         $this->class      = $class;
-        $this->method     = $method;
-        $this->parameters = $parameters;
         $this->registered = $this->isRegistered();
+        $this->method     = $method . 'Action';
+        $this->parameters = $parameters;
     }
 
     protected function isRegistered() {
@@ -29,30 +29,29 @@ class MVC {
     }
 
     public function exec() {
+
         // Class disponible.
         if( $this->registered ) {
 
-            // Reflection
-            $toInvoke = new \ReflectionClass($this->class);
-
             // Method exist ET public
-            if( method_exists( $this->method, $this->class ) ) {
+            if( method_exists( $this->class, $this->method ) ) {
                 $reflectionMethod = new  \ReflectionMethod( $this->class, $this->method );
-
-
+                //var_dump($this->parameters);
                 return $reflectionMethod->invokeArgs(
                     new $this->class,
                     $this->parameters
                 );
             }
+
         }
         else {
             // Exception
+            echo $this->class . ' unknown !';
         }
     }
 
     public function invoker( $class, $method, $parameters ) {
-        $handler = new self($class, $method, $parameters);
+        $handler = new self( $class, $method, $parameters );
         $handler->exec();
     }
 
