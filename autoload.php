@@ -3,39 +3,23 @@ include("core/autoloader/class.autoloader.php");
 
 try {
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
-    // Core
-    \LibreMVC\Autoloader::addPool("./core/");
-    // Modules
-    \LibreMVC\Autoloader::addPool("./");
-    \LibreMVC\Autoloader::addPool("sites/_default");
-    set_error_handler('\\LibreMVC\Errors\\ErrorsHandler::add');
 
-    $uri = new \LibreMCV\Http\Uri($_SERVER['REQUEST_URI']);
-    $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
-    $paths = $instance->processPattern( \LibreMVC\Files\Config::load("config/paths.ini"),"home",'index' );
-
-    var_dump($instance);
-    var_dump($paths);
-
-    // Route par defaut
+    new \LibreMVC\System\Boot('\LibreMVC\System\Boot\Steps');
 
     $restRoute = new LibreMCV\Routing\Route();
     $restRoute->name = "";
-    $restRoute->pattern = trim(dirname($_SERVER["PHP_SELF"]),'/').'[/][:controller][/][:action][/][:id][/]';
+    $restRoute->pattern = 'LibreMVC[/][:action][/][:id][/]';
     \LibreMCV\Routing\RoutesCollection::addRoute($restRoute);
 
-    // Router
-    $router = new \LibreMCV\Routing\Router($uri, \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
-    $processedRoute = $router->route();
-    var_dump($processedRoute);
+    $router = new \LibreMCV\Routing\Router( \LibreMCV\Http\Uri::current(), \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
+    $routedRoute = $router->dispatch();
 
-    // Routes systemes
-    \LibreMVC\Database\Driver::setup(
-        "route",
-        new \LibreMVC\Database\Driver\SQlite($paths['base_routes'])
-    );
+    var_dump($routedRoute);
 
-    \LibreMVC\AutoLoader::getAutoload($paths['base_autoload']);
+
+    \LibreMCV\Mvc::invoker( 'LibreMCV\Controllers\HomeController', $processedRoute->action, $processedRoute->params);
+
+
 
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
