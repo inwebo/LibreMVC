@@ -1,1 +1,1 @@
-Je suis la vue index.php par defaut
+<a href="debug/" title="Yeah">debug</a>
