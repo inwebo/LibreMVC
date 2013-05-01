@@ -2,8 +2,7 @@
 
 namespace LibreMVC;
 
-use \LibreMVC\Views\Head as Head;
-use \LibreMVC\Views\Template\Parser as Parser;
+use \LibreMVC\Views\Template\Parser;
 /**
  * LibreMVC
  *
@@ -48,29 +47,40 @@ use \LibreMVC\Views\Template\Parser as Parser;
  * @since      File available since Beta
  */
 class Views {
-    
-    public $instance;
-    public $controller;
-    public $action;
-    public $md5;
-    public $head;
-    
-    
-    public function __construct( $instance, $controller, $action ) {
-        $this->instance = $instance;
-        $this->controller = $controller;
-        $this->action = $action;
-        $this->md5 = md5($this->instance.$this->controller.$this->action);
-        $this->head = Head::getHeadByHash($this->md5);
+
+    public function __construct() {
+
     }
-   
-    public function render() {
-        return Parser::SharedView( PATH_CURRENT_INCLUDE . 'index.php');
+
+    static public function render( $template ) {
+        return Parser::render( $template );
     }
-    
-    public function renderSharedView( $view ) {
-        $a=is_file(PATH_CURRENT_TPL . "" . $this->controller . '/' . $view . '.php');
-        echo $a;
-        return Parser::SharedView( PATH_CURRENT_TPL . "" . $this->controller . '/' . $view . '.php');
+
+    // auto $template !
+    // Reflection
+    // Controller Methods
+    // Avec la method on peux reconstruire le chemin
+    static public function renderAction() {
+        /**
+         * Snippet
+         * Recupere pile Appel LIFO
+         *
+         */
+        $debug = list(, $caller) = debug_backtrace(false);
+
+        // Methode Courante (avant derniere)
+        array_shift($debug);
+        //var_dump($debug);
+        $method = $debug[0]['function'];
+        $method = str_replace('Action','',$method);
+        //var_dump($method);
+        $class = strtolower($debug[0]['class']);
+        //echo ''   . $class . '<br>';
+        $class = join('', array_slice(explode('\\', $class), -1));
+        $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
+        $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini"), $class, $method );
+        //var_dump($paths);
+        Parser::render($paths['base_view']);
     }
+
 }
