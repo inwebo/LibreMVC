@@ -28,10 +28,21 @@ class Asserts {
         return ( $uri->value === $route->name ) ? true : false ;
     }
 
+    static public function isUriGreaterThanRoute( $uri, $route ) {
+
+        $iuri = count($uri->toArray());
+        $ipat = count($route->patternToArray());
+
+        //echo $iuri,$ipat,(int)( $iuri > $ipat );
+
+        return ( $iuri > $ipat );
+    }
+
     static public function isValidPattern($uri, $route) {
         $valid = true;
         $uriArray = $uri->toArray();
         $patternArray = $route->patternToArray();
+
         $j = 0;
         foreach( $patternArray as $value ) {
 
