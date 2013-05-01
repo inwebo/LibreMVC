@@ -3,6 +3,8 @@
 namespace LibreMVC;
 
 use \LibreMVC\Views\Template\Parser;
+use LibreMVC\Views\Template\ViewBag;
+
 /**
  * LibreMVC
  *
@@ -64,10 +66,16 @@ class Views {
         /**
          * Snippet
          * Recupere pile Appel LIFO
-         *
          */
         $debug = list(, $caller) = debug_backtrace(false);
 
+        /**
+         * - Creation contexte
+         * - Execution par reflection du controller courant
+         * - C'est le controller qui peuple le viewbag
+         * - Rendu du fichier index.php de l'instance courante avec l'inclusion de la vue courante
+         *   transmis par le ViewBag dans une partie reservee
+         */
         // Methode Courante (avant derniere)
         array_shift($debug);
         //var_dump($debug);
@@ -78,9 +86,10 @@ class Views {
         //echo ''   . $class . '<br>';
         $class = join('', array_slice(explode('\\', $class), -1));
         $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
-        $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini"), $class, $method );
-        //var_dump($paths);
-        Parser::render($paths['base_view']);
+        $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), $class, $method );
+        // @todo : Viewbag reserves
+        ViewBag::get()->view =$paths['base_view'];
+        Parser::render($paths['base_index']);
     }
 
 }
