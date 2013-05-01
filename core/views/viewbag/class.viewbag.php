@@ -69,9 +69,8 @@ class ViewBag {
      * @static
      */
     public static function get() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
+        if ( !isset( self::$instance ) ) {
+            self::$instance = new self();
         }
 
         return self::$instance;

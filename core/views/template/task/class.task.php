@@ -32,9 +32,8 @@ Class Task {
      * 
      * Retourne le resultat de la comparaison de deux variables selon un opérateur.
      * 
-     * @param object $tags Un objet tag
-     * @param object $logic Un objet logic
-     * @return string Le contenu fichier template modifié par une fonction pcre
+     * @param Tag $tags Un objet tag
+     * @param Logic $logic Un objet logic
      */
     public function __construct(Tag $tags, Logic $logic) {
         $this->tags = $tags;

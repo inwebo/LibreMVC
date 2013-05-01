@@ -108,11 +108,11 @@ class Parser {
     /**
      * Lecture du contenu du fichier template. Création de l'ensemble des consta
      * ntes de l'application
-     * @param string $file Le chemin d'accés à un fichier template.
+     * @param string $templateFile Le chemin d'accés à un fichier template.
      */
-    public function __construct($file) {
+    public function __construct($templateFile) {
         try {
-            $this->template = new \LibreMVC\Views\Template($file);
+            $this->template = new \LibreMVC\Views\Template($templateFile);
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
@@ -124,7 +124,7 @@ class Parser {
     /**
      * Definition des constantes nécessaires.
      */
-    private function define() {
+    protected function define() {
         foreach ($this->constantes as $key => $value) {
             (!defined($key) ) ? define($key, $value) : null;
         }
@@ -132,16 +132,15 @@ class Parser {
 
     /**
      * Ajoute un tâche à la liste des tâches.
-     * @param object $task Un objet Task
+     *
+     * @param Task $task Un objet Task
      */
     public function attach(Task $task) {
         $this->tasks->attach($task);
     }
 
     /**
-     * Affichage sortie courante contenu modifié de la template.
-     * @param bool $toString Si vrai affichage sortie courante, sinon retourne
-     * le contenu du template dans une chaine de caractère.
+     * Parse les balises utilisateurs et les remplace par le résultat d'une regex
      */
     public function process() {
         $this->tasks->rewind();
@@ -161,7 +160,7 @@ class Parser {
 
     }
     
-    public function render($toString = false) {
+    public function getContent( $toString = false ) {
         if ($toString) {
             return $this->template->content;
         }
@@ -171,18 +170,18 @@ class Parser {
     }
 
 
-    static public function sharedView( $file, $toString = false ) {
+    static public function render( $file, $toString = false ) {
         try {
-             $parser = new Parser( $file );
+             $parser = new self( $file );
         }
         catch ( \Exception $e ) {
             echo $e->getMessage();
         }
-        return $parser->render($toString);
+        return $parser->getContent($toString);
     }
     
     public function __destruct() {
-        ($this->autoRender) ? $this->render() : null;
+        ( $this->autoRender ) ? $this->getContent() : null;
     }
 
 }
