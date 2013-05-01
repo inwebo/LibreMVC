@@ -1,6 +1,6 @@
 <?php
 include("core/autoloader/class.autoloader.php");
-echo 'l ' . __LINE__ . ' : ' . __FILE__ . '<br>';
+// #debug# echo 'l ' . __LINE__ . ' : ' . __FILE__ . '<br>';
 try {
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
     \LibreMVC\Autoloader::addPool("./");
