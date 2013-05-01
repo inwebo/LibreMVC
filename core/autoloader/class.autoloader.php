@@ -1,7 +1,12 @@
 <?php
 
 namespace LibreMVC;
+
+// dépendance
+// Pas injection possible doit etre un callback static avec 1 argument
 include('includer/class.includer.php');
+
+
 /**
   * My Framework : My.Forms
   *
@@ -22,22 +27,35 @@ include('includer/class.includer.php');
   *
   *
   * @category   My.Forms
-  * @package    Extra
+  * @package LibreMVC
   * @copyright  Copyright (c) 2005-2011 Inwebo (http://www.inwebo.net)
   * @license    http://http://creativecommons.org/licenses/by-nc-sa/3.0/
   * @version    $Id:$
   * @link       https://github.com/inwebo/My.Forms
   * @since      File available since Beta 01-10-2011
   */
+
 class AutoLoader {
 
-    static public $poolPaths = array();
+    /**
+     * Chemin par defaut dans l'ordre.
+     *
+     * - Chemin courant : ./
+     * - Core : ./core/
+     *
+     * @var array
+     */
+    static public $poolPaths = array("./core/", "./", "./sites/_default/");
 
     static public function handler( $class ) {
         $j = -1;
+        $toInclude = array();
         while(isset( self::$poolPaths[++$j] )) {
             $include = new \LibreMVC\Autoloader\Includer($class, "LibreMVC", self::$poolPaths[$j] );
-            if(is_file($include->getPath(self::$poolPaths[$j]))) {
+
+            // Est un fichier jamais inclus
+
+            if( is_file( $include->getPath( self::$poolPaths[$j] ) ) ) {
                 include($include->getPath(self::$poolPaths[$j]));
                 return;
             }
@@ -71,9 +89,9 @@ class AutoLoader {
 
     }
 
-    static public function getAutoload( $autoloadFile ) {
-        if(is_file($autoloadFile)) {
-            include($autoloadFile);
+    static public function getAutoload( $file ) {
+        if( is_file( $file ) ) {
+            include( $file );
         }
     }
 }
