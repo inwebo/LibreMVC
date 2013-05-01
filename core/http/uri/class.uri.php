@@ -18,7 +18,10 @@ class Uri {
     public function __construct( $uri ) {
         $this->raw = $uri;
         $this->value = $this->sanitize( $this->raw );
+    }
 
+    static function current() {
+        return new self($_SERVER['REQUEST_URI']);
     }
 
     /**
