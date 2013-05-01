@@ -21,6 +21,15 @@ class UriParser {
      * @var object $asserts Un objet contenant les assertions à valider
      */
     protected $assertsObject;
+
+    /**
+     * @var array Tableau associatif sous la forme :
+     * <code>
+     * array(
+     *    "nomDeLassertion" => result
+     * );
+     * <code>
+     */
     public $assertsResult = array();
 
     public function __construct( $uri, $route, $asserts ) {
@@ -64,7 +73,7 @@ class UriParser {
         return $valid;
     }
 
-    public function processPattern() {
+    public function processPattern( $strictMode = true ) {
         $uriArray = $this->uri->toArray();
         $patternArray = $this->route->patternToArray();
 
