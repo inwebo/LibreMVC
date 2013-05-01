@@ -27,6 +27,8 @@ class Includer {
         $this->nameSpace = $this->getNameSpace(true);
         $this->includePath = $this->getIncludePath($this->class);
         $this->fileName = $this->getFileName($this->includePath);
+
+        // Creation nouvel objet namspace
     }
 
     public function getPath($pool, $keepPrefix =false ) {
