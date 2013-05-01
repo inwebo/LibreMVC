@@ -22,10 +22,21 @@ class Router {
         $this->asserts = $asserts;
     }
 
-    public function route() {
+    public function dispatch() {
         $j=-1;
         while( isset( $this->routeCollection[++$j] ) ) {
-            $parser = new UriParser($this->uri, $this->routeCollection[$j], $this->asserts);
+            $parser = new UriParser( $this->uri, $this->routeCollection[$j], $this->asserts );
+            // @todo developper cette partie finement
+
+            var_dump($parser->assertsResult);
+
+            /**
+             * @important Est nécessaire pour garder l'unicité des uris. elles doivent être uniques.
+             */
+            if($parser->assertsResult['isUriGreaterThanRoute'] == true) {
+                return null;
+            }
+
             if( $parser->assertsResult['isNamedRoute'] === true || $parser->assertsResult['isValidPattern'] === true ) {
                 return $parser->processPattern();
             }
