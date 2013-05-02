@@ -49,23 +49,36 @@ class Context {
 
     /**
      * Url courante
-     *
-     * @return String
      */
-    static public function getUrl() {
-        $pageURL = 'http';
-        $pageURL .= (isset($_SERVER["HTTPS"])) ? 's' : '';
-        $pageURL .= "://" . $_SERVER["SERVER_NAME"];
+    static public function getUrl( $protocol = true ) {
+        $pageURL = "";
+        if( $protocol ) {
+            $pageURL .= 'http';
+            $pageURL .= (isset($_SERVER["HTTPS"])) ? 's' : '';
+            $pageURL .= "://";
+        }
+
+        $pageURL .=$_SERVER["SERVER_NAME"];
         $pageURL .= ($_SERVER["SERVER_PORT"] != "80") ? ":" . $_SERVER["SERVER_PORT"] : '' ;
         $pageURL .= $_SERVER["REQUEST_URI"];
         return $pageURL;
     }
 
     /**
+     * Retourne le verbe courant HTTP GET, POST, HEAD, DELETE ...
+     *
+     * @return mixed
+     */
+    static public function getHttpVerb() {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    /**
      * Retourne le realPath de l'application courante.
      *
-     * @param bool $trailingSlash Ajout d'un slash final ?
-     * @return string Un chemin absolue du système de fichier de l'hôte de l'application courante
+     * @param $dir
+     * @param bool $trailingSlash
+     * @return string
      */
     static public function getBaseDirRealPath( $dir, $trailingSlash = true ) {
         //
@@ -75,15 +88,19 @@ class Context {
     }
 
     /**
-     * Nom du dossier courant.
-     *
-     * @param bool $trailingSlash Ajout d'un slash final ?
-     * @return string Nom du fichier courant.
+     * @param $file
+     * @param bool $trailingSlash
+     * @return string
      */
-    static public function getBaseDir( $trailingSlash = true ) {
-        $bd = basename(dirname(__FILE__));
+
+    static public function getBaseDir( $file,$trailingSlash = true ) {
+        $bd = basename(dirname($file));
         $bd.= ($trailingSlash) ? '/' : '';
         return $bd;
+
+        //$debug = list(, $caller) = debug_backtrace(false);
+        //var_dump($debug);
+        //$bd = basename(dirname($debug[0]['file']));
     }
 
     /**
@@ -109,10 +126,17 @@ class Context {
      *
      */
     static public function getInstanceUri($name) {
-        $arrayName = explode('.', $name);
-        $arrayUri = explode('/', self::getUri());
-        $url = array_diff($arrayUri,$arrayName);
-        return trim(implode('/',$url), '/'). '/';
+        $arrayName = explode( '.', $name );
+        $arrayUri = explode( '/', self::getUri() );
+        /**
+         * @todo instance local uri
+         */
+        $url = array_diff( $arrayUri,$arrayName );
+        return trim( implode( '/', $url ), '/' ). '/';
+
+    }
+
+    static public function getInstanceMandatoryPart() {
 
     }
 }
