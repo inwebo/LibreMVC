@@ -12,6 +12,8 @@ namespace LibreMCV\Routing;
 // Doit renvoyer les segments obligatoire, facultatifs
 // Appliques toutes les methodes des asserts sur l'uri courante.
 
+use LibreMVC\Instance;
+
 class UriParser {
 
     protected $uri;
@@ -97,6 +99,13 @@ class UriParser {
 
                         case '[:id]':
                             $params[] = $uriArray[$j];
+                            break;
+
+                        /**
+                         * Ajouter segment
+                         */
+                        case '[:instance]':
+                            //$params[] = Instance::getBaseDirRealPath();
                             break;
 
                         default:
