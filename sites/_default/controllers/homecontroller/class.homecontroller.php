@@ -1,6 +1,7 @@
 <?php
 namespace LibreMCV\Controllers;
 
+use LibreMCV\Http\Request;
 use \LibreMVC\Mvc\Controllers\StandardController as StandardController;
 use \LibreMVC\Views;
 
@@ -28,6 +29,7 @@ class HomeController extends StandardController {
     }
 
     public function debugAction() {
+
         Views\Template\ViewBag::get()->instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
 
         $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
@@ -42,4 +44,11 @@ class HomeController extends StandardController {
         Views::renderAction();
     }
 
+    public function requestAction() {
+        Views\Template\ViewBag::get()->request = Request::current();
+        var_dump(Request::current()->toArray());
+        $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
+        var_dump($instance);
+        Views::renderAction();
+    }
 }
