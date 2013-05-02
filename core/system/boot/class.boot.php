@@ -19,14 +19,14 @@ class Boot {
     public function __construct( $steps ) {
         // valider l'entree
         $this->_steps = $steps;
-        $this->walk();
+        $this->start();
     }
 
     /**
      * Process each steps
      */
-    public function walk() {
-        $methods = get_class_methods($this->_steps);
+    public function start() {
+        $methods = get_class_methods( $this->_steps );
         foreach( $methods as  $member ) {
                  $reflectAssertions = new \ReflectionMethod( $this->_steps, $member );
                  $reflectAssertions->invoke( $member );
