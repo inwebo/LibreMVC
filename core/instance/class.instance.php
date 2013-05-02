@@ -57,7 +57,19 @@ class Instance {
     public $url;
     public $realPath;
     public $includeUrl;
+    /**
+     * ajouter mandatory segment
+     */
+    /**
+     * @var string Segment non obligatoire dans l'uri
+     */
     public $uri;
+
+    /**
+     * @var Devrait etre le dossier courant d'execution
+     */
+    public $localMandatoryUri;
+
 
     public function __construct( $url, $baseDir = "sites/" ) {
         $this->url = $url;
