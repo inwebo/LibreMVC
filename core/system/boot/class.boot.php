@@ -17,9 +17,13 @@ class Boot {
     protected $_steps;
 
     public function __construct( $steps ) {
-        // valider l'entree
-        $this->_steps = $steps;
-        $this->start();
+        if( is_object( $steps ) ) {
+            $this->_steps = $steps;
+            $this->start();
+        }
+        else {
+            throw new \Exception( __CLASS__ . ' must have valid callback object');
+        }
     }
 
     /**
