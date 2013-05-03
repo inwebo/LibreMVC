@@ -30,8 +30,8 @@ class Boot {
      * Process each steps
      */
     public function start() {
-        $methods = get_class_methods( $this->_steps );
-        foreach( $methods as  $member ) {
+        $members = get_class_methods( $this->_steps );
+        foreach( $members as  $member ) {
                  $reflectAssertions = new \ReflectionMethod( $this->_steps, $member );
                  $reflectAssertions->invoke( $member );
         }
