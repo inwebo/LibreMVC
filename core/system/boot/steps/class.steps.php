@@ -18,20 +18,19 @@ class Steps {
 
     static public function includeInstanceAutoloadFile() {
         $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
+
         $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "home", 'index' );
         \LibreMVC\AutoLoader::getAutoload( $paths['base_autoload'] );
     }
 
+    /**
+     * Devrait être un Object Front controller
+     * Applique le pattron de concéption Commande
+     */
     static public function routerDispatch() {
-
-
-
         $router = new \LibreMCV\Routing\Router( \LibreMCV\Http\Uri::current(), \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
         $routedRoute = $router->dispatch();
-
         //var_dump($routedRoute);
-
-
         \LibreMCV\Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
