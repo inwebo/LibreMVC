@@ -14,28 +14,32 @@ namespace LibreMVC\Autoloader;
  *
  * @package LibreMVC\Autoloader
  */
-class Namespaces {
+class ClassNamespace {
 
     protected $namespace;
     protected $absoluteNamespace;
+    protected $className;
+    protected $vendorPrefix;
 
     public function __construct( $namespaces ) {
         $this->namespace = $namespaces;
-        $this->absoluteNamespace = $this->toAbsolute($this->namespace);
+        $this->absoluteNamespace = $this->toAbsolute( $this->namespace );
+        $this->vendorPrefix = $this->getVendorPrefix();
+        $this->className = $this->getClassName();
     }
 
     public function toAbsolute() {
         return '\\'.ltrim( $this->namespace, '\\' );
     }
 
-    public function getConstructorPrefix() {
+    public function getVendorPrefix() {
 
         if( $this->isNamespaced() ) {
-            $asArray = explode('\\',$this->namespace);
-            return array_shift($asArray);
+            $asArray = explode('\\', trim($this->namespace, '\\' ));
+            return ( isset( $asArray[0] ) && !empty( $asArray[0] ) ) ? $asArray[0] : $this->namespace;
         }
         else {
-            return$this->namespace;
+            return $this->namespace;
         }
     }
 
@@ -51,9 +55,9 @@ class Namespaces {
         return $strReplace;
     }
 
-    public function toFilePath( $keepPrefix = false, $pattern = "class.%className%.php", $caseSensitive = false ) {
+    public function toFilePath( $keepPrefix = false, $pattern = "class.%getClassName%.php", $caseSensitive = false ) {
         $dir = implode( '/', $this->toArray( $keepPrefix ) );
-        $file = str_replace( "%className%", $this->className(), $pattern );
+        $file = str_replace( "%getClassName%", $this->getClassName(), $pattern );
         $path = $dir . '/' . $file;
         return ( !$caseSensitive ) ? strtolower( $path ) : $path ;
     }
@@ -75,7 +79,7 @@ class Namespaces {
         }
     }
 
-    public function className() {
+    public function getClassName() {
         if( $this->isNamespaced() ) {
             $array = explode( '\\', trim( $this->absoluteNamespace, '\\' ) );
             return $array[count($array)-1];
