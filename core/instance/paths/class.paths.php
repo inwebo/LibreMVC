@@ -11,5 +11,9 @@ namespace LibreMVC\Instance;
 
 
 class Paths {
+    static public $paths;
 
+    public function __construct() {
+
+    }
 }
