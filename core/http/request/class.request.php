@@ -58,8 +58,8 @@ class Request {
      * @param null|string $rawUri
      */
     private function __construct( $rawUrl = null, $rawUri = null) {
-        $this->rawUrl = ( !is_null( $rawUrl ) ) ? $rawUrl : Context::getUrl( false );
-        $this->url = ( $this->paranoid ) ? $this->paranoid( $this->rawUrl ) : $this->rawUrl ;
+        $this->rawUrl = ( !is_null( $rawUrl ) ) ? $rawUrl : Context::getUrl( true );
+        $this->url = ( $this->paranoid ) ? $this->paranoid( Context::getUrl( false ) ) : $this->rawUrl ;
         $this->rawUri = ( !is_null( $rawUri ) ) ? $rawUri : $_SERVER['REQUEST_URI'];
         $this->uri =  ( $this->paranoid ) ? $this->paranoid( $this->rawUri ) : $this->rawUri ;
         $this->verb = Context::getHttpVerb();
