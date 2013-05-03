@@ -58,7 +58,7 @@ class Includer {
     }
 
     public function getIncludePath($class) {
-        return strtolower(str_replace('\\', DIRECTORY_SEPARATOR, $class));
+        return strtolower(str_replace('\\', '/', $class));
     }
 
     public function getFileName($includePath) {
