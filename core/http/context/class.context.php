@@ -93,8 +93,8 @@ class Context {
      * @return string
      */
 
-    static public function getBaseDir( $file,$trailingSlash = true ) {
-        $bd = basename(dirname($file));
+    static public function getBaseDir( $file, $trailingSlash = true ) {
+        $bd = basename( dirname( $file ) );
         $bd.= ($trailingSlash) ? '/' : '';
         return $bd;
 
@@ -108,7 +108,7 @@ class Context {
      * @return string L'adresse courante.
      */
     static public function getBaseUrl() {
-        $pathInfo = pathinfo($_SERVER['PHP_SELF']);
+        $pathInfo = pathinfo( $_SERVER['PHP_SELF'] );
         $hostName = $_SERVER['HTTP_HOST'];
         $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
         return $protocol.$hostName.$pathInfo['dirname']."/";
@@ -125,18 +125,19 @@ class Context {
     /**
      *
      */
-    static public function getInstanceUri($name) {
+    static public function getInstanceUri( $name ) {
         $arrayName = explode( '.', $name );
         $arrayUri = explode( '/', self::getUri() );
         /**
          * @todo instance local uri
          */
-        $url = array_diff( $arrayUri,$arrayName );
+        $url = array_diff( $arrayUri, $arrayName );
         return trim( implode( '/', $url ), '/' ). '/';
 
     }
 
-    static public function getInstanceMandatoryPart() {
-
+    static public function getBaseUri() {
+        $pathInfo = pathinfo( $_SERVER['PHP_SELF'] );
+        return ltrim($pathInfo['dirname'],'/')."/";
     }
 }
