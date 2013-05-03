@@ -31,12 +31,9 @@ class HomeController extends StandardController {
     public function debugAction() {
 
         Views\Template\ViewBag::get()->instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
-
         $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
-
         $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "home", 'index' );
         Views\Template\ViewBag::get()->paths = $paths;
-
         $router = new \LibreMCV\Routing\Router( \LibreMCV\Http\Uri::current(), \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
         Views\Template\ViewBag::get()->router = $router;
         Views\Template\ViewBag::get()->routedRoute = $router->dispatch();
@@ -45,10 +42,9 @@ class HomeController extends StandardController {
     }
 
     public function requestAction() {
+
         Views\Template\ViewBag::get()->request = Request::current();
-        var_dump(Request::current()->toArray());
-        $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
-        var_dump($instance);
+        Views\Template\ViewBag::get()->instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
         Views::renderAction();
     }
 }
