@@ -68,7 +68,7 @@ class Instance {
     /**
      * @var Devrait etre le dossier courant d'execution
      */
-    public $localMandatoryUri;
+    public $baseUri;
 
 
     public function __construct( $url, $baseDir = "sites/" ) {
@@ -79,10 +79,15 @@ class Instance {
         $this->baseUrl = Context::getBaseUrl();
         $this->includeUrl = Context::getBaseUrl().$this->baseDir . $this->name . "/";
         $this->uri = Context::getInstanceUri($this->name);
+        $this->baseUri = Context::getBaseUri();
     }
 
     static public function current( $baseDir = "sites/" ) {
         return new self( \LibreMVC\Http\Context::getUrl(), $baseDir );
+    }
+
+    public function getRootDir() {
+
     }
 
     public function getName() {
