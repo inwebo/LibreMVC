@@ -16,7 +16,7 @@ Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deseru
 {$foo}
 <hr>
 {$nexistepas}{TEST}
-</hr>
+<hr>
 <ul>
     {loop="$array"}
 
