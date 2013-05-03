@@ -29,13 +29,13 @@ class ClassNamespace {
     }
 
     public function toAbsolute() {
-        return '\\'.ltrim( $this->namespace, '\\' );
+        return '\\' . ltrim( $this->namespace, '\\' );
     }
 
     public function getVendorPrefix() {
 
         if( $this->isNamespaced() ) {
-            $asArray = explode('\\', trim($this->namespace, '\\' ));
+            $asArray = explode( '\\', trim( $this->namespace, '\\' ) );
             return ( isset( $asArray[0] ) && !empty( $asArray[0] ) ) ? $asArray[0] : $this->namespace;
         }
         else {
@@ -48,7 +48,7 @@ class ClassNamespace {
     }
 
     public function toPath( $caseSensitive = false ) {
-        $strReplace = str_replace('\\', DIRECTORY_SEPARATOR, $this->namespace);
+        $strReplace = str_replace('\\', '/', $this->namespace);
         if( !$caseSensitive ) {
             $strReplace = strtolower($strReplace);
         }
