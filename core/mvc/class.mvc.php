@@ -29,7 +29,6 @@ class MVC {
     }
 
     public function exec() {
-
         // Class disponible.
         if( $this->registered ) {
 
@@ -46,11 +45,11 @@ class MVC {
         }
         else {
             // Exception
-            echo $this->class . ' unknown !';
+            throw new \Exception( $this->class . ' is not registered, include it !' );
         }
     }
 
-    public function invoker( $class, $method, $parameters ) {
+    static public function invoker( $class, $method, $parameters ) {
         $handler = new self( $class, $method, $parameters );
         $handler->exec();
     }

@@ -59,9 +59,13 @@ class Config
      */
     private $file;
 
-    private function __construct($file, $process_sections = true)
+    private function __construct( $file, $process_sections = true)
     {
-        if (($config = @parse_ini_file($file, $process_sections)) == false) {
+        if( array_key_exists($file, self::$_instances) ) {
+            return self::$_instances[$file];
+        }
+
+        if ( ( $config = @parse_ini_file( $file, $process_sections ) ) == false ) {
             throw new Exception('Config file ' . $file . ' not found.');
         } else {
             $this->file = $file;

@@ -94,8 +94,9 @@ class Instance {
         $url = explode('.', self::toDirName( $this->url ) );
         $loop = count($url);
         $name = null;
+        $asDirName = "";
         for($i=1; $i <= $loop; $i++) {
-            $asDirName =  self::toDirName( Context::getBaseDir() );
+            //$asDirName =  self::toDirName( Context::getBaseDir() );
             $asDirName .=  $this->baseDir . implode('.', $url);
             if(is_dir($asDirName)) {
                 return implode('.', $url);
