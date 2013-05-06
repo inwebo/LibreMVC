@@ -13,14 +13,12 @@ namespace LibreMVC\System\Boot;
 class Steps {
 
     static public function registerErrorHandler() {
-        set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
+        //set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
     }
 
     static public function includeInstanceAutoloadFile() {
-        $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
-
-        $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "home", 'index' );
-        \LibreMVC\AutoLoader::getAutoload( $paths['base_autoload'] );
+        $paths = \LibreMVC\Instance::current()->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "", '' );
+        include( $paths['base_autoload'] );
     }
 
     /**
@@ -30,7 +28,6 @@ class Steps {
     static public function routerDispatch() {
         $router = new \LibreMCV\Routing\Router( \LibreMCV\Http\Uri::current(), \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
         $routedRoute = $router->dispatch();
-        //var_dump($routedRoute);
         \LibreMCV\Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
