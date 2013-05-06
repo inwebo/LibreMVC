@@ -83,9 +83,9 @@ class UriParser {
         $j = 0;
         foreach( $patternArray as $value ) {
 
-            $facultative = ( is_int( strpos( $value, '[' ) ) ) ? true : false;
+            $optional = ( is_int( strpos( $value, '[' ) ) ) ? true : false;
 
-            if( $facultative !== false ) {
+            if( $optional !== false ) {
 
                 if( isset( $uriArray[$j] ) && $uriArray[$j] !== "/" ) {
                     switch( $value ) {

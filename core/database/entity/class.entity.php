@@ -58,8 +58,7 @@ abstract class Entity implements Modifiable {
 
     // <editor-fold defaultstate="collapsed" desc="Attributs">
     /**
-     * Nom de la table au pluriel associée à l'instance courante.
-     * @var String Le nom de la classe au pluriel
+     * @var string Nom de la table au pluriel associée à l'instance courante.
      */
     private $table;
 
