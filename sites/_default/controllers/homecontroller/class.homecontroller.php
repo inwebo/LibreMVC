@@ -29,7 +29,6 @@ class HomeController extends StandardController {
     }
 
     public function debugAction() {
-
         Views\Template\ViewBag::get()->instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
         $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
         $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "home", 'index' );

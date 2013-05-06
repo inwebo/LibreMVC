@@ -12,3 +12,6 @@ echo \LibreMVC\Http\Context::getBaseUrl();
 var_dump(\LibreMVC\Views\Template\ViewBag::get()->instance);
 ?>
 
+<a href="~/">Instance root</a>
+<br>
+<a href="#/">default root</a>
