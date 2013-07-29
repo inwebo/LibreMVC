@@ -233,7 +233,7 @@ class Img {
      * @param string $format Mime type de l'image de destination
      * @param int $quality Si est un PNG [0,9], si JPG [0,100]
      * @return \LibreMVC\Img
-     * @throws Exception Si le mime type souhaité est inconnu.
+     * @throws \Exception Si le mime type souhaité est inconnu.
      */
     public function saveAs($toFile, $format = "png", $quality = 5) {
         $toFileInfos = pathinfo($toFile);
@@ -256,7 +256,7 @@ class Img {
                 break;
 
             default :
-                throw new Exception("Unknown mime-type $format, please try PNG, JPG, GIF");
+                throw new \Exception("Unknown mime-type $format, please try PNG, JPG, GIF");
                 break;
         }
         return $this;

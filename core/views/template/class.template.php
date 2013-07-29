@@ -59,9 +59,9 @@ class Template {
 
         $this->file = $file;
         if (!file_exists($this->file)) {
-            throw new Exception("Template $this->file does not exist.");
+            throw new \Exception("Template file : $this->file does not exist.");
         } elseif (!is_readable($this->file)) {
-            throw new Exception("Template $this->file is not readable.");
+            throw new \Exception("Template file : $this->file is not readable.");
         } else {
             $this->read();
         }

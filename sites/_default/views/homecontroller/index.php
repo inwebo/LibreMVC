@@ -1,1 +1,8 @@
-<a href="debug/" title="Yeah">debug</a>
+<?php
+
+$menus = \LibreMVC\Views\Template\ViewBag::get()->menus;
+
+foreach ($menus as $v) {
+    echo '<a href="http://www.inwebo.dev/LibreMVC/ss">test</a>';
+    echo $v;
+}

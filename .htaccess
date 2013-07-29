@@ -7,3 +7,4 @@ RewriteBase /LibreMVC
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L,QSA]
+php_value auto_prepend_file "./prepend.php"

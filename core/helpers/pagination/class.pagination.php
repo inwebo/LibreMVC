@@ -58,18 +58,16 @@ class Pagination {
      * @var mixed
      */
     protected $chunk;
-    
+
     /**
-     * Nouvel pagination.
-     * 
-     * @param mixed $subject Un objet ou un array à paginer.
-     * @param int $index La page courante
-     * @param int $limite Nombre objet par page.
+     * @param $subject
+     * @param int $index
+     * @param int $limit
      */
-    public function __construct( $subject, $index = 1 , $limite = 27) {
+    public function __construct( $subject, $index = 1 , $limit = 25) {
         $this->subject = $subject;
         $this->index=  $index;
-        $this->limite = $limite ;
+        $this->limite = $limit ;
 
         $this->chunk = $this->chunk();
         $this->min = $this->setMin();

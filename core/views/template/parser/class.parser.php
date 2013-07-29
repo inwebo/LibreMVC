@@ -115,6 +115,7 @@ class Parser {
             $this->template = new \LibreMVC\Views\Template($templateFile);
         } catch (\Exception $e) {
             echo $e->getMessage();
+            throw new \Exception('');
         }
         $this->define();
         $this->tasks = new \LibreMVC\Views\Template\Task\TasksTag();
@@ -172,12 +173,14 @@ class Parser {
 
     static public function render( $file, $toString = false ) {
         try {
-             $parser = new self( $file );
+            $parser = new self( $file );
+            return $parser->getContent( $toString );
         }
         catch ( \Exception $e ) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
+            //throw new \Exception('');
         }
-        return $parser->getContent($toString);
+
     }
     
     public function __destruct() {

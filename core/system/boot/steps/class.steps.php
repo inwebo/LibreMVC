@@ -28,7 +28,7 @@ class Steps {
     static public function routerDispatch() {
         $router = new \LibreMCV\Routing\Router( \LibreMCV\Http\Uri::current(), \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
         $routedRoute = $router->dispatch();
-        \LibreMCV\Mvc::invoker(
+            \LibreMCV\Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
             $routedRoute->params

@@ -67,6 +67,11 @@ abstract class PageController {
         $this->$member = $value;
     }
 
+    public function toMenuEntries() {
+        $class = new ReflectionClass(self);
+        return $class->getMethods(ReflectionMethod::IS_PUBLIC);
+    }
+
     /**
      * Getter
      * @param string $attribut

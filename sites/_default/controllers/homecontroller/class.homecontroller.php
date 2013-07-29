@@ -2,6 +2,7 @@
 namespace LibreMCV\Controllers;
 
 use LibreMCV\Http\Request;
+use LibreMVC\Database;
 use \LibreMVC\Mvc\Controllers\StandardController as StandardController;
 use \LibreMVC\Views;
 
@@ -12,6 +13,7 @@ class HomeController extends StandardController {
     }
 
     public function indexAction() {
+        Views\Template\ViewBag::get()->menus = $this->toMenuEntries();
         Views\Template\ViewBag::get()->demoViewBag = "Depuis le viewbag !";
         Views::renderAction();
     }

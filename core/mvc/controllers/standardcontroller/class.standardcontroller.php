@@ -56,7 +56,7 @@ abstract class StandardController {
     /**
      * Action par défaut du controller devrait être surchargée.
      */
-    public function index() {}
+    public function indexAction() {}
 
     /**
      * Setter
@@ -65,6 +65,21 @@ abstract class StandardController {
      */
     public function __set($member, $value) {
         $this->$member = $value;
+    }
+
+    public function toMenuEntries() {
+        $class = new \ReflectionClass($this);
+        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $j=-1;
+        while(isset($methods[++$j])) {
+            if(!strpos($methods[$j],'Action') ) {
+                unset($methods[$j]);
+            }
+            else {
+                $methods[$j] = str_replace('Action','', $methods[$j]->name);
+            }
+        }
+        return (object)$methods;
     }
 
     /**
