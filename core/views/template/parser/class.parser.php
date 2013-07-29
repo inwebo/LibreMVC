@@ -94,7 +94,7 @@ class Parser {
         'PATTERN_GET' => '#[^<>!=](>=)[^<>!=]#',
         'PATTERN_SDIF' => '#(!==)[^=!<>]#',
         'PATTERN_LET' => '#[^<>!=](<=)[^<>!=]#',
-        'PATTERN_HREF' => '#<a href=\"(.*)\">#U'
+        //'PATTERN_HREF' => '#<a href=\\"(.*)\">#U'
     );
 
     /**

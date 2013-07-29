@@ -50,7 +50,7 @@ class TasksTag extends \SplObjectStorage {
         // Tpl pattern {tpl="tplToInclude"}
         $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_TPL), new \LibreMVC\Views\Template\Logic\LogicTPL()));
         // Href
-        $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_HREF), new \LibreMVC\Views\Template\Logic\LogicHref()));
+        //$this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_HREF), new \LibreMVC\Views\Template\Logic\LogicHref()));
     }
 
 }
