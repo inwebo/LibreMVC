@@ -3,10 +3,10 @@ namespace LibreMCV\Controllers;
 
 use LibreMCV\Http\Request;
 use LibreMVC\Database;
-use \LibreMVC\Mvc\Controllers\StandardController as StandardController;
+use \LibreMVC\Mvc\Controllers\PageController as PageController;
 use \LibreMVC\Views;
 
-class HomeController extends StandardController {
+class HomeController extends PageController {
 
     public function __construct() {
         parent::__construct();
@@ -18,10 +18,9 @@ class HomeController extends StandardController {
         Views::renderAction();
     }
 
-    public function testAction($a) {
+    public function testAction($a='') {
         echo 'l ' . __LINE__ . ' : ' . __FILE__ . '<br>';
         echo 'Home controller testAction with ' . $a . ' parameters';
-
         Views::renderAction();
     }
 

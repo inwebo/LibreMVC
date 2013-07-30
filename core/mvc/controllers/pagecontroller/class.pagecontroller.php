@@ -47,16 +47,34 @@ abstract class PageController {
 
 
     /**
-     * 
+     *
      */
-    public function __construct() {
-
-    }
+    public function __construct() {}
 
     /**
      * Action par défaut du controller devrait être surchargée.
      */
-    public function index() {}
+    public function indexAction() {}
+
+    /**
+     * Retourne les actions MVC publique disponible dans le controller courant.
+     *
+     * @return object
+     */
+    public function toMenuEntries() {
+        $class = new \ReflectionClass($this);
+        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $j=-1;
+        while(isset($methods[++$j])) {
+            if(!strpos($methods[$j],'Action') ) {
+                unset($methods[$j]);
+            }
+            else {
+                $methods[$j] = str_replace('Action','', $methods[$j]->name);
+            }
+        }
+        return (object)$methods;
+    }
 
     /**
      * Setter
@@ -65,11 +83,6 @@ abstract class PageController {
      */
     public function __set($member, $value) {
         $this->$member = $value;
-    }
-
-    public function toMenuEntries() {
-        $class = new ReflectionClass(self);
-        return $class->getMethods(ReflectionMethod::IS_PUBLIC);
     }
 
     /**
