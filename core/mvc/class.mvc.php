@@ -35,7 +35,6 @@ class MVC {
             // Method exist ET public
             if( method_exists( $this->class, $this->method ) ) {
                 $reflectionMethod = new  \ReflectionMethod( $this->class, $this->method );
-                //var_dump($this->parameters);
                 return $reflectionMethod->invokeArgs(
                     new $this->class,
                     $this->parameters
