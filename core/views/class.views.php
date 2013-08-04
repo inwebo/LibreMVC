@@ -2,8 +2,9 @@
 
 namespace LibreMVC;
 
-use \LibreMVC\Views\Template\Parser;
+use LibreMVC\Views\Template\Parser;
 use LibreMVC\Views\Template\ViewBag;
+use LibreMVC\Mvc\Environnement;
 
 /**
  * LibreMVC
@@ -87,8 +88,7 @@ class Views {
         $class = join('', array_slice(explode('\\', $class), -1));
         $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
         $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), $class, $method );
-        // @todo : Viewbag reserves
-        ViewBag::get()->view =$paths['base_view'];
+        Environnement::get()->viewPath =$paths['base_view'];
         Parser::render($paths['base_index']);
     }
 

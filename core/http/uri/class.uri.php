@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Http;
+namespace LibreMVC\Http;
 
 
 class Uri {

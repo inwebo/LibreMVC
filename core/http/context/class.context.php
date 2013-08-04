@@ -48,7 +48,8 @@ namespace LibreMVC\Http;
 class Context {
 
     /**
-     * Url courante
+     * @param bool $protocol
+     * @return string
      */
     static public function getUrl( $protocol = true ) {
         $pageURL = "";

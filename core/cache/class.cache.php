@@ -1,6 +1,6 @@
 <?php
 
-namespace LibreMVC\Core;
+namespace LibreMVC;
 
 class Cache {
 

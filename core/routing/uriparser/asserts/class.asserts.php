@@ -7,9 +7,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Routing\UriParser;
+namespace LibreMVC\Routing\UriParser;
 
-use \LibreMCV\Routing\Route\Segment as Segment;
+use \LibreMVC\Routing\Route\Segment as Segment;
 
 class Asserts {
 

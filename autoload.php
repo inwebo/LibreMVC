@@ -1,38 +1,46 @@
 <?php
-include("core/autoloader/class.autoloader.php");
 
+include( dirname(__FILE__) . "/core/autoloader/class.autoloader.php" );
+use LibreMVC\Mvc\Environnement as Env;
 try {
     LibreMVC\AutoLoader::instance()->addPool( './core/' );
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
 
+    define('CSV', ';');
+
+    // @debug
+
+
+
     // Bookmarks route
-    $bookmarks = new \LibreMCV\Routing\Route();
+    $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
     $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|idCategorie][/][:page][/][:id|Page]';
-    $bookmarks->controller = '\LibreMCV\Controllers\BookmarksController';
+    $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
     $bookmarks->action = 'category';
-    \LibreMCV\Routing\RoutesCollection::addRoute($bookmarks);
+    \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
-    $bookmarks = new \LibreMCV\Routing\Route();
+    $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
     $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks[/][:id|page][/]';
-    $bookmarks->controller = '\LibreMCV\Controllers\BookmarksController';
+    $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
     $bookmarks->action = 'index';
-    \LibreMCV\Routing\RoutesCollection::addRoute($bookmarks);
+    \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
 
     // Default route
-    $defaultRoute = new \LibreMCV\Routing\Route();
+    $defaultRoute = new \LibreMVC\Routing\Route();
     $defaultRoute->name = "";
     $defaultRoute->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '[/][:action][/][:id][/]';
-    $defaultRoute->controller = '\LibreMCV\Controllers\HomeController';
+    $defaultRoute->controller = '\LibreMVC\Controllers\HomeController';
     $defaultRoute->action = 'index';
-    \LibreMCV\Routing\RoutesCollection::addRoute($defaultRoute);
-
-    new LibreMCV\System\Boot( new \LibreMVC\System\Boot\Steps() );
+    \LibreMVC\Routing\RoutesCollection::addRoute($defaultRoute);
 
 
 
+    new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
+
+    var_dump(LibreMVC\Mvc\Environnement::get());
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
     echo $message;

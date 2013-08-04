@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Routing;
+namespace LibreMVC\Routing;
 
 // Doit renvoyer les segments obligatoire, facultatifs
 // Appliques toutes les methodes des asserts sur l'uri courante.

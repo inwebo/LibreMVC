@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV;
+namespace LibreMVC;
 
 
 class MVC {

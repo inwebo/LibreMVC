@@ -8,12 +8,12 @@
  */
 
 namespace LibreMVC\System\Boot;
-
+use LibreMVC\Mvc\Environnement as Env;
 
 class Steps {
 
     static public function registerErrorHandler() {
-        //set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
+        set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
     }
 
     static public function includeInstanceAutoloadFile() {
@@ -26,20 +26,18 @@ class Steps {
      * Applique le pattron de concéption Commande
      */
     static public function routerDispatch() {
-        $router = new \LibreMCV\Routing\Router( \LibreMCV\Http\Uri::current(), \LibreMCV\Routing\RoutesCollection::getRoutes(), \LibreMCV\Routing\UriParser\Asserts::load() );
+        $router = new \LibreMVC\Routing\Router( \LibreMVC\Http\Uri::current(), \LibreMVC\Routing\RoutesCollection::getRoutes(), \LibreMVC\Routing\UriParser\Asserts::load() );
         $routedRoute = $router->dispatch();
-            \LibreMCV\Mvc::invoker(
+            \LibreMVC\Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
             $routedRoute->params
         );
+        Env::get()->route = $routedRoute->pattern;
+        Env::get()->controller = $routedRoute->controller;
+        Env::get()->action = $routedRoute->action;
+        Env::get()->params = $routedRoute->params;
     }
 
-    /**
-     * Front controller
-     */
-    static public function startFrontController() {
-
-    }
 
 }

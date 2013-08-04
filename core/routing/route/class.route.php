@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Routing;
+namespace LibreMVC\Routing;
 use LibreMVC\Database\Entity;
 
 class Route extends  Entity{

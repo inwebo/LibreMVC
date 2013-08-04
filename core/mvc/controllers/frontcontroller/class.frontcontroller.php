@@ -7,11 +7,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\FrontController;
+namespace LibreMVC\FrontController;
 
 /**
  * Class FrontController
- * @package LibreMCV\FrontController
+ * @package LibreMVC\FrontController
  */
 class FrontController {
 
@@ -22,8 +22,6 @@ class FrontController {
     public function __construct( $routes ) {
         $this->_request = \LibreMVC\Http\Request::current();
         $this->_routes = $routes;
-
     }
-
 
 }

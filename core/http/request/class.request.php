@@ -7,13 +7,13 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Http;
+namespace LibreMVC\Http;
 
 use LibreMVC\Http\Context;
 
 /**
  * Class Request
- * @package LibreMCV\Http
+ * @package LibreMVC\Http
  */
 class Request {
 
@@ -53,16 +53,20 @@ class Request {
      */
     public $verb;
 
+
+    public $httpHeader;
+
     /**
      * @param null|string $rawUrl
      * @param null|string $rawUri
      */
     private function __construct( $rawUrl = null, $rawUri = null) {
-        $this->rawUrl = ( !is_null( $rawUrl ) ) ? $rawUrl : Context::getUrl( true );
-        $this->url    = ( $this->paranoid ) ? $this->paranoid( Context::getUrl( false ) ) : $this->rawUrl ;
-        $this->rawUri = ( !is_null( $rawUri ) ) ? $rawUri : $_SERVER['REQUEST_URI'];
-        $this->uri    =  ( $this->paranoid ) ? $this->paranoid( $this->rawUri ) : $this->rawUri ;
-        $this->verb   = Context::getHttpVerb();
+        $this->rawUrl     = ( !is_null( $rawUrl ) ) ? $rawUrl : Context::getUrl( true );
+        $this->url        = ( $this->paranoid ) ? $this->paranoid( Context::getUrl( false ) ) : $this->rawUrl ;
+        $this->rawUri     = ( !is_null( $rawUri ) ) ? $rawUri : $_SERVER['REQUEST_URI'];
+        $this->uri        =  ( $this->paranoid ) ? $this->paranoid( $this->rawUri ) : $this->rawUri ;
+        $this->verb       = Context::getHttpVerb();
+        $this->httpHeader = getallheaders();
     }
 
     /**

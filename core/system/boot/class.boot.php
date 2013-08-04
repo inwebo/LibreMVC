@@ -1,19 +1,22 @@
 <?php
 
-namespace LibreMCV\System;
+namespace LibreMVC\System;
 
 // Sale mais obligatoire a ce stade les classes declarees sont vide
 
 /**
  * Class Boot
  *
- * Recoit un objet disposant de methodes static public. Elles seront ececutees consecutivement dans l'ordre d'appararition
+ * Recoit un objet disposant de methodes static public. Elles seront executees consecutivement dans l'ordre d'appararition
  * dans le fichier declarant l'objet.
  *
  * @package LibreMVC\System
  */
 class Boot {
 
+    /**
+     * @var object
+     */
     protected $_steps;
 
     public function __construct( $steps ) {

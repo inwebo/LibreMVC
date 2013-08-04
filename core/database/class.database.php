@@ -3,8 +3,6 @@
 namespace LibreMVC;
 
 use LibreMVC\Database\Driver;
-use \PDO;
-use LibreMVC\Database\Query;
 
 
 /**

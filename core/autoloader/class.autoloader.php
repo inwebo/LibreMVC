@@ -34,6 +34,10 @@ class ClassNamespace {
         return new self( $namespaces );
     }
 
+    public function getNamespace() {
+        return $this->namespace;
+    }
+
     public function toPath( $caseSensitive = false ) {
         $strReplace = str_replace('\\', '/', $this->namespace);
         if( !$caseSensitive ) {
@@ -150,6 +154,10 @@ class AutoLoader {
         foreach ( $this->_pools as $directory ){
             if(is_file( $directory . $nc->toFilePath() ) ) {
                 include_once($directory . $nc->toFilePath());
+                //@ todo Class alias automatique
+                $base =$nc->getNamespace();
+                $alias = $nc->getClassName();
+                class_alias($base,$alias);
                 return;
             }
         }

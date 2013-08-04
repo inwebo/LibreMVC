@@ -7,9 +7,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Routing;
+namespace LibreMVC\Routing;
 
-use LibreMCV\Routing\UriParser as UriParser;
+use LibreMVC\Routing\UriParser as UriParser;
 
 class Router {
 

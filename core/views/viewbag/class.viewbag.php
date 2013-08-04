@@ -90,6 +90,9 @@ class ViewBag {
         if (isset($this->$key)) {
             return $this->$key;
         }
+        else {
+            trigger_error('Propreties doesnt exists');
+        }
     }
 
 }
