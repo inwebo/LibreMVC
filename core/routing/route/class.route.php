@@ -10,7 +10,7 @@
 namespace LibreMVC\Routing;
 use LibreMVC\Database\Entity;
 
-class Route extends  Entity{
+class Route extends Entity{
     /**
      * @var string route Partie dans l'uri obligatoire.
      */

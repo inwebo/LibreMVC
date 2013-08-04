@@ -25,7 +25,7 @@ class Steps {
      * Devrait être un Object Front controller
      * Applique le pattron de concéption Commande
      */
-    static public function routerDispatch() {
+    static public function frontController() {
         $router = new \LibreMVC\Routing\Router( \LibreMVC\Http\Uri::current(), \LibreMVC\Routing\RoutesCollection::getRoutes(), \LibreMVC\Routing\UriParser\Asserts::load() );
         $routedRoute = $router->dispatch();
             \LibreMVC\Mvc::invoker(
@@ -37,6 +37,16 @@ class Steps {
         Env::get()->controller = $routedRoute->controller;
         Env::get()->action = $routedRoute->action;
         Env::get()->params = $routedRoute->params;
+    }
+
+    //@todo Load instance ini
+    static public function loadIniFilesFromInstances() {
+
+    }
+
+    //@todo
+    static public function loadRoutes() {
+
     }
 
 
