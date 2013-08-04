@@ -12,7 +12,10 @@ try {
 
 
 
+
     // Bookmarks route
+
+
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
     $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|idCategorie][/][:page][/][:id|Page]';
@@ -20,6 +23,12 @@ try {
     $bookmarks->action = 'category';
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
+    $bookmarks = new \LibreMVC\Routing\Route();
+    $bookmarks->name = "";
+    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/addbookmark[/]';
+    $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
+    $bookmarks->action = 'addbookmark';
+    \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
     $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks[/][:id|page][/]';
@@ -40,7 +49,7 @@ try {
 
     new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
 
-    var_dump(LibreMVC\Mvc\Environnement::get());
+    //var_dump(LibreMVC\Mvc\Environnement::get());
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
     echo $message;
