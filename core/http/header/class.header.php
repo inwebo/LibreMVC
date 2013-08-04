@@ -59,6 +59,10 @@ class Header {
         header('HTTP/1.1 304 Not Modified');
     }
 
+    public static function json() {
+        header('Content-type: application/json');
+    }
+
     public static function contentLength($size) {
         header('Content-Length: '.$size);
     }
