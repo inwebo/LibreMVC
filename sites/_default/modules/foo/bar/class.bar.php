@@ -1,5 +1,5 @@
 <?php
-namespace LibreMCV\Modules\Foo;
+namespace LibreMVC\Modules\Foo;
 
 /**
  * Created by JetBrains PhpStorm.

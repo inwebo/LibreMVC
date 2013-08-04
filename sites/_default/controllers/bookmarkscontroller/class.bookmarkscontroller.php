@@ -7,9 +7,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Controllers;
+namespace LibreMVC\Controllers;
 
-use \LibreMCV\Http\Request;
+use \LibreMVC\Http\Request;
 use LibreMVC\Core\Views\ViewBag;
 use \LibreMVC\Database;
 

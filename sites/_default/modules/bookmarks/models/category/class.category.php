@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMCV\Modules\Bookmarks\Models;
+namespace LibreMVC\Modules\Bookmarks\Models;
 
 
 class Category {
