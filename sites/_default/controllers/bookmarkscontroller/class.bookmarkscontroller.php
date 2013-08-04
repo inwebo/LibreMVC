@@ -27,9 +27,9 @@ class BookmarksController {
 
     public function indexAction( $page = 1 ) {
 
-        $f = new Pagination($this->_db->query('SELECT * FROM my_tables_bookmarks'));
-        ViewBag::get()->bookmarks =$f->page($page);
-        $this->getAllCategories();
+        //$f = new Pagination($this->_db->query('SELECT * FROM my_tables_bookmarks'));
+        //ViewBag::get()->bookmarks =$f->page($page);
+        //$this->getAllCategories();
         $a = $this->getBookmarksByCategory($this->getAllCategories());
         ViewBag::get()->bookmarks = $a;
         Views::renderAction();
@@ -41,6 +41,14 @@ class BookmarksController {
         return $categories;
     }
 
+    public function addbookmarkAction() {
+
+        \LibreMVC\Http\Header::json();
+        echo json_encode(get_declared_classes());
+
+
+    }
+
     protected function getBookmarksByCategory($categories, $limit = 20 ) {
         $buffer = new \StdClass();
         foreach($categories as $categorie) {
@@ -50,10 +58,16 @@ class BookmarksController {
     }
 
     public function categoryAction( $idCategorie = 1, $page = 1 ) {
-        echo $idCategorie, $page;
-        $a = $this->_db->query('SELECT * FROM my_tables_bookmarks WHERE category = ?', array($idCategorie));
-        $f = new Pagination($this->_db->query('SELECT * FROM my_tables_bookmarks WHERE cateogry = ?', array($idCategorie)));
-        ViewBag::get()->bookmarks = $f->first();
+        //echo $idCategorie, $page;
+        $category = $this->_db->query('SELECT * FROM my_tables_bookmarks WHERE category = ?', array($idCategorie));
+        $categoryName = $this->_db->query('SELECT name FROM my_tables_categories WHERE id=?', array($idCategorie));
+        $f = new Pagination($category, $page);
+        ViewBag::get()->bookmarks = $f->page($page);
+        ViewBag::get()->categoryName = $categoryName[0]['name'];
+        ViewBag::get()->categoryId = $idCategorie;
+
+        ViewBag::get()->totalPages = $f->max;
+        //var_dump($f);
         Views::renderAction();
 
     }
