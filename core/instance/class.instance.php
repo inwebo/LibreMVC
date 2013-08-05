@@ -51,7 +51,7 @@ use \LibreMVC\Http\Context as Context;
 class Instance {
 
     protected  $default = "_default";
-    protected $baseUrl;
+    public $baseUrl;
     protected $baseDir;
     public $name;
     public $url;
