@@ -103,6 +103,7 @@ abstract class Driver {
 
     public function query($query, $params = NULL, $options = array(PDO::FETCH_ASSOC), $chaining = false) {
         $this->results = false;
+        //@todo Check ig this->resource est un objet resource
         $this->pdoStatement = $this->resource->prepare($query);
         $this->fetchStyle = null;
         //var_dump( $this->fetchStyle );
