@@ -16,6 +16,8 @@ use LibreMVC\Helpers\Pagination;
 use LibreMVC\Views;
 use LibreMVC\Instance;
 use LibreMVC\Mvc\Environnement;
+use LibreMVC\Files\Config;
+use LibreMVC\Database\Driver\MySQL;
 
 class BookmarksController {
 
@@ -25,15 +27,14 @@ class BookmarksController {
 
     public function __construct() {
         $this->_paths = Environnement::this()->paths;
-        $this->_config = \LibreMVC\Files\Config::load( $this->_paths['base_config'] . '_db.ini' );
-        Database::setup('bookmarks',new \LibreMVC\Database\Driver\MySQL($this->_config->db_server,$this->_config->db_database,'',''));
+        $this->_config = Config::load( $this->_paths['base_config'] . '_db.ini' );
+        //@todo devrait provenir du fichier ini
+        Database::setup( 'bookmarks', new MySQL( 'localhost', 'bookmarks', 'root','root' ) );
         $this->_viewbag->baseUrl = "yeah";
-        $this->_db =Database::get('bookmarks');
+        $this->_db = Database::get('bookmarks');
     }
 
     public function indexAction( $page = 1 ) {
-        ViewBag::get()->t = "e";
-
         $f = new Pagination($this->_db->query('SELECT * FROM my_tables_bookmarks'));
         ViewBag::get()->bookmarks = $f->page($page);
         $this->getAllCategories();
@@ -43,7 +44,7 @@ class BookmarksController {
     }
 
     protected function getAllCategories() {
-        $categories  = $this->_db->query('SELECT * FROM my_tables_categories');
+        $categories = $this->_db->query('SELECT * FROM my_tables_categories');
         return $categories;
     }
 

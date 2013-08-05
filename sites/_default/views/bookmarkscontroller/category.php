@@ -8,7 +8,7 @@ echo '<a href="http://www.inwebo.dev/LibreMVC/bookmarks/category/'.ViewBag::get(
 }
 ?>
 
-<?php echo \LibreMVC\Core\Views\ViewBag::get()->pageTotal ?>
+<?php //echo LibreMVC\Core\Views\ViewBag::get()->pageTotal ?>
 
 <ul>
     <?php

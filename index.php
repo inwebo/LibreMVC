@@ -10,4 +10,4 @@ include("autoload.php");
 </code>
  */
 ?>
-<?php var_dump(\LibreMVC\Mvc\Environnement::this()); ?>
+<?php //var_dump(\LibreMVC\Mvc\Environnement::this()); ?>

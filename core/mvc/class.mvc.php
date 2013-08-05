@@ -45,6 +45,7 @@ class MVC {
         }
         else {
             // Exception
+            //@todo page 404
             throw new \Exception( $this->class .$this->method.'() ' .  ' is not registered, include it !' );
         }
     }
