@@ -4,6 +4,11 @@
 </head>
 <body>
 <h1 id="example">LibreMVC</h1>
-<?php LibreMVC\Views::render(LibreMVC\Mvc\Environnement::get()->viewPath); ?>
+<ul>
+    {loop="$menus"}
+    <li> <a href="http://www.inwebo.dev/LibreMVC/{$value}">{$value}</a></li>
+    {/loop}
+</ul>
+<?php LibreMVC\Views::render(LibreMVC\Mvc\Environnement::this()->viewPath); ?>
 </body>
 </html>
