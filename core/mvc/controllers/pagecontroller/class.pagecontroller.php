@@ -1,6 +1,8 @@
 <?php
 namespace LibreMVC\Mvc\Controllers;
 
+use LibreMVC\Views\Template\ViewBag;
+
 /**
  * LibreMVC
  *
@@ -45,18 +47,19 @@ namespace LibreMVC\Mvc\Controllers;
  */
 abstract class PageController {
 
+    protected $_viewbag;
 
     /**
      * 
      */
     public function __construct() {
-
+        $this->_viewbag = ViewBag::get();
     }
 
     /**
      * Action par défaut du controller devrait être surchargée.
      */
-    public function index() {}
+    public function indexAction() {}
 
     /**
      * Setter
@@ -68,8 +71,18 @@ abstract class PageController {
     }
 
     public function toMenuEntries() {
-        $class = new ReflectionClass(self);
-        return $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $class = new \ReflectionClass($this);
+        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $j=-1;
+        while(isset($methods[++$j])) {
+            if(!strpos($methods[$j],'Action') ) {
+                unset($methods[$j]);
+            }
+            else {
+                $methods[$j] = str_replace('Action','', $methods[$j]->name);
+            }
+        }
+        return (object)$methods;
     }
 
     /**
