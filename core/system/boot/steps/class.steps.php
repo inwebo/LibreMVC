@@ -8,7 +8,16 @@
  */
 
 namespace LibreMVC\System\Boot;
-use LibreMVC\Mvc\Environnement as Env;
+
+use LibreMVC\Mvc\Environnement;
+use LibreMVC\Instance;
+use LibreMVC\Files\Config;
+use LibreMVC\Routing\Router;
+use LibreMVC\Http\Uri;
+use LibreMVC\Routing\RoutesCollection;
+use LibreMVC\Routing\UriParser\Asserts;
+use LibreMVC\Mvc;
+use LibreMVC\Http\Context;
 
 class Steps {
 
@@ -17,35 +26,41 @@ class Steps {
     }
 
     static public function includeInstanceAutoloadFile() {
-        $paths = \LibreMVC\Instance::current()->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "", '' );
-        include( $paths['base_autoload'] );
+        Environnement::this()->paths = Instance::current()->processPattern(Config::load( "config/paths.ini" ), "", '' );
+        Environnement::this()->instance = new Instance( Context::getUrl() );
+        if(is_file( Environnement::this()->paths )) {
+            include(Environnement::this()->paths['base_autoload'] );
+        }
+        else {
+            //@todo message erreur
+        }
     }
+
+    static public function loadRoutes() {}
 
     /**
      * Devrait être un Object Front controller
      * Applique le pattron de concéption Commande
      */
     static public function frontController() {
-        $router = new \LibreMVC\Routing\Router( \LibreMVC\Http\Uri::current(), \LibreMVC\Routing\RoutesCollection::getRoutes(), \LibreMVC\Routing\UriParser\Asserts::load() );
+        $router = new Router( Uri::current(), RoutesCollection::getRoutes(), Asserts::load() );
         $routedRoute = $router->dispatch();
-            \LibreMVC\Mvc::invoker(
+            Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
             $routedRoute->params
         );
-        Env::get()->route = $routedRoute->pattern;
-        Env::get()->controller = $routedRoute->controller;
-        Env::get()->action = $routedRoute->action;
-        Env::get()->params = $routedRoute->params;
+
+
+        // @todo n'est pas peuplé ?
+        Environnement::this()->controller  = $routedRoute->controller;
+        Environnement::this()->action      = $routedRoute->action;
+        Environnement::this()->params      = $routedRoute->params;
+        Environnement::this()->routedRoute = $routedRoute;
     }
 
     //@todo Load instance ini
     static public function loadIniFilesFromInstances() {
-
-    }
-
-    //@todo
-    static public function loadRoutes() {
 
     }
 
