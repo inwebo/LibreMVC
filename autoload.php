@@ -25,17 +25,10 @@ try {
 
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
-    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/addbookmark[/]';
-    $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
-    $bookmarks->action = 'addbookmark';
-    \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
-    $bookmarks = new \LibreMVC\Routing\Route();
-    $bookmarks->name = "";
     $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks[/][:id|page][/]';
     $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
     $bookmarks->action = 'index';
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
-
 
     // Default route
     $defaultRoute = new \LibreMVC\Routing\Route();
