@@ -19,17 +19,18 @@ use \LibreMVC\Views;
 class BookmarksController {
 
     protected $_db;
+    protected $_paths;
+    protected $_config;
 
     public function __construct() {
-        Database::setup('bookmarks',new \LibreMVC\Database\Driver\MySQL('localhost','bookmarks','root','root'));
+        $this->_paths = $paths = \LibreMVC\Instance::current()->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), "", '' );
+        $this->_config = \LibreMVC\Files\Config::load( $this->_paths['base_config'] . '_db.ini' );
+        var_dump($this->_config);
+        Database::setup('bookmarks',new \LibreMVC\Database\Driver\MySQL($this->_config->db_server,$this->_config->db_database,'',''));
         $this->_db =Database::get('bookmarks');
     }
 
     public function indexAction( $page = 1 ) {
-
-        //$f = new Pagination($this->_db->query('SELECT * FROM my_tables_bookmarks'));
-        //ViewBag::get()->bookmarks =$f->page($page);
-        //$this->getAllCategories();
         $a = $this->getBookmarksByCategory($this->getAllCategories());
         ViewBag::get()->bookmarks = $a;
         Views::renderAction();
