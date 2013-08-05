@@ -8,18 +8,20 @@
  */
 
 namespace LibreMVC\Mvc;
-use LibreMVC\Helpers\Log;
+
 
 class Environnement {
 
     public $controller;
     public $action;
     public $params;
-    public $route;
+    public $routedRoute;
     public $log;
     public $viewPath;
+    public $instance;
+    public $paths;
 
-    public static $keywords = array('controller','action', 'params', 'log');
+
 
     /**
      * Instance unique du ViewBag
@@ -27,7 +29,7 @@ class Environnement {
      * @param object $instance contient l'instance courante.
      * @static
      */
-    protected static $instance;
+    protected static $_instance;
 
     /**
      * Constructeur privé.
@@ -35,9 +37,7 @@ class Environnement {
      */
     private function __construct() {}
 
-    static public function isReserved( $word ) {
-        return in_array($word, self::$keywords);
-    }
+
 
     /**
      * Retourne l'instance courante d'un objet singleton ViewBag
@@ -45,12 +45,12 @@ class Environnement {
      * @return ViewBag ViewBag courant
      * @static
      */
-    public static function get() {
-        if ( !isset( self::$instance ) ) {
-            self::$instance = new self();
+    public static function this() {
+        if ( !isset( self::$_instance ) ) {
+            self::$_instance = new self();
         }
 
-        return self::$instance;
+        return self::$_instance;
     }
     /**
      * Setter
