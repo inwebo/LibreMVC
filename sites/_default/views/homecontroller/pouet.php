@@ -1,3 +1,1 @@
-<?php
-
-echo 'tea';
+<h2>Pouet</h2>
