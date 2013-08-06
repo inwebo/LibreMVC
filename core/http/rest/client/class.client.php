@@ -244,6 +244,8 @@ class Client {
      * @param String $method La méthode HTTP souhaitée.
      * @param array $params Les paramètres à envoyés avec la requête.
      * @return resource
+     * @todo Accept : text/plain text/json  etc
+     * @todo Autorization  https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
      */
     protected function context( $method, $params = array() ) {
         $streamOptions = array(
