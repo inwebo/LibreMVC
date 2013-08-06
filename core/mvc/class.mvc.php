@@ -9,6 +9,7 @@
 
 namespace LibreMVC;
 
+use LibreMVC\Controllers\ErrorsController;
 
 class MVC {
 
@@ -29,23 +30,23 @@ class MVC {
     }
 
     public function exec() {
-        // Class disponible.
         if( $this->registered ) {
 
             // Method exist ET public
             if( method_exists( $this->class, $this->method ) ) {
                 $reflectionMethod = new  \ReflectionMethod( $this->class, $this->method );
-                //var_dump($this->parameters);
                 return $reflectionMethod->invokeArgs(
                     new $this->class,
                     $this->parameters
                 );
             }
+            else {
+                ErrorsController::throwHttpError('404');
+            }
 
         }
         else {
-            // Exception
-            //@todo page 404
+            ErrorsController::throwHttpError('404');
             throw new \Exception( $this->class .$this->method.'() ' .  ' is not registered, include it !' );
         }
     }
