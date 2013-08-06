@@ -44,6 +44,8 @@ namespace LibreMVC\Http\Rest;
  * @version    $Id:$
  * @link       https://github.com/inwebo/RESTfulClient
  * @since     File available since 06-04-2013
+ * @todo Devrait retourner le type demandé
+ * @todo rendre indépendant du framework, le server du framework devrait etre un Objet AjaxController
  */
 
 class Server {
@@ -57,6 +59,11 @@ class Server {
      * @var string Le contenu courante de la requête.
      */
     public $content;
+
+    /**
+     * @var string
+     */
+    public $contentType;
 
     /**
      * @param string $data file_get_contents
