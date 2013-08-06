@@ -43,12 +43,19 @@ class Errors {
         //@todo
     }
 
-    public function toXml() {
+    public function toXmlNode() {
         //@todo
+
+
+
+    }
+
+    public function toXmlFile() {
+
     }
 
     public function toSerializablePHP() {
-        //@todo 
+        //@todo
     }
 
     static protected function errNoAsString( $errno ){
