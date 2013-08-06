@@ -26,7 +26,7 @@ try {
 
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
-    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|idCategorie][/][:page][/][:id|Page]';
+    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|idCategorie][/][page][/][:id|Page]';
     $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
     $bookmarks->action = 'category';
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
