@@ -18,24 +18,27 @@ use LibreMVC\Instance;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Files\Config;
 use LibreMVC\Database\Driver\MySQL;
+use LibreMVC\Http\Header;
+use LibreMVC\Mvc;
+use LibreMVC\Controllers;
+use LibreMVC\Controllers\ErrorsController;
 
 class BookmarksController {
 
     protected $_db;
     protected $_paths;
     protected $_config;
+    protected $_tables;
 
     public function __construct() {
         $this->_paths = Environnement::this()->paths;
-        $this->_config = Config::load( $this->_paths['base_config'] . '_db.ini' );
-        //@todo devrait provenir du fichier ini
-        Database::setup( 'bookmarks', new MySQL( 'localhost', 'bookmarks', 'root','root' ) );
-        $this->_viewbag->baseUrl = "yeah";
+        $this->_config = Config::load( $this->_paths['base_config'] . '_db.ini' , false);
+        Database::setup( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user,$this->_config->db_password ) );
         $this->_db = Database::get('bookmarks');
     }
 
     public function indexAction( $page = 1 ) {
-        $f = new Pagination($this->_db->query('SELECT * FROM my_tables_bookmarks'));
+        $f = new Pagination($this->_db->query("SELECT * FROM my_tables_bookmarks"));
         ViewBag::get()->bookmarks = $f->page($page);
         $this->getAllCategories();
         $a = $this->getBookmarksByCategory($this->getAllCategories());
@@ -49,8 +52,7 @@ class BookmarksController {
     }
 
     public function addbookmarkAction() {
-
-        \LibreMVC\Http\Header::json();
+        Header::json();
         echo json_encode(get_declared_classes());
 
 
@@ -69,10 +71,13 @@ class BookmarksController {
         $category = $this->_db->query('SELECT * FROM my_tables_bookmarks WHERE category = ?', array($idCategorie));
         $categoryName = $this->_db->query('SELECT name FROM my_tables_categories WHERE id=?', array($idCategorie));
         $f = new Pagination($category, $page);
+        if( $page > $f->max ) {
+            ErrorsController::throwHttpError("404");
+        }
+
         ViewBag::get()->bookmarks = $f->page($page);
         ViewBag::get()->categoryName = $categoryName[0]['name'];
         ViewBag::get()->categoryId = $idCategorie;
-
         ViewBag::get()->totalPages = $f->max;
         //var_dump($f);
         Views::renderAction();
