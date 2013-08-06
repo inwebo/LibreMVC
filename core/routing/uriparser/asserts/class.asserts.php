@@ -56,6 +56,15 @@ class Asserts {
                 }
 
             }
+            else {
+                //Ne dois pas être un :id ni un /
+                $requiredName = trim(trim($value,'['),']');
+                if( $requiredName[0] !== ":" && $requiredName !== '/' ) {
+                    if( $uriArray[$j] !== $requiredName ) {
+                        return false;
+                    }
+                }
+            }
 
             $j++;
         }
