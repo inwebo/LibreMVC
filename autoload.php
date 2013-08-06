@@ -15,6 +15,14 @@ try {
 
     // Bookmarks route
 
+    // Ajoute un bookmark
+    // http://bookmarks.inwebo.net/bookmark/
+    // /bookmark
+    // /bookmark/[:id|idbookmark]
+    // Multiple verbe
+
+    // Update bookmarks
+    // http://bookmarks.inwebo.net/bookmark/[:id|id]
 
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";

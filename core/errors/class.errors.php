@@ -36,12 +36,25 @@ class Errors {
     }
     
     public function toCSV() {
-        
+        //@todo
     }
-    
+
+    public function toJson() {
+        //@todo
+    }
+
+    public function toXml() {
+        //@todo
+    }
+
+    public function toSerializablePHP() {
+        //@todo 
+    }
+
     static protected function errNoAsString( $errno ){
         
         switch($errno) {
+            default:
             case 2:
                 return 'E_WARNING';
                 break;
