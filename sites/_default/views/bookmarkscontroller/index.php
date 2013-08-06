@@ -3,7 +3,7 @@
 use LibreMVC\Views\Template\ViewBag;
 
 ?>
-<h2>Bookmarks</h2>
+<h2><a href="bookmarks/">Bookmarks</a></h2>
 <ul>
     <?php
     $i=1;
