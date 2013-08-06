@@ -1,5 +1,5 @@
 <?php
-namespace LibreMVC\Core\Views;
+namespace LibreMVC\Views;
 /**
  * LibreMVC
  *
