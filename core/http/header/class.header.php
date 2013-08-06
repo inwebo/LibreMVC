@@ -66,7 +66,7 @@ class Header {
     public static function contentLength($size) {
         header('Content-Length: '.$size);
     }
-    
+
     public static function expires( $birth, $life ) {
         $life = $birth + $life;
         header('Expires: ' . gmdate('D, d M Y H:i:s', $life));
@@ -98,7 +98,15 @@ class Header {
         header('Server: ');
         header('X-Powered-By: ');
     }
-    
+
+    public static function error($httpErrorNumber) {
+        switch( $httpErrorNumber ) {
+            default:
+            case '404':
+                header("HTTP/1.0 404 Not Found");
+                break;
+        }
+    }
     
     // @todo http://www.php.net/manual/fr/function.header.php#88875
     /*header("Cache-Control: no-cache");
