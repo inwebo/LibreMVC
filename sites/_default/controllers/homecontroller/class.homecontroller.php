@@ -8,7 +8,7 @@ use LibreMVC\Instance;
 use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Views;
 use LibreMVC\Mvc\Environnement;
-
+use LibreMVC\Errors;
 class HomeController extends PageController {
 
     public function __construct() {

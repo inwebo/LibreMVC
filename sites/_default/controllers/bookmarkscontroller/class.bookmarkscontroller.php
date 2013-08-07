@@ -21,9 +21,9 @@ use LibreMVC\Database\Driver\MySQL;
 use LibreMVC\Http\Header;
 use LibreMVC\Mvc;
 use LibreMVC\Controllers;
-use LibreMVC\Controllers\ErrorsController;
+use LibreMVC\Mvc\Controllers\PageController;
 
-class BookmarksController {
+class BookmarksController extends PageController{
 
     protected $_db;
     protected $_paths;
