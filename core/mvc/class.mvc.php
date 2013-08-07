@@ -46,7 +46,7 @@ class MVC {
 
         }
         else {
-            ErrorsController::throwHttpError('404');
+            //ErrorsController::throwHttpError('404');
             throw new \Exception( $this->class .$this->method.'() ' .  ' is not registered, include it !' );
         }
     }
