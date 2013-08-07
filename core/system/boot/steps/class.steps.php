@@ -45,7 +45,6 @@ class Steps {
     static public function frontController() {
         $router = new Router( Uri::current(), RoutesCollection::getRoutes(), Asserts::load() );
         $routedRoute = $router->dispatch();
-
         Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
