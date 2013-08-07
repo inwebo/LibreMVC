@@ -223,7 +223,7 @@ class Client {
     public function login( $user, $passPhrase ) {
         $this->user = $user;
         $this->logged = true;
-        $this->signature = $this->signature( $user, $passPhrase );
+        $this->signature = self::signature( $user, $passPhrase );
         return $this;
     }
 
@@ -295,7 +295,7 @@ class Client {
      * @param string $passPhrase La pass phrase associée à l'utilisateur courant
      * @return string
      */
-    public function signature( $user, $passPhrase ) {
+    static public function signature( $user, $passPhrase ) {
         return  base64_encode( hash_hmac( "ripemd160",$user , $passPhrase ) ) ;
     }
 
