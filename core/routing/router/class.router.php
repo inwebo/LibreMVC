@@ -35,8 +35,10 @@ class Router {
             }
 
             if( $parser->assertsResult['isNamedRoute'] === true || $parser->assertsResult['isValidPattern'] === true ) {
+
                 return $parser->processPattern();
             }
+
         }
 
     }
