@@ -7,12 +7,12 @@ try {
 
     define('CSV', ';');
 
-    $defaultRoute = new \LibreMVC\Routing\Route();
-    $defaultRoute->name = "";
-    $defaultRoute->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmark/';
-    $defaultRoute->controller = '\LibreMVC\Controllers\BookmarkController';
-    $defaultRoute->action = 'index';
-    \LibreMVC\Routing\RoutesCollection::addRoute($defaultRoute);
+    $bookmarks = new \LibreMVC\Routing\Route();
+    $bookmarks->name = "";
+    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|idCategorie][/][page][/][:id|Page]';
+    $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
+    $bookmarks->action = 'category';
+    \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
@@ -28,8 +28,14 @@ try {
     $bookmarks->action = 'index';
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
-    // Default route
-
+    //@todo si il n'y a pas au minimum un segment facultatif bug
+    //@todo bugfixe léger[]
+    $bookmarks = new \LibreMVC\Routing\Route();
+    $bookmarks->name = "";
+    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmark[/][:id|idBookmark]';
+    $bookmarks->controller = '\LibreMVC\Controllers\BookmarkController';
+    $bookmarks->action = 'index';
+    \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
     // Default route
     $defaultRoute = new \LibreMVC\Routing\Route();
@@ -43,7 +49,7 @@ try {
 
     new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
 
-    var_dump(LibreMVC\Mvc\Environnement::this());
+    //var_dump(LibreMVC\Mvc\Environnement::this());
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
     echo $message;
