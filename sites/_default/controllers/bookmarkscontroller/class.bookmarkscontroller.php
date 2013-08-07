@@ -22,7 +22,7 @@ use LibreMVC\Http\Header;
 use LibreMVC\Mvc;
 use LibreMVC\Controllers;
 use LibreMVC\Mvc\Controllers\PageController;
-
+use LibreMVC\Mvc\Controllers\ErrorsController;
 class BookmarksController extends PageController{
 
     protected $_db;

@@ -45,6 +45,12 @@ class Steps {
     static public function frontController() {
         $router = new Router( Uri::current(), RoutesCollection::getRoutes(), Asserts::load() );
         $routedRoute = $router->dispatch();
+        // @todo n'est pas peuplé ?
+        Environnement::this()->controller  = $routedRoute->controller;
+        Environnement::this()->action      = $routedRoute->action;
+        Environnement::this()->params      = $routedRoute->params;
+        Environnement::this()->routedRoute = $routedRoute;
+        //var_dump(Environnement::this());
         Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
@@ -52,11 +58,7 @@ class Steps {
         );
 
 
-        // @todo n'est pas peuplé ?
-        Environnement::this()->controller  = $routedRoute->controller;
-        Environnement::this()->action      = $routedRoute->action;
-        Environnement::this()->params      = $routedRoute->params;
-        Environnement::this()->routedRoute = $routedRoute;
+
     }
 
     //@todo Load instance ini

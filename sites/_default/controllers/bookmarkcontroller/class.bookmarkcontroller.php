@@ -8,10 +8,11 @@
  */
 
 namespace LibreMVC\Controllers;
+use LibreMVC\Errors;
 use LibreMVC\Http\Header;
 use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Views;
-
+use LibreMVC\Http\Context;
 class BookmarkController extends PageController{
 
     public function __construct() {
@@ -19,6 +20,32 @@ class BookmarkController extends PageController{
     }
 
     public function indexAction(){
-        echo 'bookmark index';
+        Header::ajax();
+        Header::json();
+        Header::hideInfos();
+        $err = new Errors(2,'Error',__FILE__, __LINE__, __CLASS__);
+        echo json_encode($err);
     }
+
+    public function get() {
+
+    }
+
+    public function post() {
+
+    }
+
+    public function update() {
+
+    }
+
+    public function delete() {
+
+    }
+
+    public function testAction(){
+        echo __METHOD__;
+        return;
+    }
+
 }
