@@ -8,15 +8,17 @@
  */
 
 namespace LibreMVC\Controllers;
-//use LibreMVC\Mvc\Controllers\RestController;
+use LibreMVC\Http\Header;
+use LibreMVC\Mvc\Controllers\PageController;
+use LibreMVC\Views;
 
-class BookmarkController {
+class BookmarkController extends PageController{
 
     public function __construct() {
-        //parent::__construct();
+        parent::__construct();
     }
 
     public function indexAction(){
-        echo 'yeah';
+        echo 'bookmark index';
     }
 }
