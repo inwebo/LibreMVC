@@ -76,6 +76,7 @@ class UriParser {
         return $valid;
     }
 
+    //@todo à fixer
     public function processPattern( $strictMode = true ) {
         $uriArray = $this->uri->toArray();
         $patternArray = $this->route->patternToArray();
@@ -123,6 +124,7 @@ class UriParser {
 
             $j++;
         }
+
         return $this->route;
     }
 
