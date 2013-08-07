@@ -46,6 +46,7 @@ namespace LibreMVC\Http\Rest;
  * @since     File available since 06-04-2013
  * @todo Devrait retourner le type demandé
  * @todo rendre indépendant du framework, le server du framework devrait etre un Objet AjaxController
+ * @todo Si
  */
 
 class Server {
