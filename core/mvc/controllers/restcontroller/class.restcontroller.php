@@ -16,9 +16,6 @@ class RestController extends  PageController {
     public $verb;
     public $accept;
 
-    public function __construct() {
+    public function __construct() {}
 
-    }
-
-    public function indexAction(){}
 }
