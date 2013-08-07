@@ -9,8 +9,8 @@
 
 namespace LibreMVC;
 
-use LibreMVC\Controllers\ErrorsController;
-
+use LibreMVC\Mvc\Controllers\ErrorsController;
+use LibreMVC\Mvc\Environnement;
 class MVC {
 
     public $class;
