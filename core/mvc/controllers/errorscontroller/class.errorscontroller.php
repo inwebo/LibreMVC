@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMVC\Controllers;
+namespace LibreMVC\Mvc\Controllers;
 
 
 use LibreMVC\Http\Header;
