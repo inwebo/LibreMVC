@@ -5,7 +5,9 @@ namespace LibreMVC;
 use LibreMVC\Views\Template\Parser;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Mvc\Environnement;
-
+use LibreMVC\Instance;
+use LibreMVC\Http\Context;
+use LibreMVC\Files\Config;
 /**
  * LibreMVC
  *
@@ -79,18 +81,14 @@ class Views {
          */
         // Methode Courante (avant derniere)
         array_shift($debug);
-        //var_dump($debug);
         $method = $debug[0]['function'];
         $method = str_replace('Action','',$method);
-        //var_dump($method);
         $class = strtolower($debug[0]['class']);
-        //echo ''   . $class . '<br>';
         $class = join('', array_slice(explode('\\', $class), -1));
 
-        // @todo devrait venir d'Environnement
-        $instance = new \LibreMVC\Instance( \LibreMVC\Http\Context::getUrl() );
-        $paths = $instance->processPattern( \LibreMVC\Files\Config::load( "config/paths.ini" ), $class, $method );
-        Environnement::this()->viewPath =$paths['base_view'];
+        $instance = new Instance( Context::getUrl() );
+        $paths = $instance->processPattern( Config::load( "config/paths.ini" ), $class, $method );
+        Environnement::this()->viewPath = $paths['base_view'] ;
         Parser::render($paths['base_index']);
     }
 
