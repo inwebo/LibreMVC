@@ -35,27 +35,25 @@ class Errors {
         return $output;
     }
     
-    public function toCSV() {
-        //@todo
+    public function toCSV($separator=";") {
+        $list = array( self::errNoAsString($this->errno), $this->errstr, $this->errfile, $this->errline, $this->errcontext);
+        return implode($separator, $list) . PHP_EOL;
     }
 
     public function toJson() {
-        //@todo
+        return json_encode($this);
     }
 
     public function toXmlNode() {
         //@todo
-
-
-
     }
 
     public function toXmlFile() {
-
+        $dom = new \DOMDocument('1.0','UTF-8');
     }
 
     public function toSerializablePHP() {
-        //@todo
+        return serialize($this);
     }
 
     static protected function errNoAsString( $errno ){
