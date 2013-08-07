@@ -9,7 +9,6 @@
 
 namespace LibreMVC\Routing\UriParser;
 
-use \LibreMVC\Routing\Route\Segment as Segment;
 
 class Asserts {
 
@@ -29,13 +28,7 @@ class Asserts {
     }
 
     static public function isUriGreaterThanRoute( $uri, $route ) {
-
-        $iuri = count($uri->toArray());
-        $ipat = count($route->patternToArray());
-
-        //echo $iuri,$ipat,(int)( $iuri > $ipat );
-
-        return ( $iuri > $ipat );
+        return ( count($uri->toArray()) > count($route->patternToArray()) );
     }
 
     static public function isValidPattern($uri, $route) {
@@ -46,29 +39,37 @@ class Asserts {
         $j = 0;
         foreach( $patternArray as $value ) {
 
-            $facultative = ( is_int( strpos($value,'[') ) ) ? true : false;
+            $mandatory  = ( is_int( strpos($value,'[') ) ) ? true : false;
+            $requiredName = self::cleanParam($value);
 
             // Segment obligatoire
-            if( $facultative === false ) {
+            if( !$mandatory ) {
 
                 if( !isset( $uriArray[$j] ) || $uriArray[$j] != $value ) {
                     return false;
                 }
 
             }
-            else {
-                //Ne dois pas être un :id ni un /
-                $requiredName = trim(trim($value,'['),']');
-                if( $requiredName[0] !== ":" && $requiredName !== '/' ) {
-                    if( $uriArray[$j] !== $requiredName ) {
-                        return false;
-                    }
-                }
+
+            if( !self::isParam($requiredName) && !self::isSlash($requiredName) && isset($uriArray[$j]) && $requiredName !== $uriArray[$j] ) {
+                return false;
             }
 
             $j++;
         }
         return $valid;
+    }
+
+    static protected function cleanParam( $string ) {
+        return trim(trim($string,'['),']');
+    }
+
+    static protected function isParam( $string ) {
+        return ($string[0] === ":") ;
+    }
+
+    static protected function isSlash( $string ) {
+        return ($string === '/');
     }
 }
 
