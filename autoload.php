@@ -1,28 +1,18 @@
 <?php
-
 include( dirname(__FILE__) . "/core/autoloader/class.autoloader.php" );
-use LibreMVC\Mvc\Environnement as Env;
+use LibreMVC\Mvc\Environnement;
 try {
     LibreMVC\AutoLoader::instance()->addPool( './core/' );
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
 
     define('CSV', ';');
 
-    // @debug
-
-
-
-
-    // Bookmarks route
-
-    // Ajoute un bookmark
-    // http://bookmarks.inwebo.net/bookmark/
-    // /bookmark
-    // /bookmark/[:id|idbookmark]
-    // Multiple verbe
-
-    // Update bookmarks
-    // http://bookmarks.inwebo.net/bookmark/[:id|id]
+    $defaultRoute = new \LibreMVC\Routing\Route();
+    $defaultRoute->name = "";
+    $defaultRoute->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmark/';
+    $defaultRoute->controller = '\LibreMVC\Controllers\BookmarkController';
+    $defaultRoute->action = 'index';
+    \LibreMVC\Routing\RoutesCollection::addRoute($defaultRoute);
 
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
@@ -39,6 +29,9 @@ try {
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
     // Default route
+
+
+    // Default route
     $defaultRoute = new \LibreMVC\Routing\Route();
     $defaultRoute->name = "";
     $defaultRoute->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '[/][:action][/][:id][/]';
@@ -50,7 +43,7 @@ try {
 
     new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
 
-    //var_dump(LibreMVC\Mvc\Environnement::get());
+    var_dump(LibreMVC\Mvc\Environnement::this());
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
     echo $message;
