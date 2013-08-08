@@ -44,12 +44,49 @@ class Errors {
         return json_encode($this);
     }
 
+    /**
+     * @return string
+     */
     public function toXmlNode() {
-        //@todo
+        return "<error>" . "\n\t" .
+                "<type>$this->errno</type>"."\n\t".
+                "<message>$this->errstr</message>"."\n\t".
+                "<file>$this->errfile</file>"."\n\t".
+                "<line>$this->errline</line>"."\n\t".
+                "<context>$this->errcontext</context>"."\n".
+                "</error>";
+
     }
 
+    /**
+     * <errors>
+     * <error>
+     *  <type>WARNING</type>
+     *  <message>this is ERROOOOOOOR</message>
+     *  <file></file>
+     *  <line></line>
+     *  <context></context>
+     * </error>
+     * </errors>
+     */
     public function toXmlFile() {
         $dom = new \DOMDocument('1.0','UTF-8');
+        $dom->formatOutput = true;
+        $root = $dom->createElement("errors");
+
+        $error = $dom->createElement("error");
+        $errno = $dom->createElement("type", $this->errno);
+        $errstr = $dom->createElement("message", $this->errstr);
+        $errline = $dom->createElement('line', $this->errline);
+        $context = $dom->createElement('context', $this->errcontext);
+
+        $error->appendChild($errno);
+        $error->appendChild($errstr);
+        $error->appendChild($errline);
+        $error->appendChild($context);
+        $root->appendChild($error);
+        $dom->appendChild($root);
+        return $dom->saveXML();
     }
 
     public function toSerializablePHP() {
