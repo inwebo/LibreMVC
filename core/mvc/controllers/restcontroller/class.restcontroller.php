@@ -9,13 +9,22 @@
 //@todo yeah!
 namespace LibreMVC\Mvc\Controllers;
 
+use LibreMVC\Http\Context;
 use LibreMVC\Mvc\Controllers\PageController;
 
 class RestController extends  PageController {
 
     public $verb;
-    public $accept;
+    public $accept = array();
+    public $mustBeLogged = true;
+    public $content;
 
-    public function __construct() {}
+    public function __construct() {
+        $this->verb = Context::getHttpVerb();
+    }
+
+    public function indexAction(){
+
+    }
 
 }
