@@ -22,11 +22,10 @@ class Header {
         header('ETag: ' . md5( time() ) );
     }
 
-    // @todo abstraction affichage
-    public static function redirect( $url, $delay = 0 ) {
+    public static function redirect( $url, $delay = 0, $message = "You will be redirected" ) {
         if( $delay > 0 ) {
             header('Refresh: '. $delay .'; url=' . $url);
-            print 'You will be redirected in '. $delay .' seconds';
+            print $message;
             exit;
         }
         else {
@@ -59,10 +58,6 @@ class Header {
         header('HTTP/1.1 304 Not Modified');
     }
 
-    public static function json() {
-        header('Content-type: application/json');
-    }
-
     public static function contentLength($size) {
         header('Content-Length: '.$size);
     }
@@ -90,9 +85,6 @@ class Header {
         self::disableKeepAlive();
     }
 
-    static public function isAjax() {
-
-    }
 
     public static function hideInfos() {
         header('Server: ');
@@ -107,8 +99,64 @@ class Header {
                 break;
         }
     }
-    
-    // @todo http://www.php.net/manual/fr/function.header.php#88875
-    /*header("Cache-Control: no-cache");
-    header("Expires: -1"); */
+
+    // Type Texte
+    public static function json() {
+        header('Content-type: application/json');
+    }
+
+    public static function xml() {
+        header('Content-type: text/xml');
+    }
+
+    public static function html() {
+        header('Content-type: text/html');
+    }
+
+    public static function plain() {
+        header('Content-type: text/plain');
+    }
+
+    public static function javascript() {
+        header('Content-type: application/javascript');
+    }
+
+    public static function csv() {
+        header('Content-type: text/csv');
+    }
+
+    public static function css() {
+        header('Content-type: text/css');
+    }
+
+    // Type Default
+    public static function octetStream() {
+        header('Content-type: application/octet-stream');
+    }
+
+    // Type Images
+    public static function gif() {
+        header('Content-type: image/gif');
+    }
+
+    public static function jpeg() {
+        header('Content-type: image/jpg');
+    }
+
+    public static function png() {
+        header('Content-type: image/png');
+    }
+
+    public static function tiff() {
+        header('Content-type: image/tiff');
+    }
+
+    public static function ico() {
+        header('Content-type: image/vnd.microsoft.icon');
+    }
+
+    public static function svg() {
+        header('Content-type: image/svg+xml');
+    }
+
 }
