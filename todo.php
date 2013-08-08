@@ -17,6 +17,7 @@ $.ajax({
 type: "GET",
 url: "http://www.inwebo.dev/LibreMVC/bookmark/",
 data: { name: "John", location: "Boston" },
+// Seter le type par default par text et heriter de la methode
     headers: {
         Accept : "application/json",
         "Content-Type": "application/json"

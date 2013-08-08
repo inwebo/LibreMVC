@@ -73,7 +73,7 @@ class Reply {
         return $this->msg;
     }
 
-    public function toText() {
+    public function toString() {
         return $this->msg;
     }
 
