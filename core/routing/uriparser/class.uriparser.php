@@ -45,7 +45,6 @@ class UriParser {
         $methods = get_class_methods($this->assertsObject);
         foreach( $methods as  $member ) {
             // Doit commencer par is, est donc une assertion
-            //@todo methode public
             $isAssert = !strncmp($member, "is", strlen("is"));;
 
             // Invoke l'assertion avec les bons arguments.
