@@ -11,5 +11,8 @@
     {/loop}
 </ul>
 <?php LibreMVC\Views::render(LibreMVC\Mvc\Environnement::this()->viewPath); ?>
+<footer>
+    Inwebo
+</footer>
 </body>
 </html>
