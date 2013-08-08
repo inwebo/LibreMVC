@@ -98,14 +98,6 @@ class Parser {
     );
 
     /**
-     * Chemin de base pour les différents assets de la vue. Si la chaine est vide
-     * rien n'est fait.
-     * @todo Implement
-     * @var string
-     */
-    public $baseHref;
-
-    /**
      * Lecture du contenu du fichier template. Création de l'ensemble des consta
      * ntes de l'application
      * @param string $templateFile Le chemin d'accés à un fichier template.
