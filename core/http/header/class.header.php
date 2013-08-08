@@ -80,7 +80,7 @@ class Header {
         self::notModified();
     }
     
-    public static function ajax() {
+    public static function noCache() {
         self::disableCache();
         self::disableKeepAlive();
     }
@@ -100,7 +100,12 @@ class Header {
         }
     }
 
-    // Type Texte
+    public static function set($key,$value) {
+        $_key = $key;
+        $_key = ( !is_null($_key) ) ? ucfirst( strtolower($_key) ) : null;
+        header($_key . ': ' . $value);
+    }
+
     public static function json() {
         header('Content-type: application/json');
     }
@@ -113,7 +118,7 @@ class Header {
         header('Content-type: text/html');
     }
 
-    public static function plain() {
+    public static function textPlain() {
         header('Content-type: text/plain');
     }
 
