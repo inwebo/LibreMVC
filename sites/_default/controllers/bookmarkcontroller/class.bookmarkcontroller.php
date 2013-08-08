@@ -16,44 +16,15 @@ use LibreMVC\Views;
 use LibreMVC\Http\Context;
 class BookmarkController extends RestController{
 
+
     public function __construct() {
-        // Dans le HEADER http le token = signature, user= user, timestamp
         parent::__construct();
     }
 
-    public function indexAction(){
-        switch( strtolower($this->verb) ) {
-            case 'get':
-                $this->get();
-                break;
-            case 'post':
-                $this->post();
-                break;
-            case 'update':
-                $this->update();
-                break;
-            case 'delete':
-                $this->delete();
-                break;
-        }
-    }
-
     public function get() {
-        Header::ajax();
-        var_dump(apache_request_headers());
-        echo __METHOD__;
+        $this->httpReply->msg = 'Get';
     }
 
-    public function post() {
-        echo __METHOD__;
-    }
 
-    public function update() {
-        echo __METHOD__;
-    }
-
-    public function delete() {
-
-    }
 
 }
