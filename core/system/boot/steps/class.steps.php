@@ -31,9 +31,6 @@ class Steps {
         if(is_file( Environnement::this()->paths )) {
             include(Environnement::this()->paths['base_autoload'] );
         }
-        else {
-            //@todo message erreur
-        }
     }
 
     static public function loadRoutes() {}
