@@ -15,7 +15,9 @@
 //@todo framework javascript : objet error comme LibreMVC
 //@todo Framework javascript : Requêtes ajax doivent pouvoir être signées
 //@todo Au boot chargement des meta donnée de la page ou alors creation de nouvelles meta datas si n'existe pas encore en base.
-
+//@todo permaling, pingback voir wikipedia
+//@todo Rest controller devrait nettoyer les données entrantes
+//@todo modules font, images 
 /* Exemple
 $.ajax({
 type: "GET",

@@ -57,6 +57,7 @@ class Views {
 
     }
 
+    // @todo passer un id pour inclure le template dans une <div id="$id"></div>
     static public function render( $template ) {
         return Parser::render( $template );
     }
