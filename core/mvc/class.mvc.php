@@ -31,8 +31,7 @@ class MVC {
 
     public function exec() {
         if( $this->registered ) {
-
-            // Method exist ET public
+            $this->parameters = (is_null($this->parameters)) ? array() : $this->parameters;
             if( method_exists( $this->class, $this->method ) ) {
                 $reflectionMethod = new  \ReflectionMethod( $this->class, $this->method );
                 return $reflectionMethod->invokeArgs(
@@ -46,7 +45,7 @@ class MVC {
 
         }
         else {
-            //ErrorsController::throwHttpError('404');
+            ErrorsController::throwHttpError('404');
             throw new \Exception( $this->class .$this->method.'() ' .  ' is not registered, include it !' );
         }
     }
