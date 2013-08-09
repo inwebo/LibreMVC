@@ -24,7 +24,7 @@ class Asserts {
 
     static public function isNamedRoute( $uri, $route ) {
         // Chaine commence par route name
-        return ( $uri->value === $route->name ) ? true : false ;
+        return ( $uri->value === $route->name ) ;
     }
 
     static public function isUriGreaterThanRoute( $uri, $route ) {

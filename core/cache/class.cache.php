@@ -2,6 +2,10 @@
 
 namespace LibreMVC;
 
+/**
+ * Class Cache
+ * @package LibreMVC
+ */
 class Cache {
 
     /**

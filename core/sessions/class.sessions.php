@@ -102,7 +102,7 @@ class Sessions {
         }
 
         if (!$this->isValid()) {
-            throw new Exception('Invalid session');
+            throw new \Exception('Invalid session');
         }
     }
 

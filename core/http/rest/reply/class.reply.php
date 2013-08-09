@@ -48,24 +48,21 @@ class Reply {
         return json_encode( $this );
     }
 
-    //@todo
     public function toXml() {
-        $dom = new \DOMDocument('1.0','UTF-8');
+        $dom               = new \DOMDocument('1.0','UTF-8');
         $dom->formatOutput = true;
-        $root = $dom->createElement("errors");
+        $reply             = $dom->createElement("reply");
 
-        $error = $dom->createElement("error");
-        $errno = $dom->createElement("type", $this->errno);
-        $errstr = $dom->createElement("message", $this->errstr);
-        $errline = $dom->createElement('line', $this->errline);
-        $context = $dom->createElement('context', $this->errcontext);
+        $msg       = $dom->createElement( "msg", $this->msg );
+        $user      = $dom->createElement( "user", $this->user );
+        $token     = $dom->createElement( "token", $this->token );
+        $timestamp = $dom->createElement( 'timestamp', $this->timestamp );
 
-        $error->appendChild($errno);
-        $error->appendChild($errstr);
-        $error->appendChild($errline);
-        $error->appendChild($context);
-        $root->appendChild($error);
-        $dom->appendChild($root);
+        $reply->appendChild( $msg );
+        $reply->appendChild( $user );
+        $reply->appendChild( $token );
+        $reply->appendChild( $timestamp );
+        $dom->appendChild( $reply );
         return $dom->saveXML();
     }
 

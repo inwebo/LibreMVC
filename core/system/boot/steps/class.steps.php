@@ -28,7 +28,7 @@ class Steps {
     static public function includeInstanceAutoloadFile() {
         Environnement::this()->paths = Instance::current()->processPattern(Config::load( "config/paths.ini" ), "", '' );
         Environnement::this()->instance = new Instance( Context::getUrl() );
-        if(is_file( Environnement::this()->paths )) {
+        if(is_file( Environnement::this()->paths['base_autoload'] )) {
             include(Environnement::this()->paths['base_autoload'] );
         }
     }
@@ -42,26 +42,19 @@ class Steps {
     static public function frontController() {
         $router = new Router( Uri::current(), RoutesCollection::getRoutes(), Asserts::load() );
         $routedRoute = $router->dispatch();
-        // @todo n'est pas peuplé ?
         Environnement::this()->controller  = $routedRoute->controller;
         Environnement::this()->action      = $routedRoute->action;
         Environnement::this()->params      = $routedRoute->params;
         Environnement::this()->routedRoute = $routedRoute;
-        //var_dump(Environnement::this());
         Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
             $routedRoute->params
         );
-
-
-
     }
 
     //@todo Load instance ini
-    static public function loadIniFilesFromInstances() {
-
-    }
+    static public function loadIniFilesFromInstances() {}
 
 
 }

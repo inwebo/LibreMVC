@@ -12,6 +12,7 @@ namespace LibreMVC\FrontController;
 /**
  * Class FrontController
  * @package LibreMVC\FrontController
+ * @todo devrait être indépendant du framework
  */
 class FrontController {
 

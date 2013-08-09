@@ -53,7 +53,7 @@ class RestController extends  PageController {
     protected $httpReply;
 
     public function __construct() {
-        $this->verb = Context::getHttpVerb();
+        $this->verb = strtolower(Context::getHttpVerb());
         $this->negotiateHttpContentType();
         Header::noCache();
         $this->httpHeader = (object)apache_request_headers();
@@ -62,14 +62,21 @@ class RestController extends  PageController {
             $this->user      = $this->httpHeader->user;
             $this->token     = $this->httpHeader->Token;
             $this->timestamp = $this->httpHeader->Timestamp;
-            $this->isValidUser();
+            // Okay
+            if( $this->isValidUser() ) {
+
+            }
+            // Quit
+            else {
+
+            }
         }
 
 
     }
 
-    public function indexAction(  ){
-        switch( strtolower($this->verb) ) {
+    public function indexAction( $id = null ){
+        switch( $this->verb ) {
             case 'get':
                 $this->get();
                 break;
@@ -106,7 +113,7 @@ class RestController extends  PageController {
     }
 
     public function isValidUser() {
-
+        return true;
     }
 
     public function negotiateHttpContentType() {

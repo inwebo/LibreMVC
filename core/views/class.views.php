@@ -81,12 +81,12 @@ class Views {
          *   transmis par le ViewBag dans une partie reservee
          */
         // Methode Courante (avant derniere)
+
         array_shift($debug);
         $method = $debug[0]['function'];
         $method = str_replace('Action','',$method);
         $class = strtolower($debug[0]['class']);
         $class = join('', array_slice(explode('\\', $class), -1));
-
         $instance = new Instance( Context::getUrl() );
         $paths = $instance->processPattern( Config::load( "config/paths.ini" ), $class, $method );
         Environnement::this()->viewPath = $paths['base_view'] ;

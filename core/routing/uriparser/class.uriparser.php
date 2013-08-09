@@ -16,8 +16,16 @@ use LibreMVC\Instance;
 
 class UriParser {
 
+    /**
+     * Représentation normée d'une uri
+     * @var object
+     */
     protected $uri;
-    protected $route;
+
+    /**
+     * @var
+     */
+    public $route;
 
     /**
      * @var object $asserts Un objet contenant les assertions à valider
@@ -75,9 +83,8 @@ class UriParser {
         return $valid;
     }
 
-    //@todo à fixer
-    public function processPattern( $strictMode = true ) {
-        $uriArray = $this->uri->toArray();
+    public function processPattern( $namedRoute = false ) {
+        $uriArray     = $this->uri->toArray();
         $patternArray = $this->route->patternToArray();
 
         $params = array();
@@ -123,7 +130,6 @@ class UriParser {
 
             $j++;
         }
-
         return $this->route;
     }
 

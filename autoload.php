@@ -38,17 +38,15 @@ try {
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
     // Default route
+    //@todo bug sur les routes nommées le chemin base_view n'est pas construit
     $defaultRoute = new \LibreMVC\Routing\Route();
-    $defaultRoute->name = "";
+    $defaultRoute->name = "/LibreMVC/yeah";
     $defaultRoute->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '[/][:action][/][:id][/]';
     $defaultRoute->controller = '\LibreMVC\Controllers\HomeController';
     $defaultRoute->action = 'index';
     \LibreMVC\Routing\RoutesCollection::addRoute($defaultRoute);
 
-
-
     new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
-
     //var_dump(LibreMVC\Mvc\Environnement::this());
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";

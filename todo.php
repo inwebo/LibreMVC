@@ -11,7 +11,11 @@
 //@todo permaling, pingback voir wikipedia
 //@todo Rest controller devrait nettoyer les données entrantes
 //@todo modules font, images
-
+//@todo Themes
+//@todo Refactoring benchmark
+//@todo class mail
+//@todo named routes
+//@todo base_controller inutile
 /* Exemple
 $.ajax({
 type: "GET",
