@@ -7,16 +7,18 @@ try {
 
     define('CSV', ';');
 
+    // Route nommée avec paramétres, doit rediriger
     $bookmarks = new \LibreMVC\Routing\Route();
-    $bookmarks->name = "";
-    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|idCategorie][/][page][/][:id|Page]';
+    $bookmarks->name = "/LibreMVC/hiphop";
+    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category/1/page/9';
     $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
     $bookmarks->action = 'category';
+    $bookmarks->params = array('idCategorie'=>1, 'Page'=>9);
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "";
-    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|idCategorie][/][page][/][:id|Page]';
+    $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category[/][:id|(int)idCategorie{#`{1}[a-z]`{1}#}][/][page][/][:id|Page]';
     $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
     $bookmarks->action = 'category';
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
