@@ -8,13 +8,17 @@ class Header {
         echo ($content === '') ? '403 Forbiden' : $content;
         die();
     }
-    
+
     public static function notFound( $content='' ) {
         header('HTTP/1.1 404 Not Found');
         echo ($content === '') ? '404 Not Found' : $content;
         die();
     }
-    
+
+    public static function movedPermanently() {
+        header('HTTP/1.1 301 Moved Permanently');
+    }
+
     public static function disableCache() {
         header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
         header('Expires: Thu, 14 Apr 1982 05:00:00 GMT');

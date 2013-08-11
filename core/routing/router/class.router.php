@@ -9,6 +9,8 @@
 
 namespace LibreMVC\Routing;
 
+use LibreMVC\Http\Context;
+use LibreMVC\Http\Header;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Routing\UriParser as UriParser;
 
@@ -36,6 +38,9 @@ class Router {
             }
 
             if( $parser->assertsResult['isNamedRoute'] ) {
+                // Redirection, unicité des routes
+                Header::movedPermanently();
+                header('Location: ' . Context::getServer( true, true ) .$this->routeCollection[$j]->pattern);
                 return $this->routeCollection[$j];
             }
 

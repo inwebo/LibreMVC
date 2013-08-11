@@ -10,7 +10,6 @@
 namespace LibreMVC\Controllers;
 use LibreMVC\Errors;
 use LibreMVC\Http\Header;
-use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Mvc\Controllers\RestController;
 use LibreMVC\Views;
 use LibreMVC\Http\Context;

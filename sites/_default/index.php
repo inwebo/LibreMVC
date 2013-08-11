@@ -14,7 +14,7 @@
         {/loop}
     </nav>
 </header>
-<?php LibreMVC\Views::render(LibreMVC\Mvc\Environnement::this()->viewPath); ?>
+<?php LibreMVC\Views::render( LibreMVC\Mvc\Environnement::this()->viewPath ); ?>
 <footer>
     Inwebo | LibreMVC framework Août 2013
 </footer>

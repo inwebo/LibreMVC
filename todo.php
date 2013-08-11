@@ -16,6 +16,8 @@
 //@todo class mail
 //@todo named routes
 //@todo base_controller inutile
+//@todo _db->query("SELECT * FROM my_tables_bookmarks",array("my_tables_")); plante car pas de ?
+
 /* Exemple
 $.ajax({
 type: "GET",
@@ -35,6 +37,4 @@ data: { name: "John", location: "Boston" },
 }).done(function( msg ) {
 console.log( msg );
 });
-
-
  */

@@ -66,6 +66,26 @@ class Context {
     }
 
     /**
+     * Retourne l'url du serveur courant
+     * @param bool $scheme
+     * @param bool $trailingSlash
+     * @return string
+     */
+    static public function getServer( $scheme = true, $trailingSlash = false ) {
+        $pageURL = "";
+        if( $scheme ) {
+            $pageURL .= 'http';
+            $pageURL .= (isset($_SERVER["HTTPS"])) ? 's' : '';
+            $pageURL .= "://";
+        }
+
+        $pageURL .=$_SERVER["SERVER_NAME"];
+        $pageURL .= ($_SERVER["SERVER_PORT"] != "80") ? ":" . $_SERVER["SERVER_PORT"] : '' ;
+        $pageURL .= ($trailingSlash) ? '/' : '';
+        return $pageURL;
+    }
+
+    /**
      * Retourne le verbe courant HTTP GET, POST, HEAD, DELETE ...
      *
      * @return mixed

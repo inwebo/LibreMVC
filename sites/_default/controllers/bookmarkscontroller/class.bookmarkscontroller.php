@@ -23,6 +23,7 @@ use LibreMVC\Mvc;
 use LibreMVC\Controllers;
 use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Mvc\Controllers\ErrorsController;
+
 class BookmarksController extends PageController{
 
     protected $_db;
@@ -40,22 +41,15 @@ class BookmarksController extends PageController{
     public function indexAction( $page = 1 ) {
         $f = new Pagination($this->_db->query("SELECT * FROM my_tables_bookmarks"));
         ViewBag::get()->bookmarks = $f->page($page);
-        $this->getAllCategories();
+        ViewBag::get()->categories = $this->getAllCategories();
         $a = $this->getBookmarksByCategory($this->getAllCategories());
         ViewBag::get()->bookmarks = $a;
         Views::renderAction();
     }
 
     protected function getAllCategories() {
-        $categories = $this->_db->query('SELECT * FROM my_tables_categories');
+        $categories = $this->_db->query("SELECT * FROM my_tables_categories");
         return $categories;
-    }
-
-    public function addbookmarkAction() {
-        Header::json();
-        echo json_encode(get_declared_classes());
-
-
     }
 
     protected function getBookmarksByCategory($categories, $limit = 20 ) {

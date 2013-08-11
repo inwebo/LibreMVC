@@ -29,7 +29,7 @@ class MVC {
         return class_exists( $this->class );
     }
 
-    public function exec() {
+    public function invoke() {
         if( $this->registered ) {
             $this->parameters = (is_null($this->parameters)) ? array() : $this->parameters;
             if( method_exists( $this->class, $this->method ) ) {
@@ -52,7 +52,7 @@ class MVC {
 
     static public function invoker( $class, $method, $parameters ) {
         $handler = new self( $class, $method, $parameters );
-        $handler->exec();
+        $handler->invoke();
     }
 
 }

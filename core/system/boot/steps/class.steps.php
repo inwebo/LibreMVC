@@ -18,8 +18,14 @@ use LibreMVC\Routing\RoutesCollection;
 use LibreMVC\Routing\UriParser\Asserts;
 use LibreMVC\Mvc;
 use LibreMVC\Http\Context;
+use LibreMVC\Views\Template\ViewBag;
 
 class Steps {
+
+    static public function registerEnvironnement() {
+        Environnement::this()->server = Context::getServer(true,true);
+        ViewBag::get()->server = Environnement::this()->server;
+    }
 
     static public function registerErrorHandler() {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
@@ -56,5 +62,8 @@ class Steps {
     //@todo Load instance ini
     static public function loadIniFilesFromInstances() {}
 
+    static public function loadHtmlPageMeta() {}
+
+    static public function urlsCollection() {}
 
 }

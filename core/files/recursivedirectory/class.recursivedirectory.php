@@ -118,7 +118,7 @@ Class RecursiveDirectory {
     /**
      * Merge SplObjectStorage
      *
-     * @param how many SplObjectStorage params as you want
+     * @param how many SplObjectStorage param as you want
      * @return SplObjectStorage
      */
     static protected function mergeSplObjectStorage() {

@@ -13,4 +13,6 @@ interface Modifiable {
     
     public function delete();
     public function save();
+    public function update();
+
 }

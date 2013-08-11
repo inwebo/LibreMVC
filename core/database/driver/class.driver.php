@@ -129,7 +129,7 @@ abstract class Driver {
             else if (isset($options[0]) && isset($options[1])) {
                 $this->pdoStatement->setFetchMode($options[0], $options[1]);
             }
-            // Fetch class params
+            // Fetch class param
             else {
                 $this->pdoStatement->setFetchMode($options[0], $options[1], $options[2]);
             }

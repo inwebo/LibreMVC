@@ -81,7 +81,7 @@ class Sessions {
      * Et test si c'est une session autorisée.
      *
      * @param  array $_args cf var $args
-     * @return array $params
+     * @return array $param
      * @throws exception si ce n'est pas une session autorisée
      */
     public function __construct($salt = null, $parametersDefaultValues = NULL) {

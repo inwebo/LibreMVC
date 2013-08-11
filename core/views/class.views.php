@@ -90,7 +90,8 @@ class Views {
         $instance = new Instance( Context::getUrl() );
         $paths = $instance->processPattern( Config::load( "config/paths.ini" ), $class, $method );
         Environnement::this()->viewPath = $paths['base_view'] ;
-        Parser::render($paths['base_index']);
+        //@todo css predix
+        Parser::render($paths['base_index'], false, true);
     }
 
 }

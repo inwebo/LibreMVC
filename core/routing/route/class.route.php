@@ -19,6 +19,7 @@ class Route extends Entity{
     public $controller;
     public $action;
     public $params;
+    public $type = 'page';
 
     public function extractMandatorySegment() {
         $crochetStart = strpos($this->pattern,"[");

@@ -46,6 +46,10 @@ namespace LibreMVC\Views\Template;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
+
+use LibreMVC\Views\Template;
+use LibreMVC\Views\Template\Task\TasksTag;
+
 class Parser {
 
     /**
@@ -79,7 +83,7 @@ class Parser {
      * @var array
      */
     public $constantes = array(
-        "PATTERN_NO_PARSE" => "#\{noparse\}(.*){/noparse\}#ismU",
+        "PATTERN_NO_PARSE" => "#\{noparse\}(.*)\{/noparse\}#ismU",
         "PATTERN_LOOP" => '#\{loop={1}"{1}\$([a-z]*)"}(.*)\{{1}\/loop\}{1}#ismU',
         "PATTERN_VAR" => '#\{\$([aA-zZ_]*)\}#',
         'PATTERN_CONST' => '#\{([A-Z_]*)\}#',
@@ -104,13 +108,13 @@ class Parser {
      */
     public function __construct($templateFile) {
         try {
-            $this->template = new \LibreMVC\Views\Template($templateFile);
+            $this->template = new Template($templateFile);
         } catch (\Exception $e) {
             echo $e->getMessage();
             throw new \Exception('');
         }
         $this->define();
-        $this->tasks = new \LibreMVC\Views\Template\Task\TasksTag();
+        $this->tasks = new TasksTag();
         $this->process();
     }
 
@@ -163,7 +167,7 @@ class Parser {
     }
 
 
-    static public function render( $file, $toString = false ) {
+    static public function render( $file, $toString = false, $cssId = false ) {
         try {
             $parser = new self( $file );
             return $parser->getContent( $toString );

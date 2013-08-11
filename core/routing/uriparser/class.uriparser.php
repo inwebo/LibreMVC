@@ -13,6 +13,7 @@ namespace LibreMVC\Routing;
 // Appliques toutes les methodes des asserts sur l'uri courante.
 
 use LibreMVC\Instance;
+use LibreMVC\Routing\UriParser\Param;
 
 class UriParser {
 
@@ -113,7 +114,7 @@ class UriParser {
                          * @todo Ajouter segment
                          */
                         case '[:instance]':
-                            //$params[] = Instance::getBaseDirRealPath();
+                            //$param[] = Instance::getBaseDirRealPath();
                             break;
 
                         default:
@@ -121,6 +122,9 @@ class UriParser {
                     }
 
                     if( strpos( $value, '[:id|' ) !== false ) {
+                        $param = new Param($patternArray[$j], $uriArray[$j]);
+                        echo($patternArray[$j].$uriArray[$j].$value);
+                        var_dump($param);
                         $parmName = explode( '|', $value );
                         $params[trim($parmName[1],']')] = $uriArray[$j];
                     }
