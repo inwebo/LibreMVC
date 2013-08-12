@@ -1,7 +1,7 @@
 <?php
 namespace LibreMVC\Mvc\Controllers;
 
-use LibreMVC\Views\Template\ViewBag;
+
 
 /**
  * LibreMVC
@@ -45,15 +45,27 @@ use LibreMVC\Views\Template\ViewBag;
  * @author     Inwebo Veritas <inwebo@gmail.com>
  * @abstract
  */
+use LibreMVC\Html\Document\Head;
+use LibreMVC\Views\Template\ViewBag;
+use LibreMVC\Mvc\Environnement;
 abstract class PageController {
 
     protected $_viewbag;
+
+    protected $_meta;
 
     /**
      * 
      */
     public function __construct() {
         $this->_viewbag = ViewBag::get();
+        Head::orm(Environnement::this()->_dbSystem, 'heads', 'md5');
+        $head = Head::getById( md5( Environnement::this()->instance->url ) );
+        if($head === false) {
+            $head = new Head(Environnement::this()->instance->url,'welcome');
+        }
+        $this->_meta = $head;
+        $this->_viewbag->meta = $this->_meta;
     }
 
     /**
@@ -94,6 +106,10 @@ abstract class PageController {
         if (property_exists($this, $attribut)) {
             return $this->$attribut;
         }
+    }
+
+    public  function __destruct() {
+        $this->_meta->save();
     }
 
 }

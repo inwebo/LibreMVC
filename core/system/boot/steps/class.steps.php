@@ -9,6 +9,7 @@
 
 namespace LibreMVC\System\Boot;
 
+use LibreMVC\Database;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Instance;
 use LibreMVC\Files\Config;
@@ -19,12 +20,13 @@ use LibreMVC\Routing\UriParser\Asserts;
 use LibreMVC\Mvc;
 use LibreMVC\Http\Context;
 use LibreMVC\Views\Template\ViewBag;
-
+use LibreMVC\Html\Document\Head;
+use LibreMVC\Database\Driver\SQlite;
 class Steps {
 
     static public function registerEnvironnement() {
         Environnement::this()->server = Context::getServer(true,true);
-        ViewBag::get()->server = Environnement::this()->server;
+
     }
 
     static public function registerErrorHandler() {
@@ -39,7 +41,16 @@ class Steps {
         }
     }
 
-    static public function loadRoutes() {}
+    static public function loadSystemDb() {
+        Environnement::this()->_dbSystem = Database::setup('system', new SQlite(Environnement::this()->paths['base_routes']));
+        Environnement::this()->_dbSystem = Database::get('system');
+    }
+
+    //@todo Load instance ini
+    static public function loadIniFilesFromInstances() {}
+
+
+    static public function urlsCollection() {}
 
     /**
      * Devrait être un Object Front controller
@@ -52,18 +63,17 @@ class Steps {
         Environnement::this()->action      = $routedRoute->action;
         Environnement::this()->params      = $routedRoute->params;
         Environnement::this()->routedRoute = $routedRoute;
+
+
+
         Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
             $routedRoute->params
         );
+
     }
 
-    //@todo Load instance ini
-    static public function loadIniFilesFromInstances() {}
 
-    static public function loadHtmlPageMeta() {}
-
-    static public function urlsCollection() {}
 
 }
