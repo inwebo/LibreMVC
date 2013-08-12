@@ -121,10 +121,10 @@ class UriParser {
                             break;
                     }
 
-                    if( strpos( $value, '[:id|' ) !== false ) {
-                        $param = new Param($patternArray[$j], $uriArray[$j]);
-                        echo($patternArray[$j].$uriArray[$j].$value);
-                        var_dump($param);
+                    if( strpos( $value, ':id|' ) !== false ) {
+                        //$param = new Param($patternArray[$j], $uriArray[$j]);
+                        //echo($patternArray[$j]);
+                        //var_dump($param);
                         $parmName = explode( '|', $value );
                         $params[trim($parmName[1],']')] = $uriArray[$j];
                     }

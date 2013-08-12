@@ -11,6 +11,8 @@ namespace LibreMVC;
 
 use LibreMVC\Mvc\Controllers\ErrorsController;
 use LibreMVC\Mvc\Environnement;
+use LibreMVC\System\Boot\Steps;
+
 class MVC {
 
     public $class;

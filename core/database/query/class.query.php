@@ -68,8 +68,8 @@ class Query {
      * @param String $var la clef à formatée
      * @return String Chaine formatée
      */
-    public static function toKey($var) {
-        return '`' . trim($var, '`') . '`';
+    public static function toKey(&$value, $key) {
+        $value = '`' . trim($value, '`') . '`';
     }
 
     /**
@@ -77,8 +77,8 @@ class Query {
      * @param String $value
      * @return String valeur formatée
      */
-    public static function toValue($value) {
-        return "'" . $value . "'";
+    public static function toValue(&$value, $key) {
+        $value = "'" . $value . "'";
     }
 
     /**
@@ -94,10 +94,12 @@ class Query {
         }
 
         $buffer = "";
-        $i = 0;
-        foreach ($publicAttributs['cols'] as $key) {
-            $buffer .= ' ' . $publicAttributs['cols'][$i] . '=' . $publicAttributs['values'][$i] . " ";
-            $i++;
+        $total = count($publicAttributs);
+        $j=1;
+        foreach ($publicAttributs as $key => $value) {
+            $buffer .= ' `' . $key . '`="' . $value . "\" ";
+            $buffer .= ( $total > 1 && $j < $total ) ? ', ' : '';
+            ++$j;
         }
         return $buffer;
     }

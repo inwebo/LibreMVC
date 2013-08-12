@@ -54,179 +54,83 @@ use LibreMVC\Database\Query;
  * @author     Inwebo Veritas <inwebo@gmail.com>
  * @abstract
  */
-abstract class Entity implements Modifiable {
+abstract class Entity {
 
-    // <editor-fold defaultstate="collapsed" desc="Attributs">
-    /**
-     * @var string Nom de la table au pluriel associée à l'instance courante.
-     */
-    private $table;
+    static protected $_dbResource;
+    static protected $_table;
+    static protected $_idRow;
+    protected  $public;
 
-    /**
-     * Clef primaire de la table courante
-     * @var String Clef primaire
-     */
-    protected $id = null;
-
-    /**
-     * Connexion valide vers une base de donnée.
-     * @var PDO
-     */
-    protected $driver;
-
-    /**
-     * Tous les attributs publique de l'instance courante.
-     * @var Array Equivalence nom de colonne / attribut de classe
-     */
-    protected $public;
-
-    /**
-     * Les tables peuvent être préfixés.
-     * @var String Prefix table utilisateur.
-     */
-    protected $tablePrefix;
-
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Construct">
     public function __construct() {
-        $this->driver = "default";
-        $this->public = $this->getPublicAttributs();
-        $this->table = $this->getTableName();
+        $this->bindAttributs();
     }
 
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="getTable Name">
-    protected function getTableName($plural = true) {
-        if (__NAMESPACE__ != '') {
-            $class = explode('\\', get_called_class());
-            $class = strtolower($class[count($class) - 1]);
-        } else {
-            $class = strtolower(get_called_class());
-        }
-
-        ($plural) ? $class .= 's' : null;
-
-        if (isset($this->tablePrefix)) {
-            $class = Query::toKey($this->tablePrefix . $class);
-        }
-
-        return $class;
+    static public function orm( $dbResource, $table, $idRow ) {
+        self::$_dbResource = $dbResource;
+        self::$_table      = $table;
+        self::$_idRow      = $idRow;
     }
 
-    /**
-     * Retourne un tableau associatif à deux entrées. Cela correspond à l'état
-     * de l'objet courant.
-     *
-     * <code>
-     *
-     * class user extends Entity{
-     *      public $id;
-     *      public $name,
-     *
-     *     public function __construct($id , $name) {
-     *         $this->id = 1;
-     *         $this->name = "inwebo";
-     *
-     *         echo $this->getPublicAttributs(),
-     *     }
-     *
-     * }
-     *
-     * // Retourne
-     * Array(
-     *      ['cols'] = Array(id, name);
-     *      ['value'] = Array(1, "Inwebo");
-     * )
-     *
-     * <code>
-     *
-     * @return Array
-     */
-    protected function getPublicAttributs() {
-        $bind = array();
-        foreach ($this->getReflectionObject() as $key => $value) {
-            $bind["cols"][] = Query::toKey($key);
-            $bind['values'][] = Query::toValue($value);
+    protected function bindAttributs() {
+        $ref = new ReflectionObject( $this );
+        $props = $ref->getProperties(ReflectionProperty::IS_PUBLIC);
+        $public = array();
+        foreach($props as $prop) {
+            false && $pro = new \ReflectionProperty();
+            $public[$prop->getName()] = $prop->getValue($this);
         }
-        return $bind;
+
+        $this->public = $public;
     }
 
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Reflection">
-    /**
-     * Retourne les attributs public de la class courante. Ils seront binder
-     * sur les noms de colonnes de la table courante.
-     *
-     * @return Array Les attributs public.
-     */
-    protected function getReflectionObject() {
-        $ref = new ReflectionObject($this);
-        $pros = $ref->getProperties(ReflectionProperty::IS_PUBLIC);
-        $result = array();
-        foreach ($pros as $pro) {
-            false && $pro = new ReflectionProperty();
-            $result[$pro->getName()] = $pro->getValue($this);
+    public function save(){
+        $this->bindAttributs();
+        if( is_null($this->id) ) {
+            $query = $this->insert();
         }
-        return $result;
+        else {
+            $query = $this->update();
+        }
+        return self::$_dbResource->query($query);
     }
-
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Modifiable">
-    /**
-     * Supprime la ligne en BDD associée à l'id courant.
-     * @return Bool True si la ligne est effacée sinon False
-     */
-    public function delete() {
-        $delete = "DELETE FROM " . $this->table . " WHERE id= '" . $this->id . "'";
-        if (!is_null($this->id) && (Driver::get($this->driver)->query($delete) !== false)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Sauvegarde les attributs public de l'object courant dans une ligne de la
-     * base de donnée.
-     *
-     * Si la ligne n'existe pas elle est crée. Sinon update de la ligne
-     *
-     */
-    public function save() {
-        if (is_null($this->id)) {
-            if (Driver::get($this->driver)->query($this->insert()) !== false) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (Driver::get($this->driver)->query($this->update()) !== FALSE) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+    public function delete(){
+        $this->bindAttributs();
+        $query = "DELETE FROM " . self::$_table . " WHERE ". self::$_idRow . "='" . $this->public[self::$_idRow] . "'";
+        self::$_dbResource->query($query);
     }
 
     public function insert() {
-        $this->public = $this->getPublicAttributs();
-        return "INSERT INTO " . $this->table . " ( " . implode(',', $this->public['cols']) . ') VALUES (' . implode(',', $this->public['values']) . ')';
+        $this->bindAttributs();
+        $keys = array_keys($this->public);
+        array_walk($keys,array('LibreMVC\Database\Query','toKey'));
+        $values = array_values($this->public);
+        array_walk($values, 'LibreMVC\Database\Query::toValue');
+        $query = "INSERT INTO " . self::$_table . " (" . implode(',', $keys) . ') VALUES (' . implode(',', $values) . ')';
+        return $query;
     }
 
     public function update() {
-        $this->public = $this->getPublicAttributs();
-        return "UPDATE " . $this->table . ' SET ' . Query::toCouple($this->public) . ' WHERE ' . ' `id` ' . ' = ' . $this->id;
+        $this->bindAttributs();
+        return "UPDATE " . self::$_table . ' SET ' . Query::toCouple($this->public) . ' WHERE ' . ' `'.self::$_idRow.'`' . ' = ' . $this->public[self::$_idRow];
+
     }
 
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="getters and setters">
-    public function __get($name) {
-        return ( isset($this->$name) ) ? $this->$name : trigger_error("Unknow attribut $name.");
+    static public function getById($id){
+        $query = "SELECT * FROM " . self::$_table . ' WHERE `' . self::$_idRow . '` = "' . $id . '"';
+        $values = self::$_dbResource->query($query);
+
+        if( !isset($values[0]) ) {
+            return false;
+        }
+        else {
+            $class = get_called_class();
+            $new = new $class;
+            foreach( $values[0] as $key => $value ) {
+                $new->$key = $value;
+            }
+            return $new;
+        }
+
     }
 
-    public function __set($name, $value) {
-        return $this->$name = $value;
-    }
-
-    // </editor-fold>
 }

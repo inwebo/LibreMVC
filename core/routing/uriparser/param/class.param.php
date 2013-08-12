@@ -60,6 +60,10 @@ class Param {
             case 'int':
                 return !preg_match('#[a-zA-Z]#', $this->dataIn);
                 break;
+
+            case 'regex':
+
+                break;
         }
     }
 
