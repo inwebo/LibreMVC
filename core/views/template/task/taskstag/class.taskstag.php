@@ -1,21 +1,5 @@
 <?php
 namespace LibreMVC\Views\Template\Task;
-use LibreMVC\Views\Template as Template;
-use LibreMVC\Views\Template\Logic as Logic;
-use LibreMVC\Views\Template\Logic\LogicComparison as LogicComparison;
-use LibreMVC\Views\Template\Logic\LogicConst as LogicConst;
-use LibreMVC\Views\Template\Logic\LogicIf as LogicIf;
-use LibreMVC\Views\Template\Logic\LogicInclude as LogicInclude;
-use LibreMVC\Views\Template\Logic\LogicLoop as LogicLoop;
-use LibreMVC\Views\Template\Logic\LogicNoparse as LogicNoparse;
-use LibreMVC\Views\Template\Logic\LogicTpl as LogicTpl;
-use LibreMVC\Views\Template\Logic\LogicVar as LogicVar;
-use LibreMVC\Views\Template\Parser as Parser;
-use LibreMVC\Views\Template\Tag as Tag;
-use LibreMVC\Views\Template\Task as Task;
-use LibreMVC\Views\Template\Task\TaskComparison as TaskComparison;
-use LibreMVC\Views\Template\ViewBag as ViewBag;
-
 
 /**
  * Collection de tâches.
@@ -29,6 +13,23 @@ use LibreMVC\Views\Template\ViewBag as ViewBag;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
+
+use LibreMVC\Views\Template;
+use LibreMVC\Views\Template\Logic;
+use LibreMVC\Views\Template\Logic\LogicComparison;
+use LibreMVC\Views\Template\Logic\LogicConst;
+use LibreMVC\Views\Template\Logic\LogicIf;
+use LibreMVC\Views\Template\Logic\LogicInclude;
+use LibreMVC\Views\Template\Logic\LogicLoop;
+use LibreMVC\Views\Template\Logic\LogicNoparse;
+use LibreMVC\Views\Template\Logic\LogicTpl;
+use LibreMVC\Views\Template\Logic\LogicVar;
+use LibreMVC\Views\Template\Parser;
+use LibreMVC\Views\Template\Tag;
+use LibreMVC\Views\Template\Task;
+use LibreMVC\Views\Template\Task\TaskComparison;
+use LibreMVC\Views\Template\ViewBag;
+
 class TasksTag extends \SplObjectStorage {
 
     /**
@@ -36,19 +37,19 @@ class TasksTag extends \SplObjectStorage {
      */
     public function __construct() {
         // No parse pattern {noparse}{/noparse}
-        $this->attach(new \LibreMVC\Views\Template\Task( new \LibreMVC\Views\Template\Tag(PATTERN_NO_PARSE), new \LibreMVC\Views\Template\Logic\LogicNoParse()) );
+        $this->attach( new Task( new Tag(PATTERN_NO_PARSE), new LogicNoParse()) );
         // Loop pattern {loop="array"}{/loop}
-        $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_LOOP), new \LibreMVC\Views\Template\Logic\LogicLoop()));
+        $this->attach( new Task( new Tag(PATTERN_LOOP), new LogicLoop() ) );
         // If pattern {if="condition"}true{else}false{fi}
-        $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_IF), new \LibreMVC\Views\Template\Logic\LogicIf()));
+        $this->attach( new Task( new Tag(PATTERN_IF), new LogicIf() ) );
         // variable pattern {$var}
-        $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_VAR), new \LibreMVC\Views\Template\Logic\LogicVar()));
+        $this->attach( new Task( new Tag(PATTERN_VAR), new LogicVar() ) );
         // Constante pattern {CONSTANTE}
-        $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_CONST), new \LibreMVC\Views\Template\Logic\LogicConst()));
+        $this->attach( new Task( new Tag(PATTERN_CONST), new LogicConst() ) );
         // Include pattern {include="fileToInclude"}
-        $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_INCLUDE), new \LibreMVC\Views\Template\Logic\LogicInclude()));
+        $this->attach( new Task( new Tag(PATTERN_INCLUDE), new LogicInclude() ) );
         // Tpl pattern {tpl="tplToInclude"}
-        $this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_TPL), new \LibreMVC\Views\Template\Logic\LogicTPL()));
+        $this->attach( new Task( new Tag(PATTERN_TPL), new LogicTPL() ) );
         // Href
         //$this->attach(new \LibreMVC\Views\Template\Task(new \LibreMVC\Views\Template\Tag(PATTERN_HREF), new \LibreMVC\Views\Template\Logic\LogicHref()));
     }

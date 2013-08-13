@@ -82,7 +82,13 @@ class Sessions {
      *
      * @param  array $_args cf var $args
      * @return array $param
-     * @throws exception si ce n'est pas une session autorisée
+     * @throws \Exception si ce n'est pas une session autorisée
+     */
+
+    /**
+     * @param null $salt
+     * @param null $parametersDefaultValues
+     * @throws \Exception
      */
     public function __construct($salt = null, $parametersDefaultValues = NULL) {
 

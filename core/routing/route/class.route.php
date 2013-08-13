@@ -37,7 +37,8 @@ class Route extends Entity{
         $named = preg_match_all(
             //@todo a revoir mange le crochet fermant
             "#\[{1}(.*)\]{1}#mU",
-            //"#\[{1}(.*\#\]|\]|\]\[)#mU",
+            //@todo a tester
+            //"#(\[:(.*)(\#\])|\[{1}(.*)\]{1})#mU",
             $this->pattern,
             $match
         );

@@ -14,7 +14,7 @@ namespace LibreMVC\Mvc\Controllers;
  *
  * Under the following conditions:
  * Attribution, You must attribute the work in the manner specified by
- * the author or licensor (but not in any way that suggests that they
+ * the author or licensor (but not in any way thant suggests that they
  * endorse you or your use of the work).
  *
  * Share Alike, If you alter, transform, or build upon

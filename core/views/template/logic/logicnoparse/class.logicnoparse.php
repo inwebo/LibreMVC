@@ -1,13 +1,6 @@
 <?php
 namespace LibreMVC\Views\Template\Logic;
-use LibreMVC\Views\Template as Template;
-use LibreMVC\Views\Template\Logic as Logic;
-use LibreMVC\Views\Template\Logic\LogicComparison as LogicComparison;
-use LibreMVC\Views\Template\Logic\LogicLoop as LogicLoop;
-use LibreMVC\Views\Template\Parser as Parser;
-use LibreMVC\Views\Template\Task as Task;
-use LibreMVC\Views\Template\Task\TaskComparison as TaskComparison;
-use LibreMVC\Views\Template\ViewBag as ViewBag;
+
 /**
  * LibreMVC
  *
@@ -56,7 +49,16 @@ use LibreMVC\Views\Template\ViewBag as ViewBag;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
-class LogicNoParse extends \LibreMVC\Views\Template\Logic {
+
+use LibreMVC\Views\Template;
+use LibreMVC\Views\Template\Logic;
+use LibreMVC\Views\Template\Logic\LogicComparison;
+use LibreMVC\Views\Template\Logic\LogicVar;
+use LibreMVC\Views\Template\Parser;
+use LibreMVC\Views\Template\Task;
+use LibreMVC\Views\Template\ViewBag;
+
+class LogicNoParse extends Logic {
 
     /**
      * Encode les { et }. Les balises seront ignorées par le parser.

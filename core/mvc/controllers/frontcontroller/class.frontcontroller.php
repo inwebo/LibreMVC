@@ -14,6 +14,9 @@ namespace LibreMVC\FrontController;
  * @package LibreMVC\FrontController
  * @todo devrait être indépendant du framework
  */
+
+use LibreMVC\Http\Request;
+
 class FrontController {
 
     protected $_request;
@@ -21,7 +24,7 @@ class FrontController {
     protected $_routeAsserts;
 
     public function __construct( $routes ) {
-        $this->_request = \LibreMVC\Http\Request::current();
+        $this->_request = Request::current();
         $this->_routes = $routes;
     }
 

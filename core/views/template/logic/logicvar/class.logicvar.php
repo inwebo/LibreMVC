@@ -50,7 +50,14 @@ use LibreMVC\Views\Template\Parser;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
-class LogicVar extends \LibreMVC\Views\Template\Logic {
+
+use LibreMVC\Views\Template;
+use LibreMVC\Views\Template\Logic;
+use LibreMVC\Views\Template\Logic\LogicComparison;
+use LibreMVC\Views\Template\Task;
+use LibreMVC\Views\Template\ViewBag;
+
+class LogicVar extends Logic {
 
     /**
      * Setter match. Applique une class métier sur un pattern PCRE.
@@ -61,7 +68,7 @@ class LogicVar extends \LibreMVC\Views\Template\Logic {
     public function process($match) {
         $this->match = $match;
         ob_start();
-        if (isset(self::$ViewBag->$match[1])) {
+        if ( isset( self::$ViewBag->$match[1] ) ) {
             echo( self::$ViewBag->$match[1] );
         } else {
             Parser::$trace[] = "ViewBag var ViewBag::$match[1] is not set";
@@ -89,6 +96,8 @@ class LogicVar extends \LibreMVC\Views\Template\Logic {
      * @return mixed La valeur de la variable en cours contenu dans le ViewBag
      */
     public function __get($match) {
+        //@todo child node
+        Parser::$trace[] = $match[1];
         return self::$ViewBag->$match[1];
     }
 

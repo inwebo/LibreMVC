@@ -122,7 +122,7 @@ class UriParser {
                     }
 
                     if( strpos( $value, ':id|' ) !== false ) {
-                        //$param = new Param($patternArray[$j], $uriArray[$j]);
+                        $param = new Param($patternArray[$j], $uriArray[$j]);
                         //echo($patternArray[$j]);
                         //var_dump($param);
                         $parmName = explode( '|', $value );

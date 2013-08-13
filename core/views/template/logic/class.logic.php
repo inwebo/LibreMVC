@@ -45,6 +45,9 @@ namespace LibreMVC\Views\Template;
  * @since      File available since Beta
  * @abstract
  */
+
+use LibreMVC\Views\Template\ViewBag;
+
 abstract class Logic {
 
     /**
@@ -71,7 +74,7 @@ abstract class Logic {
      * @todo Injection de dépendance.
      */
     public function __construct() {
-        self::$ViewBag = \LibreMVC\Views\Template\ViewBag::get();
+        self::$ViewBag = ViewBag::get();
     }
 
     /**

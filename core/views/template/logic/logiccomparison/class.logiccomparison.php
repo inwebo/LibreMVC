@@ -1,14 +1,15 @@
 <?php
 namespace LibreMVC\Views\Template\Logic;
 
-use LibreMVC\Views\Template as Template;
-use LibreMVC\Views\Template\Logic as Logic;
-use LibreMVC\Views\Template\Logic\LogicLoop as LogicLoop;
-use LibreMVC\Views\Template\Logic\LogicVar as LogicVar;
-use LibreMVC\Views\Template\Parser as Parser;
-use LibreMVC\Views\Template\Task as Task;
-use \LibreMVC\Views\Template\Task\TasksComparison as TasksComparison;
-use LibreMVC\Views\Template\ViewBag as ViewBag;
+use LibreMVC\Views\Template;
+use LibreMVC\Views\Template\Logic;
+use LibreMVC\Views\Template\Logic\LogicLoop;
+use LibreMVC\Views\Template\Logic\LogicVar;
+use LibreMVC\Views\Template\Parser;
+use LibreMVC\Views\Template\Task;
+use LibreMVC\Views\Template\Task\TasksComparison;
+use LibreMVC\Views\Template\ViewBag;
+
 /**
  * LibreMVC
  *
@@ -54,7 +55,7 @@ use LibreMVC\Views\Template\ViewBag as ViewBag;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
-class LogicComparison extends \LibreMVC\Views\Template\Logic {
+class LogicComparison extends Template\Logic {
 
     /**
      * Pile de tâches à effectuer.
@@ -82,11 +83,11 @@ class LogicComparison extends \LibreMVC\Views\Template\Logic {
 
     /**
      * Applique une classe métier LogicComparison au Tag if
-     * 
+     *
      * Retourne le resultat de la comparaison de deux variables selon un opérateur.
-     * 
-     * @param array $match Un tableau de retour de preg_match_all
-     * @return string Le contenu fichier template modifié par une fonction pcre
+     *
+     * @param array $subject Un tableau de retour de preg_match_all
+     * @return bool|void Le contenu fichier template modifié par une fonction pcre
      */
     public function process($subject) {
         $this->subject = $subject;

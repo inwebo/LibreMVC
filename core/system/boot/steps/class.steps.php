@@ -46,12 +46,11 @@ class Steps {
         Environnement::this()->_dbSystem = Database::get('system');
     }
 
-    //@todo Load instance ini
     static public function loadIniFilesFromInstances() {}
-
 
     static public function urlsCollection() {}
 
+    static public function getPlugins() {}
     /**
      * Devrait être un Object Front controller
      * Applique le pattron de concéption Commande

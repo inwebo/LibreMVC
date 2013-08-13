@@ -105,6 +105,7 @@ class Parser {
      * Lecture du contenu du fichier template. Création de l'ensemble des consta
      * ntes de l'application
      * @param string $templateFile Le chemin d'accés à un fichier template.
+     * @throws \Exception si template n'existe pas
      */
     public function __construct($templateFile) {
         try {
@@ -167,6 +168,12 @@ class Parser {
     }
 
 
+    /**
+     * @param $file
+     * @param bool $toString
+     * @param bool $cssId
+     * @return mixed
+     */
     static public function render( $file, $toString = false, $cssId = false ) {
         try {
             $parser = new self( $file );

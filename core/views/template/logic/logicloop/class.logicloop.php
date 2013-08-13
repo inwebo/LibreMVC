@@ -1,22 +1,6 @@
 <?php
 namespace LibreMVC\Views\Template\Logic;
 
-use LibreMVC\Views\Template as Template;
-use LibreMVC\Views\Template\Logic as Logic;
-use LibreMVC\Views\Template\Logic\LogicComparison as LogicComparison;
-use LibreMVC\Views\Template\Logic\LogicConst as LogicConst;
-use LibreMVC\Views\Template\Logic\LogicIf as LogicIf;
-use LibreMVC\Views\Template\Logic\LogicInclude as LogicInclude;
-use LibreMVC\Views\Template\Logic\LogicLoop as LogicLoop;
-use LibreMVC\Views\Template\Logic\LogicNoparse as LogicNoparse;
-use LibreMVC\Views\Template\Logic\LogicTpl as LogicTpl;
-use LibreMVC\Views\Template\Logic\LogicVar as LogicVar;
-use LibreMVC\Views\Template\Parser as Parser;
-use LibreMVC\Views\Template\Tag as Tag;
-use LibreMVC\Views\Template\Task as Task;
-use LibreMVC\Views\Template\Task\TaskComparison as TaskComparison;
-use LibreMVC\Views\Template\Task\TasksTag as TasksTag;
-use LibreMVC\Views\Template\ViewBag as ViewBag;
 /**
  * LibreMVC
  *
@@ -70,7 +54,16 @@ use LibreMVC\Views\Template\ViewBag as ViewBag;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
-class LogicLoop extends \LibreMVC\Views\Template\Logic {
+
+use LibreMVC\Views\Template;
+use LibreMVC\Views\Template\Logic;
+use LibreMVC\Views\Template\Logic\LogicComparison;
+use LibreMVC\Views\Template\Logic\LogicVar;
+use LibreMVC\Views\Template\Parser;
+use LibreMVC\Views\Template\Task;
+use LibreMVC\Views\Template\ViewBag;
+
+class LogicLoop extends Logic {
 
     /**
      * Boucle sur un tableau
@@ -85,7 +78,7 @@ class LogicLoop extends \LibreMVC\Views\Template\Logic {
             Parser::$trace[] = "Loop var $match[1] is not set";
             return null;
         }
-        $logic = new \LibreMVC\Views\Template\Logic\LogicVar();
+        $logic = new LogicVar();
        
         foreach (self::$ViewBag->$match[1] as self::$ViewBag->key => self::$ViewBag->value) {
             $buffer[] = preg_replace_callback(PATTERN_VAR, array($logic, 'process'), $match[2]);

@@ -1,21 +1,6 @@
 <?php
 namespace LibreMVC\Views\Template\Logic;
-use LibreMVC\Views\Template as Template;
-use LibreMVC\Views\Template\Logic as Logic;
-use LibreMVC\Views\Template\Logic\LogicComparison as LogicComparison;
-use LibreMVC\Views\Template\Logic\LogicConst as LogicConst;
-use LibreMVC\Views\Template\Logic\LogicIf as LogicIf;
-use LibreMVC\Views\Template\Logic\LogicInclude as LogicInclude;
-use LibreMVC\Views\Template\Logic\LogicLoop as LogicLoop;
-use LibreMVC\Views\Template\Logic\LogicNoparse as LogicNoparse;
-use LibreMVC\Views\Template\Logic\LogicTpl as LogicTpl;
-use LibreMVC\Views\Template\Logic\LogicVar as LogicVar;
-use LibreMVC\Views\Template\Parser as Parser;
-use LibreMVC\Views\Template\Tag as Tag;
-use LibreMVC\Views\Template\Task as Task;
-use LibreMVC\Views\Template\Task\TaskComparison as TaskComparison;
-use LibreMVC\Views\Template\Task\TasksTag as TasksTag;
-use LibreMVC\Views\Template\ViewBag as ViewBag;
+
 /**
  * LibreMVC
  *
@@ -65,7 +50,16 @@ use LibreMVC\Views\Template\ViewBag as ViewBag;
  * @since      File available since Beta
  */
 
-class LogicHref extends \LibreMVC\Views\Template\Logic {
+use LibreMVC\Views\Template;
+use LibreMVC\Views\Template\Logic;
+use LibreMVC\Views\Template\Logic\LogicComparison;
+use LibreMVC\Views\Template\Logic\LogicLoop;
+use LibreMVC\Views\Template\Logic\LogicVar;
+use LibreMVC\Views\Template\Parser;
+use LibreMVC\Views\Template\Task;
+use LibreMVC\Views\Template\ViewBag;
+
+class LogicHref extends Logic {
 
     /**
      * Setter match. Applique une class métier sur un pattern PCRE.

@@ -58,7 +58,7 @@ class Bookmark {
 		return base64_encode($this->favicon);
 	}
 	
-	public function asNetscapeBookmark() {
+	public function toNetscapeBookmark() {
 		return '<DT><A HREF="'. $this->url .'" ADD_DATE="'. $this->dateUnix() .'" LAST_VISITED="0" ICON="'. $this->faviconEncode() .'">'. $this->title .'</A>' . "\n";
 	}
 

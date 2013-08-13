@@ -25,6 +25,7 @@ class Param {
     public $valid = false;
 
     public function __construct( $segment, $dataIn ) {
+        echo $segment;
         $this->segment = trim($segment,'[]');
         $this->dataIn = $dataIn;
         $this->isNamed = $this->isNamed();
