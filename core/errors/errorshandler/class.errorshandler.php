@@ -2,6 +2,9 @@
 
 namespace LibreMVC\Errors;
 
+// Include manuel car autoloader n'est pas encore prêt
+include(dirname(__DIR__) . '/class.errors.php');
+
 use LibreMVC\Errors;
 
 class ErrorsHandler {
