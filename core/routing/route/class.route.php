@@ -36,14 +36,14 @@ class Route extends Entity{
 
         $named = preg_match_all(
             //@todo a revoir mange le crochet fermant
-            "#\[{1}(.*)\]{1}#mU",
+            //"#\[{1}(.*)\]{1}#mU",
             //@todo a tester
-            //"#(\[:(.*)(\#\])|\[{1}(.*)\]{1})#mU",
+            "#(\[:(.*)(\#\])|\[{1}(.*)\|\#\]$]{1})|\[{1}(.*)\]{1}#mU",
             $this->pattern,
             $match
         );
         //var_dump($match);
-        return ( $withoutMandatory === false ) ? array_merge($this->mandatoryToArray(),$match[0]) : $match[0] ;
+        return ( $withoutMandatory === false ) ? array_merge( $this->mandatoryToArray(), $match[0] ) : $match[0] ;
     }
 
     public function mandatoryToArray() {

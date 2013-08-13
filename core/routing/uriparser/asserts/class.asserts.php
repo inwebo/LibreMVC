@@ -49,11 +49,22 @@ class Asserts {
                     return false;
                 }
 
+                if( self::isParam(trim($patternArray[$j], '[]')) ) {
+                    $param = new Param($patternArray[$j], $uriArray[$j]);
+                    //echo($patternArray[$j]);
+                    //var_dump($param);
+                    if( $param->valid === false ) {
+                        return false;
+                    }
+                }
+
             }
 
             if( !self::isParam($requiredName) && !self::isSlash($requiredName) && isset($uriArray[$j]) && $requiredName !== $uriArray[$j] ) {
                 return false;
             }
+
+
 
             $j++;
         }
@@ -64,6 +75,7 @@ class Asserts {
         return trim(trim($string,'['),']');
     }
 
+    //@todo + finement :id
     static protected function isParam( $string ) {
         return ($string[0] === ":") ;
     }

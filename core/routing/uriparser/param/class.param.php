@@ -18,25 +18,19 @@ class Param {
     public $name;
     public $isTyped;
     public $type;
+    public $regex;
     public $validateType;
-    public $isSpelled;
-    public $spelling;
-    public $validateSpelling;
     public $valid = false;
 
     public function __construct( $segment, $dataIn ) {
-        echo $segment;
-        $this->segment = trim($segment,'[]');
-        $this->dataIn = $dataIn;
-        $this->isNamed = $this->isNamed();
-        $this->name = ($this->isNamed()) ? $this->getName() : null;
-        $this->isTyped = $this->isTyped();
-        $this->type = ($this->isTyped) ? $this->getType() : null ;
-        $this->validateType = ( $this->isTyped() ) ? $this->validateType() : null ;
-        $this->isSpelled = $this->isSpelled();
-        $this->spelling = ($this->isSpelled) ? $this->getSpelling() : null;
-        $this->validateSpelling = ($this->isSpelled) ? $this->validateSpelling() : null ;
-        $this->valid = $this->isValid();
+        $this->segment          = trim( $segment, '[]' );
+        $this->dataIn           = $dataIn;
+        $this->isNamed          = $this->isNamed();
+        $this->name             = ( $this->isNamed() ) ? $this->getName()      : null;
+        $this->isTyped          = $this->isTyped();
+        $this->type             = ( $this->isTyped )   ? $this->getType()      : null ;
+        $this->validateType     = ( $this->isTyped() ) ? $this->validateType() : null ;
+        $this->valid            = $this->isValid();
     }
 
     protected function isNamed() {
@@ -44,8 +38,14 @@ class Param {
     }
 
     protected function getName() {
-        $r = explode( '|', $this->segment );
-        return $r[1];
+        $name = explode( '|', $this->segment );
+        if($this->isTyped()) {
+            $name[1] = preg_replace('#\(.*\)#','',$name[1]);
+        }
+        if($this->isRegex()) {
+            $name[1] = preg_replace('#\#(.*)\##','',$name[1]);
+        }
+        return $name[1];
     }
 
     protected function isTyped() {
@@ -63,34 +63,27 @@ class Param {
                 break;
 
             case 'regex':
-
+                preg_match_all("#\#(.*)\##", $this->segment, $match);
+                $result = preg_match($match[0][0], $this->dataIn);
+                $this->regex = $match[0][0];
+                return ($result === 0) ? false : true;
                 break;
         }
-    }
-
-    protected function getSpelling() {
-        return $this->betweenChar(array('{','}'), $this->segment);
     }
 
     protected function betweenChar( $char, $segment ) {
         $pos   = array();
         $pos[] = strpos($this->segment, $char[0]);
-        $pos[] = strripos($this->segment, $char[1]);
+        $pos[] = strpos($this->segment, $char[1]);
         return substr( $this->segment, $pos[0] + 1, ( $pos[1] - $pos[0] ) -1 );
     }
 
-    protected function isSpelled() {
-        return preg_match("#{(.*)}#", $this->segment);
-    }
-
-    protected function validateSpelling() {
-        return preg_match($this->spelling, $this->dataIn);
+    protected function isRegex() {
+        return preg_match("#\#(.*)\##", $this->segment);
     }
 
     protected function isValid() {
-        $validateType = (is_null($this->type)) ? true : $this->type;
-        $validateSpelling = (is_null($this->validateSpelling)) ? true : $this->validateSpelling;
-        return $validateType && $validateSpelling ;
+        return $this->validateType ;
     }
 
 }
