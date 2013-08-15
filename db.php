@@ -148,7 +148,7 @@ $head->uri = 'http://www.inwebo.dev/LibreMVC/';
 $head->md5 =md5($head->uri);
 $head->description = 'one deux one deux';
 $head->keywords = 'test, arf';
-$head->author = 'jool';
+
 $head->title = "welcome";
 //$head->save();
 $head = Head::getById(1);
