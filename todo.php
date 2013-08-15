@@ -8,15 +8,11 @@
 //@todo framework javascript : objet error comme LibreMVC
 //@todo Framework javascript : Requêtes ajax doivent pouvoir être signées
 //@todo permaling, pingback voir wikipedia
-//@todo Rest controller devrait nettoyer les données entrantes
 //@todo modules font, images
 //@todo Themes
-//@todo Refactoring benchmark
 //@todo class mail
-//@todo named routes
 //@todo base_controller inutile
 //@todo _db->query("SELECT * FROM my_tables_bookmarks",array("my_tables_")); plante car pas de ?
-//@todo constante minimal php version like DRUPAL_MINIMUM_PHP
 /* Exemple
 $.ajax({
 type: "GET",
