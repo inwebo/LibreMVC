@@ -81,7 +81,7 @@ class Sessions {
      * Et test si c'est une session autorisée.
      *
      * @param  array $_args cf var $args
-     * @return array $param
+     * @return array $segment
      * @throws \Exception si ce n'est pas une session autorisée
      */
 

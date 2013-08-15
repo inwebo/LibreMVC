@@ -13,7 +13,7 @@ namespace LibreMVC\Routing;
 // Appliques toutes les methodes des asserts sur l'uri courante.
 
 use LibreMVC\Instance;
-use LibreMVC\Routing\UriParser\Param;
+use LibreMVC\Routing\UriParser\Segment;
 
 class UriParser {
 
@@ -111,10 +111,10 @@ class UriParser {
                             break;
 
                         /**
-                         * @todo Ajouter segment
+                         * @todo Ajouter asserts
                          */
                         case '[:instance]':
-                            //$param[] = Instance::getBaseDirRealPath();
+                            //$segment[] = Instance::getBaseDirRealPath();
                             break;
 
                         default:

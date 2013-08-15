@@ -63,8 +63,6 @@ class Steps {
         Environnement::this()->params      = $routedRoute->params;
         Environnement::this()->routedRoute = $routedRoute;
 
-
-
         Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
