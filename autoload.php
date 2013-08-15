@@ -7,12 +7,12 @@ try {
 
     define('CSV', ';');
 
-    // Route nommée avec paramétres, doit rediriger
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name = "/LibreMVC/hiphop";
     $bookmarks->pattern = \LibreMVC\Http\Context::getBaseDir( __FILE__, false ) . '/bookmarks/category/1/page/9';
     $bookmarks->controller = '\LibreMVC\Controllers\BookmarksController';
     $bookmarks->action = 'category';
+    //@todo serialize
     $bookmarks->params = array('idCategorie'=>1, 'Page'=>9);
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
@@ -30,7 +30,7 @@ try {
     $bookmarks->action = 'index';
     \LibreMVC\Routing\RoutesCollection::addRoute($bookmarks);
 
-    //@todo si il n'y a pas au minimum un segment facultatif bug
+    //@todo si il n'y a pas au minimum un asserts facultatif bug
     //@todo bugfixe léger[]
     $bookmarks = new \LibreMVC\Routing\Route();
     $bookmarks->name       = "";
