@@ -10,6 +10,7 @@
 namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
+use LibreMVC\Files\Directory;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Instance;
 use LibreMVC\Files\Config;
@@ -19,14 +20,14 @@ use LibreMVC\Routing\RoutesCollection;
 use LibreMVC\Routing\UriParser\Asserts;
 use LibreMVC\Mvc;
 use LibreMVC\Http\Context;
+use LibreMVC\System\Hooks;
 use LibreMVC\Views\Template\ViewBag;
-use LibreMVC\Html\Document\Head;
 use LibreMVC\Database\Driver\SQlite;
+use LibreMVC\Routing\Route;
 class Steps {
 
     static public function registerEnvironnement() {
         Environnement::this()->server = Context::getServer(true,true);
-
     }
 
     static public function registerErrorHandler() {
@@ -41,22 +42,46 @@ class Steps {
         }
     }
 
+    static public function autoloadPlugins() {
+        $dir = new Directory( Environnement::this()->paths['base_modules'] );
+        $dir->folders->rewind();
+        while($dir->folders->valid()) {
+            if(is_file($dir->folders->current()->realPath . '/autoload.php')) {
+                include($dir->folders->current()->realPath . '/autoload.php');
+            }
+            $dir->folders->next();
+        }
+    }
+
     static public function loadSystemDb() {
         Environnement::this()->_dbSystem = Database::setup('system', new SQlite(Environnement::this()->paths['base_routes']));
         Environnement::this()->_dbSystem = Database::get('system');
     }
 
-    static public function loadIniFilesFromInstances() {}
+    static public function defaultRoute() {
 
-    static public function urlsCollection() {}
+        Hooks::get()->callHooks('prependRoutes');
+        // Default route
+        //@todo bug sur les routes nommées le chemin base_view n'est pas construit
+        $defaultRoute = new Route();
+        $defaultRoute->name = "";
+        $defaultRoute->pattern = trim(Environnement::this()->instance->baseUri,'/').'[/][:action][/][:id][/]';
+        $defaultRoute->controller = '\LibreMVC\Controllers\HomeController';
+        $defaultRoute->action = 'index';
+        RoutesCollection::addRoute($defaultRoute);
+        Hooks::get()->callHooks('appendRoutes');
+    }
 
-    static public function getPlugins() {}
+
+
     /**
      * Devrait être un Object Front controller
      * Applique le pattron de concéption Commande
      */
     static public function frontController() {
+        //var_dump(RoutesCollection::getRoutes());
         $router = new Router( Uri::current(), RoutesCollection::getRoutes(), Asserts::load() );
+
         $routedRoute = $router->dispatch();
         Environnement::this()->controller  = $routedRoute->controller;
         Environnement::this()->action      = $routedRoute->action;
