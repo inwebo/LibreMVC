@@ -24,6 +24,7 @@ use LibreMVC\Controllers;
 use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Mvc\Controllers\ErrorsController;
 
+
 class BookmarksController extends PageController{
 
     protected $_db;
@@ -35,8 +36,9 @@ class BookmarksController extends PageController{
         parent::__construct();
         $this->_paths = Environnement::this()->paths;
         $this->_config = Config::load( $this->_paths['base_config'] . '_db.ini' , false);
-        Database::setup( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user,$this->_config->db_password ) );
+        Database::setup( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user, $this->_config->db_password ) );
         $this->_db = Database::get('bookmarks');
+        $this->_meta->base .="bookmarks/";
     }
 
     public function indexAction( $page = 1 ) {
@@ -63,10 +65,11 @@ class BookmarksController extends PageController{
 
     public function categoryAction( $idCategorie = 1, $page = 1 ) {
         //echo $idCategorie, $page;
-        $this->_meta->title = "Inwebo > Bookmarks > " . $page;
+;
         $category = $this->_db->query('SELECT * FROM my_tables_bookmarks WHERE category = ?', array($idCategorie));
         $categoryName = $this->_db->query('SELECT name FROM my_tables_categories WHERE id=?', array($idCategorie));
         $this->_meta->title = "Inwebo > Bookmarks > " . $categoryName[0]['name'] . ' > page > '. $page;
+        $this->_meta->description = "Annuaire de liens intéressants par Inwebo dans la catégorie " . $categoryName[0]['name'] . ' et à la page ' . $page;
         $f = new Pagination($category, $page);
         if( $page > $f->max ) {
             ErrorsController::throwHttpError("404");
