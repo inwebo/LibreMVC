@@ -34,16 +34,18 @@ class Asserts {
     }
 
     static public function isValidPattern($uri, $route) {
+        //@todo refactoring
         $valid = true;
         $uriArray = $uri->toArray();
         $patternArray = $route->patternToArray();
+
         //var_dump($patternArray);
         $j = 0;
         foreach( $patternArray as $value ) {
-
+            //echo $patternArray[$j];
             // Creation
             $segment = new Segment($patternArray[$j], $uriArray[$j]);
-            var_dump($segment);
+            //var_dump($segment);
 
             $mandatory  = !( is_int( strpos($value,'[') ) ) ? true : false;
             //echo (int) $mandatory;
@@ -57,14 +59,17 @@ class Asserts {
             }
 
             if( !self::isParam($requiredName) && !self::isSlash($requiredName) && isset($uriArray[$j]) && $requiredName !== $uriArray[$j] ) {
-
                 return false;
             }
 
 
             if( self::isParam(trim($patternArray[$j], '[]')) && isset($uriArray[$j]) ) {
+                //echo $uriArray[$j];
                     $param = new Segment($patternArray[$j], $uriArray[$j]);
-                    self::$isValidParam = self::$isValidParam && $param->valid;
+                    self::$isValidParam = self::$isValidParam || $param->valid;
+                if( $param->valid === false  ) {
+                    return false;
+                }
             }
 
             $j++;
