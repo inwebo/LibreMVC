@@ -9,9 +9,11 @@
 
 namespace LibreMVC\Routing\UriParser;
 
-
+//@todo todo !
 class Segment {
 
+    public $mandatory;
+    public $rawSegment;
     public $segment;
     public $dataIn;
     public $isNamed;
@@ -23,6 +25,9 @@ class Segment {
     public $valid = false;
 
     public function __construct( $segment, $dataIn ) {
+
+        $this->rawSegment       = $segment;
+        $this->mandatory        = $this->isMandatory();
         $this->segment          = trim( $segment, '[]' );
         $this->dataIn           = $dataIn;
         $this->isNamed          = $this->isNamed();
@@ -49,7 +54,11 @@ class Segment {
     }
 
     protected function isTyped() {
-        return preg_match("#\({1}(.*)\){1}#", $this->segment);
+        return (preg_match("#\({1}(.*)\){1}#", $this->segment) === 0) ? false : true;
+    }
+
+    protected function isMandatory() {
+        return !($this->rawSegment[0] === "[");
     }
 
     protected function getType() {
