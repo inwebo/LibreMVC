@@ -84,9 +84,9 @@ class Parser {
      */
     public $constantes = array(
         "PATTERN_NO_PARSE" => "#\{noparse\}(.*)\{/noparse\}#ismU",
+        'PATTERN_CONST' => '#\{([A-Z_]*)\}#',
         "PATTERN_LOOP" => '#\{loop={1}"{1}\$([a-z]*)"}(.*)\{{1}\/loop\}{1}#ismU',
         "PATTERN_VAR" => '#\{\$([aA-zZ_]*)\}#',
-        'PATTERN_CONST' => '#\{([A-Z_]*)\}#',
         'PATTERN_INCLUDE' => '#\{include="([aA-zZ.]*)"\}#',
         'PATTERN_TPL' => '#\{tpl="([aA-zZ\.0-9]*)"\}#',
         'PATTERN_IF' => '#\{if "([aA-zZ0-9<!=>{$}]*)"\}(.*)\{else\}(.*)\{fi\}#ismU',
