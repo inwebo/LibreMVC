@@ -6,7 +6,7 @@
 ## What can i do ?
 * Databases abstraction layer, able to use MySQL, SQlite and many others
 * Able to work without database
-* REST API, server or client
+* REST
 * Smart routing system
 * Ligthweight template system
 * API : images, HTML5 form, REST
@@ -14,8 +14,8 @@
 * Multisites & multilinguals
 * Object Relational Mapping, easiest way to save object into database
 * Small javascript framework bundled
-* Well organized system extensive use of php NAMESPACES
+* Well organized system, extensive use of php NAMESPACES
 * SEO friendly, no freaky duplicate content with us !
-* Responsive & Adaptative design
+* Responsive & Adaptative design Gumby framework
 * Simple Theming system
 * And more
