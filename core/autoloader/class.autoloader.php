@@ -120,6 +120,12 @@ class AutoLoader {
 
     final function __clone() {}
 
+    static public function registerClass( $file ) {
+        if( is_file($file) ) {
+            include($file);
+        }
+    }
+
     static public function handler( $class ) {
         self::instance()->_class = $class;
 
