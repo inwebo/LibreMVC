@@ -44,9 +44,16 @@ class Router {
                 return $this->routeCollection[$j];
             }
 
-            if( $parser->assertsResult['isValidPattern'] ) {
-                return $parser->processPattern();
+            if( $parser->assertsResult['isValidParam'] === false ) {
+                return null;
             }
+
+            if( $parser->assertsResult['isValidPattern'] ) {
+
+                    return $parser->processPattern();
+            }
+
+
 
         }
 
