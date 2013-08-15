@@ -2,8 +2,7 @@
 
 namespace LibreMVC;
 
-use LibreMVC\Files\Config;
-use \LibreMVC\Http\Context as Context;
+
 
 /**
  * LibreMVC
@@ -48,6 +47,9 @@ use \LibreMVC\Http\Context as Context;
  * @since      File available since Beta
  */
 
+use LibreMVC\Files\Config;
+use LibreMVC\Http\Context;
+
 class Instance {
 
     protected  $default = "_default";
@@ -58,7 +60,7 @@ class Instance {
     public $realPath;
     public $includeUrl;
     /**
-     * ajouter mandatory segment
+     * ajouter mandatory asserts
      */
     /**
      * @var string Segment non obligatoire dans l'uri
@@ -83,7 +85,7 @@ class Instance {
     }
 
     static public function current( $baseDir = "sites/" ) {
-        return new self( \LibreMVC\Http\Context::getUrl(), $baseDir );
+        return new self( Context::getUrl(), $baseDir );
     }
 
     public function getRootDir() {
@@ -94,11 +96,9 @@ class Instance {
         $url = explode('.', self::toDirName( $this->url ) );
         $loop = count($url);
         $name = null;
-        $asDirName = "";
         for($i=1; $i <= $loop; $i++) {
-            //$asDirName =  self::toDirName( Context::getBaseDir() );
-            $asDirName .=  $this->baseDir . implode('.', $url);
-            if(is_dir($asDirName)) {
+            $asDirName =   implode('.', $url);
+            if(is_dir( getcwd() . "/" .$this->baseDir . $asDirName . "/")) {
                 return implode('.', $url);
             }
             array_pop($url);
