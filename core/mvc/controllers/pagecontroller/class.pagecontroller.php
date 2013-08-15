@@ -54,6 +54,8 @@ abstract class PageController {
 
     protected $_meta;
 
+    protected $_cachable;
+
     /**
      * 
      */
@@ -66,6 +68,7 @@ abstract class PageController {
         }
         $this->_meta = $head;
         $this->_viewbag->meta = $this->_meta;
+        $this->_viewbag->meta->baseUrl = Environnement::this()->instance->baseUrl;
     }
 
     /**
@@ -109,6 +112,8 @@ abstract class PageController {
     }
 
     public  function __destruct() {
+        // Si les metas on changés durant la vie de l'objet
+        $this->_viewbag->meta = $this->_meta;
         $this->_meta->save();
     }
 
