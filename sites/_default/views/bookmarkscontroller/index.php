@@ -8,9 +8,9 @@ use LibreMVC\Views\Template\ViewBag;
     <?php
     $i=1;
     foreach(ViewBag::get()->categories as $id => $categorie) {
-        echo '<h2><a href="category/' . $categorie['id']  .  '">'. $categorie['name'] .'</a></h2><ul>';
+        echo '<h2><a href="bookmarks/category/' . $categorie['id']  .  '">'. $categorie['name'] .'</a></h2><ul>';
         foreach(ViewBag::get()->bookmarks->$categorie['name'] as $k => $v) {
-            echo '<li><a href="'.$v['url'].'">'.$v['title'].'</a></li>';
+            echo '<li><a href="bookmarks/'.$v['url'].'">'.$v['title'].'</a></li>';
         }
         echo '</ul>';
     }

@@ -3,10 +3,8 @@ page :
 <?php
 $total = ViewBag::get()->totalPages;
 for($i=1;$i<=$total;$i++) {
-echo '<a href="'.\LibreMVC\Http\Context::getServer(true,true) .\LibreMVC\Http\Context::getBaseUri() . 'bookmarks/category/'.ViewBag::get()->categoryId.'/page/'.$i.'">'.$i.'</a> ';
+echo '<a href="bookmarks/category/'.ViewBag::get()->categoryId.'/page/'.$i.'">'.$i.'</a> ';
 }
-//@todo fixer ceci dans les segments
-echo (int) "01"==1;
 ?>
 
 <h3>{$categoryName}</h3>
@@ -18,6 +16,6 @@ echo (int) "01"==1;
 <?php
 $total = ViewBag::get()->totalPages;
 for($i=1;$i<=$total;$i++) {
-    echo '<a href="'.\LibreMVC\Http\Context::getServer(true,true) .\LibreMVC\Http\Context::getBaseUri() . 'bookmarks/category/'.ViewBag::get()->categoryId.'/page/'.$i.'">'.$i.'</a> ';
+    echo '<a href="bookmarks/category/'.ViewBag::get()->categoryId.'/page/'.$i.'">'.$i.'</a> ';
 }
 ?>
