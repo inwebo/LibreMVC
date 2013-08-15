@@ -12,6 +12,8 @@ namespace LibreMVC\Routing\UriParser;
 
 class Asserts {
 
+    static public $isValidParam = true;
+
     protected  function __construct() {}
 
     static public function load() {
@@ -35,40 +37,43 @@ class Asserts {
         $valid = true;
         $uriArray = $uri->toArray();
         $patternArray = $route->patternToArray();
-
+        //var_dump($patternArray);
         $j = 0;
         foreach( $patternArray as $value ) {
 
-            $mandatory  = ( is_int( strpos($value,'[') ) ) ? true : false;
+            // Creation
+            $segment = new Segment($patternArray[$j], $uriArray[$j]);
+            var_dump($segment);
+
+            $mandatory  = !( is_int( strpos($value,'[') ) ) ? true : false;
+            //echo (int) $mandatory;
             $requiredName = self::cleanParam($value);
 
             // Segment obligatoire
-            if( !$mandatory ) {
-
+            if( $mandatory ) {
                 if( !isset( $uriArray[$j] ) || $uriArray[$j] != $value ) {
                     return false;
                 }
-
-                if( self::isParam(trim($patternArray[$j], '[]')) ) {
-                    $param = new Param($patternArray[$j], $uriArray[$j]);
-                    //echo($patternArray[$j]);
-                    //var_dump($param);
-                    if( $param->valid === false ) {
-                        return false;
-                    }
-                }
-
             }
 
             if( !self::isParam($requiredName) && !self::isSlash($requiredName) && isset($uriArray[$j]) && $requiredName !== $uriArray[$j] ) {
+
                 return false;
             }
 
 
+            if( self::isParam(trim($patternArray[$j], '[]')) && isset($uriArray[$j]) ) {
+                    $param = new Segment($patternArray[$j], $uriArray[$j]);
+                    self::$isValidParam = self::$isValidParam && $param->valid;
+            }
 
             $j++;
         }
         return $valid;
+    }
+
+    static public function isValidParam() {
+        return self::$isValidParam;
     }
 
     static protected function cleanParam( $string ) {

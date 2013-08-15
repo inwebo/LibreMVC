@@ -10,7 +10,7 @@
 namespace LibreMVC\Routing\UriParser;
 
 
-class Param {
+class Segment {
 
     public $segment;
     public $dataIn;
