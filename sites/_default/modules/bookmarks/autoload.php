@@ -8,6 +8,10 @@ LibreMVC\AutoLoader::instance()->addPool( './' );
 
 define('TPL_BOOKMARK', __DIR__ . '/views/tpl/bookmark.php');
 
+Hooks::get()->addHook( 'addDefaultSessionsVars', function (&$array) {
+    $array['1']['lg']="eee";
+    return $array;
+});
 
 Hooks::get()->addHook('prependRoutes', function(){
     $base_uri = trim(Environnement::this()->instance->baseUri,'/');
@@ -23,6 +27,13 @@ Hooks::get()->addHook('prependRoutes', function(){
     $bookmarks->name = "";
     $bookmarks->pattern = $base_uri.'/bookmarks[/][:id|(int)page][/]';
     $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarksController';
+    $bookmarks->action = 'index';
+    RoutesCollection::addRoute($bookmarks);
+
+    $bookmarks = new Route();
+    $bookmarks->name = "";
+    $bookmarks->pattern = $base_uri.'/bookmark[/][:id]';
+    $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarkController';
     $bookmarks->action = 'index';
     RoutesCollection::addRoute($bookmarks);
 

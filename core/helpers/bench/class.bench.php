@@ -33,21 +33,43 @@ class Benchmark {
     }
 
     protected function start() {
-        $this->memory      = memory_get_usage() - $this->memoryStart;
-        while( --$this->iterations >= 0  ) {
+        $loop = $this->iterations;
+        while( --$loop >= 0  ) {
             $this->callback->__invoke();
         }
         $this->timeEnd     = microtime();
         $this->timeElapsed = $this->timeEnd - $this->timeStart;
+        $this->memory      = memory_get_usage() - $this->memoryStart;
     }
 
     public function getResult() {
         return $this->timeElapsed;
     }
 
-    public function getMemoryUsage() {
-        return $this->memory;
+    public function getMemoryUsage($unit = 'o') {
+        switch( strtolower($unit)) {
+            default:
+            case 'o':
+                return $this->memory;
+                break;
+            case 'ko':
+                return $this->int2Size($this->memory);
+                break;
+            case 'mo':
+                return ceil($this->memory / (1024*2));
+                break;
+        }
+
     }
+
+    protected function int2Size($i, $b=1024){
+        $o=$i%1024;
+        $k=(int)(($i/$b)%$b);
+        $m=(int)(($i/$b/$b)%$b);
+        $g=(int)(($i/$b/$b/$b));
+        return (($g!=0)?($g.' Go '.$m.' Mo '.$k.' Ko '.$o.' o'):($m!=0)?($m.' Mo '.$k.' Ko '.$o.' o'):(($k!=0)?$k.' Ko '.$o.' o':$o.' o'));
+    }
+
 
     static public function bench( $iterations, $callback ) {
         return new self( $iterations, $callback );

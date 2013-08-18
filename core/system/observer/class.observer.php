@@ -1,8 +1,8 @@
 <?php
 
-namespace LibreMVC\Core\System;
+namespace LibreMVC\System;
 
-use LibreMVC\Core\System\Boot\Task as Task;
+use LibreMVC\System\Boot\Task;
 
 class Observer implements \SplObserver{
 

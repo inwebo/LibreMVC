@@ -2,6 +2,17 @@
 
 namespace LibreMVC;
 
+class __Cache{
+
+    public $id;
+    public $fileName;
+    public $storageDir;
+    public $birth;
+    public $death;
+    public $life;
+    public $isValid;
+}
+
 /**
  * Class Cache
  * @package LibreMVC
@@ -54,7 +65,7 @@ class Cache {
      * Chemin d'accés au répertoire contenant les fichiers de cache 
      * @var string
      */
-    public $pathDir = 'cache/';
+    public $pathDir = '../LibreMVC/sites/_default/cache/';
 
     /**
      * Temps unix de creation du fichier cache
@@ -164,15 +175,16 @@ class Cache {
     }
 
     private function setComments() {
-        $this->fileHeader = "\n" . '<!--------- ' . $this->id . ' ----------->' . "\n";
-        $this->fileFooter = "\n" . '<!--------- ' . 'Generated @ : ' . strftime('%c') . ' ----------->' . "\n";
+        $this->fileHeader = "\n" . '<!-- ' . $this->id . ' -->' . "\n";
+        $this->fileFooter = "\n" . '<!-- ' . 'Generated @ : ' . strftime('%c') . ' -->' . "\n";
     }
 
     private function getBuffer() {
         if ($this->htmlComments) {
-            $this->buffer = $this->fileHeader;
-            $this->buffer .= ob_get_contents();
-            $this->buffer .= $this->fileFooter;
+            $buffer = ob_get_contents();
+            $buffer = str_replace('<head>', '<head>' . $this->fileHeader, $buffer);
+            $buffer = str_replace('</body>', $this->fileFooter . "</body>" , $buffer);
+            $this->buffer = $buffer;
         } else {
             $this->buffer = ob_get_contents();
         }

@@ -6,11 +6,11 @@
  * @subpackage Image
  */
 
-namespace LibreMVC\Core;
+namespace LibreMVC;
 
-use LibreMVC\Img\GdResource as GdResource;
-use LibreMVC\Img\Edit as Edit;
-use LibreMVC\Img\Filter as Filter;
+use LibreMVC\Img\GdResource;
+use LibreMVC\Img\Edit;
+use LibreMVC\Img\Filter;
 
 /**
  * <p>Représentation sous forme d'objet d'une image locale ou provenant du web.</p>

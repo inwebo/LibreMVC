@@ -45,6 +45,7 @@ namespace LibreMVC\Mvc\Controllers;
  * @author     Inwebo Veritas <inwebo@gmail.com>
  * @abstract
  */
+use LibreMVC\Cache;
 use LibreMVC\Html\Document\Head;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Mvc\Environnement;
@@ -53,8 +54,11 @@ abstract class PageController {
     protected $_viewbag;
 
     protected $_meta;
+    protected $_metaStart;
+    protected $_metaEnd;
 
-    protected $_cachable;
+    protected $_cachable = false;
+    protected $_cache;
 
     /**
      * 
@@ -63,18 +67,26 @@ abstract class PageController {
         $this->_viewbag = ViewBag::get();
         Head::orm(Environnement::this()->_dbSystem, 'heads', 'md5');
         $head = Head::getById( md5( Environnement::this()->instance->url ) );
+        //@todo update head
         if($head === false) {
             $head = new Head(Environnement::this()->instance->url,'welcome');
         }
         $this->_meta = $head;
+        $this->_metaStart = clone $this->_meta;
         $this->_viewbag->meta = $this->_meta;
         $this->_viewbag->meta->baseUrl = Environnement::this()->instance->baseUrl;
+        if($this->_cachable) {
+            $this->_cache = new Cache( array( "pathDir"=>Environnement::this()->paths['base_cache']));
+            $this->_cache->start();
+        }
     }
 
     /**
      * Action par défaut du controller devrait être surchargée.
      */
-    public function indexAction() {}
+    public function indexAction() {
+        Views::renderAction();
+    }
 
     /**
      * Setter
@@ -111,10 +123,23 @@ abstract class PageController {
         }
     }
 
-    public  function __destruct() {
-        // Si les metas on changés durant la vie de l'objet
-        $this->_viewbag->meta = $this->_meta;
-        $this->_meta->save();
+    private function isMetaUpToDate() {
+        return $this->_meta === $this->_viewbag->_meta;
+    }
+
+    public function __destruct() {
+        // Meta
+        $this->_metaEnd = $this->_meta;
+        if( ($this->_metaStart == $this->_metaEnd) === false ) {
+            $this->_viewbag->meta = $this->_meta;
+            $this->_meta->save();
+        }
+
+        if($this->_cachable) {
+
+            $this->_cache->stop();
+        }
+
     }
 
 }

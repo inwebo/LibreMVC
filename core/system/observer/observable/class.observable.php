@@ -1,5 +1,5 @@
 <?php
-namespace LibreMVC\Core\System\Observer;
+namespace LibreMVC\System\Observer;
 
 class Observable implements \SplSubject{
 

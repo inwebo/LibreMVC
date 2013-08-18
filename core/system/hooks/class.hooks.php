@@ -33,9 +33,13 @@ class Hooks {
         $this->hooks[$hookName][] = $function;
     }
 
-    public function callHooks($name) {
+    public function callHooks($name, &$args = null) {
+        $args = func_get_args();
+        if(count($args) > 1) {
+            unset($args[0]);
+        }
         foreach($this->hooks[$name] as $functions) {
-            $functions->__invoke();
+            $functions($args);
         }
     }
 

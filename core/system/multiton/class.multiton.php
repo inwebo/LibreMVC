@@ -12,4 +12,34 @@ namespace LibreMVC\System;
 
 class Multiton {
 
+    /**
+     * Instances PDO valides nommées.
+     * @var Database
+     */
+    static private $instancies;
+
+    private function __construct() {}
+    private function __clone() {}
+
+    /**
+     * Retourne une instance nommée PDO valid.
+     *
+     * @param string $name
+     * @return Mixed
+     */
+    static public function get( $name ) {
+        if( isset( self::$instancies->$name ) ) {
+            return self::$instancies->$name;
+        }
+        else {
+            $c = __CLASS__;
+            self::$instancies->$name = new $c;
+            return self::$instancies->$name;
+        }
+    }
+
+    static public function toObject() {
+        return self::$instancies;
+    }
+
 }

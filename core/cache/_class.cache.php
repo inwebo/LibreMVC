@@ -6,7 +6,7 @@ namespace LibreMVC;
  * Class Cache
  * @package LibreMVC
  */
-class Cache {
+class _Cache {
 
     /**
      * Unique id, default file name

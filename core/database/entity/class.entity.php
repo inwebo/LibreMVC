@@ -101,6 +101,7 @@ abstract class Entity {
 
     public function insert() {
         $this->bindAttributs();
+
         $keys = array_keys($this->public);
         array_walk($keys,array('LibreMVC\Database\Query','toKey'));
         $values = array_values($this->public);
@@ -111,7 +112,7 @@ abstract class Entity {
 
     public function update() {
         $this->bindAttributs();
-        return "UPDATE " . self::$_table . ' SET ' . Query::toCouple($this->public) . ' WHERE ' . ' `'.self::$_idRow.'`' . ' = ' . $this->public[self::$_idRow];
+        return "UPDATE " . self::$_table . ' SET ' . Query::toCouple($this->public) . ' WHERE ' . ' `'.self::$_idRow.'`' . ' = "' . $this->public[self::$_idRow].'"';
 
     }
 

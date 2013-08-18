@@ -11,6 +11,7 @@ namespace LibreMVC\System;
  * dans le fichier declarant l'objet.
  *
  * @package LibreMVC\System
+ * @todo Oberver Observable ?
  */
 class Boot {
 

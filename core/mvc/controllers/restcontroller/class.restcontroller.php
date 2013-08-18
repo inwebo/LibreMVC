@@ -75,6 +75,10 @@ class RestController extends  PageController {
 
     }
 
+    /**
+     * @param null $id
+     * @todo les paramétres devraient être transmis !
+     */
     public function indexAction( $id = null ){
         switch( $this->verb ) {
             case 'get':

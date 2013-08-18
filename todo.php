@@ -13,6 +13,8 @@
 //@todo class mail
 //@todo base_controller inutile
 //@todo _db->query("SELECT * FROM my_tables_bookmarks",array("my_tables_")); plante car pas de ?
+//@todo filter chain pour le nettoyage de l'uri
+//@todo http://www.inwebo.dev/LibreMVC/ base controller byg
 /* Exemple
 $.ajax({
 type: "GET",

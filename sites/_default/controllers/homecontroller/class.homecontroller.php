@@ -1,6 +1,7 @@
 <?php
 namespace LibreMVC\Controllers;
 
+use LibreMVC\Form;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Http\Request;
 use LibreMVC\Database;
@@ -11,6 +12,8 @@ use LibreMVC\Mvc\Environnement;
 use LibreMVC\Errors;
 class HomeController extends PageController {
 
+    protected $_cachable = true;
+
     public function __construct() {
         parent::__construct();
         $this->_viewbag->baseHref = Environnement::this()->instance->baseUrl;
@@ -19,6 +22,10 @@ class HomeController extends PageController {
 
     public function indexAction() {
         $this->_viewbag->demoViewBag = "Depuis le viewbag !";
+        $this->_meta->title ="Welcome home visitors from fudtur;";
+        $t = new Form();
+        $t->attach(new Form\Input\Text());
+        echo $t;
         Views::renderAction();
     }
 
