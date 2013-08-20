@@ -11,6 +11,7 @@ namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
 use LibreMVC\Files\Directory;
+use LibreMVC\Html\Helpers\Includer\Js;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Instance;
@@ -26,7 +27,7 @@ use LibreMVC\System\Hooks;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Database\Driver\SQlite;
 use LibreMVC\Routing\Route;
-use LibreMVC\Cache;
+use LibreMVC\Html\Helpers\Includer\Css;
 class Steps {
 
     static public function registerEnvironnement() {
@@ -61,7 +62,7 @@ class Steps {
         Environnement::this()->_dbSystem = Database::get('system');
     }
 
-    static public function local() {
+    static public function localisation() {
         Localisation::setup('','','');
     }
 
@@ -97,8 +98,9 @@ class Steps {
     }
 
     static public function loadThemes() {
-        $css = array();
-        $js = array();
+        $css = Js::this();
+        $js  = Css::this();
+
         Hooks::get()->callHooks('loadThemes');
         // 1 - Parser Config
         $config = Config::load(Environnement::this()->paths['base_themes']."default/theme.ini");
@@ -112,6 +114,9 @@ class Steps {
      */
     static public function frontController() {
         //var_dump(RoutesCollection::getRoutes());
+        // Lock du singleton en lecture seule
+        Environnement::this()->readOnly = true;
+
         $router = new Router( Uri::current(), RoutesCollection::getRoutes(), Asserts::load() );
 
         $routedRoute = $router->dispatch();
