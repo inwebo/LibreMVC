@@ -10,7 +10,7 @@
 namespace LibreMVC\System;
 
 
-abstract class Singleton {
+class Singleton {
 
     /**
      * Instance unique du ViewBag
@@ -24,7 +24,7 @@ abstract class Singleton {
      * Constructeur privé.
      * Pattern singleton
      */
-    private function __construct() {}
+    protected function __construct() {}
     private function __clone() {}
 
     /**
@@ -35,7 +35,8 @@ abstract class Singleton {
      */
     public static function this() {
         if (!isset(self::$instance)) {
-            $c = __CLASS__;
+            $c = get_called_class();
+            echo $c;
             self::$instance = new $c;
         }
 
