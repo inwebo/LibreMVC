@@ -6,7 +6,7 @@ class __Cache{
 
     public $id;
     public $fileName;
-    public $storageDir;
+    public $path;
     public $birth;
     public $death;
     public $life;
@@ -26,46 +26,10 @@ class Cache {
     public $id;
 
     /**
-     * File prefix
-     * @var string
-     */
-    public $filePrefix;
-
-    /**
-     * File name
-     * @var string
-     */
-    public $fileName;
-
-    /**
-     * File extension
-     * @var string
-     */
-    public $fileExtension = '.html';
-
-    /**
-     * File cache header
-     * @var string
-     */
-    public $fileHeader;
-
-    /**
-     * File cache footer
-     * @var string
-     */
-    public $fileFooter;
-
-    /**
-     * Current file cache path
-     * @var string
-     */
-    public $file;
-
-    /**
      * Chemin d'accés au répertoire contenant les fichiers de cache 
      * @var string
      */
-    public $pathDir = '../LibreMVC/sites/_default/cache/';
+    public $path = '../LibreMVC/sites/_default/cache/';
 
     /**
      * Temps unix de creation du fichier cache
@@ -99,6 +63,9 @@ class Cache {
      */
     public $htmlComments = true;
 
+    public $htmlCommentsHeader;
+    public $htmlCommentsFooter;
+
     /**
      * Le fichier cache est il à jour
      * @var bool
@@ -107,13 +74,12 @@ class Cache {
 
     public function __construct($params = array()) {
         $this->__setMembers($params);
-        $this->id = md5($_SERVER['REQUEST_URI'] . $this->fileName);
-        $this->file = $this->setCurrentFile();
+        $this->file = $this->path . $this->id;
 
-        if (!file_exists($this->pathDir)) {
-            throw new \Exception('Dir ' . $this->pathDir . ' doesn\'t exists ');
-        } elseif (!is_writable($this->pathDir)) {
-            throw new \Exception('Dir ' . $this->pathDir . ' isn\'t writable ');
+        if (!file_exists($this->path)) {
+            throw new \Exception('Dir ' . $this->path . ' doesn\'t exists ');
+        } elseif (!is_writable($this->path)) {
+            throw new \Exception('Dir ' . $this->path . ' isn\'t writable ');
         } elseif (file_exists($this->file) && !is_writable($this->file)) {
             throw new \Exception('File ' . $this->file . ' isn\'t writable ');
         }
@@ -163,27 +129,16 @@ class Cache {
         return ($this->death < (integer) time()) ? false : true;
     }
 
-    private function setCurrentFile() {
-        $buffer = $this->pathDir . $this->filePrefix;
-        if (is_null($this->fileName)) {
-            $buffer .= $this->id;
-        } else {
-            $buffer .= $this->fileName;
-        }
-        $buffer .= $this->fileExtension;
-        return $buffer;
-    }
-
     private function setComments() {
-        $this->fileHeader = "\n" . '<!-- ' . $this->id . ' -->' . "\n";
-        $this->fileFooter = "\n" . '<!-- ' . 'Generated @ : ' . strftime('%c') . ' -->' . "\n";
+        $this->htmlCommentsHeader = "\n" . '<!-- ' . $this->id . ' -->' . "\n";
+        $this->htmlCommentsFooter = "\n" . '<!-- ' . 'Generated @ : ' . strftime('%c') . ' -->' . "\n";
     }
 
     private function getBuffer() {
         if ($this->htmlComments) {
             $buffer = ob_get_contents();
-            $buffer = str_replace('<head>', '<head>' . $this->fileHeader, $buffer);
-            $buffer = str_replace('</body>', $this->fileFooter . "</body>" , $buffer);
+            $buffer = str_replace('<head>', '<head>' . $this->htmlCommentsHeader, $buffer);
+            $buffer = str_replace('</body>', $this->htmlCommentsFooter . "</body>" , $buffer);
             $this->buffer = $buffer;
         } else {
             $this->buffer = ob_get_contents();
