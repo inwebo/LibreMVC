@@ -122,23 +122,23 @@ class Steps {
         ksort($bufferJs, SORT_NUMERIC);
         foreach($bufferJs as $v) {
             if( is_file( $themeRealPath . Js::this()->getType() . $v) ) {
-                $js->assets->$v = $themeRealPath  . Js::this()->getType() . $v;
+                $js->assets->js->$v =  Js::this()->getType() . $v;
             }
         }
 
-        $bufferCss = $config->StyleSheets;
+
+        $bufferCss = (array)$config->StyleSheets;
 
         ksort($bufferCss, SORT_NUMERIC);
 
         foreach($bufferCss as $v) {
-            if( is_file( $themeRealPath . Css::this()->getType() . $v) ) {
-                $css->assets->$v = $themeRealPath  . Css::this()->getType() . $v;
-
+            if( is_file( $themeRealPath . "/css/" . $v) ) {
+                $css->assets->css->$v =  "/css/" . $v;
             }
-            echo ( $themeRealPath . Css::this()->getType() . $v);
+            //echo ( $themeRealPath . Css::this()->getType() . $v);
         }
 
-        var_dump($css->assets);
+
 
     }
 

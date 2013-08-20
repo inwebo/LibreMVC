@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="http://www.inwebo.dev/LibreMVC/sites/default/themes/default/css/gumby.css">
     <link rel="stylesheet" href="themes/default/css/style.css">
     <base href="<?php echo ViewBag::get()->meta->baseUrl; ?>">
+    <?php
+    foreach (\LibreMVC\Html\Helpers\Includer\Css::this()->assets->css as $css) {
+        echo "<link rel='stylesheet' href='". Environnement::this()->instance->baseUrl . Environnement::this()->paths["base_themes"] ."default/$css'>";
+        }
+    ?>
 </head>
 <body>
 <header>
@@ -27,6 +32,11 @@
     </nav>
 </header>
 <?php Views::render( Environnement::this()->viewPath ); ?>
+<?php
+foreach (\LibreMVC\Html\Helpers\Includer\Css::this()->assets->js as $js) {
+    echo "<script href='". Environnement::this()->instance->baseUrl . Environnement::this()->paths["base_themes"] ."default/$js'>"."\n";
+}
+?>
 <footer>
     Inwebo | LibreMVC framework Août 2013
 </footer>
