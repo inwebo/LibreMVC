@@ -12,7 +12,7 @@ use LibreMVC\Mvc\Environnement;
 use LibreMVC\Errors;
 class HomeController extends PageController {
 
-    protected $_cachable = true;
+    protected $_cachable = false;
 
     public function __construct() {
         parent::__construct();
@@ -22,10 +22,7 @@ class HomeController extends PageController {
 
     public function indexAction() {
         $this->_viewbag->demoViewBag = "Depuis le viewbag !";
-        $this->_meta->title ="Welcome home visitors from fudtur;";
-        $t = new Form();
-        $t->attach(new Form\Input\Text());
-        echo $t;
+        $this->_meta->title ="Welcome home visitors from futur.";
         Views::renderAction();
     }
 
