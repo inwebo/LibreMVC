@@ -67,7 +67,6 @@ abstract class PageController {
         $this->_viewbag = ViewBag::get();
         Head::orm(Environnement::this()->_dbSystem, 'heads', 'md5');
         $head = Head::getById( md5( Environnement::this()->instance->url ) );
-        //@todo update head
         if($head === false) {
             $head = new Head(Environnement::this()->instance->url,'welcome');
         }
@@ -76,9 +75,20 @@ abstract class PageController {
         $this->_viewbag->meta = $this->_meta;
         $this->_viewbag->meta->baseUrl = Environnement::this()->instance->baseUrl;
         if($this->_cachable) {
-            $this->_cache = new Cache( array( "pathDir"=>Environnement::this()->paths['base_cache']));
+            $this->_cache = new Cache( array( 'path' => Environnement::this()->paths['base_cache'],
+                                              'id'=>$this->formatFileCacheName())
+
+            );
             $this->_cache->start();
         }
+    }
+
+    protected function formatFileCacheName() {
+        $controller = strtolower(str_replace("\\",".",trim(Environnement::this()->controller, "\\")));
+        $action     = strtolower(Environnement::this()->action);
+        $params     = urlencode(serialize(Environnement::this()->params));
+        $id         = md5( $controller.$action.$params );
+        return $id . "-" . $controller ."-". $action ."-". $params ;
     }
 
     /**
