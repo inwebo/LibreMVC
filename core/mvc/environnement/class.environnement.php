@@ -12,6 +12,7 @@ namespace LibreMVC\Mvc;
 
 class Environnement {
 
+    public $readOnly = false;
     public $controller;
     public $action;
     public $params;
@@ -56,7 +57,9 @@ class Environnement {
      * Setter
      */
     public function __set($key, $value) {
-        $this->$key = $value;
+        if( !$this->readOnly ) {
+            $this->$key = $value;
+        }
     }
 
     /**
