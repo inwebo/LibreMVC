@@ -14,21 +14,18 @@ use LibreMVC\System\Singleton;
 class Includer extends Singleton {
 
     public $assets;
+    public $type;
 
     protected function __construct() {
         $this->assets = new \StdClass();
     }
 
     protected function isValidAsset( $file ) {
-        echo __METHOD__;
         return is_file($file);
     }
 
-    public function __set($key, $value) {
-        echo __METHOD__;
-        if($this->isValidAsset($value)) {
-            $this->assets->$key = $value;
-        }
-    }
 
+    public function getType( $slashes = true ) {
+        return ( $slashes ) ? '/' . $this->type . '/' : $this->type;
+    }
 }

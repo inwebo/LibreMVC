@@ -28,6 +28,7 @@ use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Database\Driver\SQlite;
 use LibreMVC\Routing\Route;
 use LibreMVC\Html\Helpers\Includer\Css;
+
 class Steps {
 
     static public function registerEnvironnement() {
@@ -98,13 +99,46 @@ class Steps {
     }
 
     static public function loadThemes() {
-        $css = Js::this();
-        $js  = Css::this();
+        $js   = Js::this();
+        $css  = Css::this();
 
         Hooks::get()->callHooks('loadThemes');
+
+        // 0 - Recherche du themes courant du site
+        $themeRealPath = "";
+        $dir = new Directory( Environnement::this()->paths['base_themes'] );
+        $dir->folders->rewind();
+        while($dir->folders->valid()) {
+            $themeRealPath = $dir->folders->current()->realPath;
+            $dir->folders->next();
+        }
+
         // 1 - Parser Config
-        $config = Config::load(Environnement::this()->paths['base_themes']."default/theme.ini");
-        // 2 - Peupler l'includer
+        $config = Config::load( $themeRealPath . "/theme.ini" );
+
+        // 2 - Extract CSS / JS & order them by key
+
+        $bufferJs = (array)$config->Scripts;
+        ksort($bufferJs, SORT_NUMERIC);
+        foreach($bufferJs as $v) {
+            if( is_file( $themeRealPath . Js::this()->getType() . $v) ) {
+                $js->assets->$v = $themeRealPath  . Js::this()->getType() . $v;
+            }
+        }
+
+        $bufferCss = $config->StyleSheets;
+
+        ksort($bufferCss, SORT_NUMERIC);
+
+        foreach($bufferCss as $v) {
+            if( is_file( $themeRealPath . Css::this()->getType() . $v) ) {
+                $css->assets->$v = $themeRealPath  . Css::this()->getType() . $v;
+
+            }
+            echo ( $themeRealPath . Css::this()->getType() . $v);
+        }
+
+        var_dump($css->assets);
 
     }
 

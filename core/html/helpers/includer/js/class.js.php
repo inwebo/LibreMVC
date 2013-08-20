@@ -14,6 +14,8 @@ use LibreMVC\Html\Helpers\Includer;
 
 class Js extends Includer{
 
+    public $type = "js";
+
     protected function __construct() {
         parent::__construct();
     }

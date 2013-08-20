@@ -11,6 +11,12 @@ namespace LibreMVC\Html\Helpers\Includer;
 
 use LibreMVC\Html\Helpers\Includer;
 
-class Css extends Includer{
+class Css extends Includer {
+
+    public $type = "css";
+
+    protected function __construct() {
+        parent::__construct();
+    }
 
 }

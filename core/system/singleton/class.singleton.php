@@ -36,7 +36,6 @@ class Singleton {
     public static function this() {
         if (!isset(self::$instance)) {
             $c = get_called_class();
-            echo $c;
             self::$instance = new $c;
         }
 
