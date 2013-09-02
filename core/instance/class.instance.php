@@ -77,7 +77,8 @@ class Instance {
         $this->url = $url;
         $this->baseDir = $baseDir;
         $this->name = $this->getName();
-        $this->realPath = Context::getBaseDirRealPath(__DIR__) . $this->baseDir . $this->name . "/";
+        // @todo n'est pas les realpath racine de l'application
+        $this->realPath = Context::getBaseDirRealPath( getcwd() ) . $this->baseDir . $this->name . "/";
         $this->baseUrl = Context::getBaseUrl();
         $this->includeUrl = Context::getBaseUrl().$this->baseDir . $this->name . "/";
         $this->uri = Context::getInstanceUri($this->name);
@@ -122,9 +123,22 @@ class Instance {
             $processed[$k] = $this->processCallBack($v,$patternArray);
         }
 
-        return $processed;
+        return (object)$processed;
     }
 
+    public function processBaseIncludePattern( $baseUrl, $paths ) {
+        $processed = array();
+        foreach($paths as $k => $v) {
+            $processed[$k] = $baseUrl . $v;
+        }
+        return (object)$processed;
+    }
+
+    /**
+     * @param array $stringToProcess
+     * @param array $patterns
+     * @return mixed
+     */
     protected function processCallBack( $stringToProcess, $patterns ) {
         $treePool = $patterns;
         $search = array_keys($treePool);

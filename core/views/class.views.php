@@ -89,9 +89,11 @@ class Views {
         $class = join('', array_slice(explode('\\', $class), -1));
         $instance = new Instance( Context::getUrl() );
         $paths = $instance->processPattern( Config::load( "config/paths.ini" ), $class, $method );
-        Environnement::this()->viewPath = $paths['base_view'];
+        Environnement::this()->viewPath = $paths->base_view;
+        Environnement::this()->paths->base_view = $paths->base_view;
+        Environnement::this()->baseUrls->base_view = Environnement::this()->instance->baseUrl . $paths->base_view;
         //@todo css predix
-        echo Parser::render($paths['base_index'], true, true);
+        echo Parser::render($paths->base_index, true, true);
     }
 
 }

@@ -68,7 +68,7 @@ class Query {
      * @param String $var la clef à formatée
      * @return String Chaine formatée
      */
-    public static function toKey(&$value, $key) {
+    public static function toKey(&$value) {
         $value = '`' . trim($value, '`') . '`';
     }
 
@@ -77,7 +77,7 @@ class Query {
      * @param String $value
      * @return String valeur formatée
      */
-    public static function toValue(&$value, $key) {
+    public static function toValue(&$value) {
         $value = "'" . $value . "'";
     }
 

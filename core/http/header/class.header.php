@@ -62,6 +62,14 @@ class Header {
         header('HTTP/1.1 304 Not Modified');
     }
 
+    public static function unauthorized() {
+        header('HTTP/1.1 401 Unauthorized');
+    }
+
+    public static function badRequest() {
+        header('HTTP/1.1 400 Bad Request');
+    }
+
     public static function contentLength($size) {
         header('Content-Length: '.$size);
     }
