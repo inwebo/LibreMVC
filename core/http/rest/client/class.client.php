@@ -223,7 +223,7 @@ class Client {
     public function login( $user, $passPhrase ) {
         $this->user = $user;
         $this->logged = true;
-        $this->signature = self::signature( $user, $passPhrase );
+        $this->signature = self::signature( $user, $passPhrase, now() );
         return $this;
     }
 
@@ -293,10 +293,12 @@ class Client {
      *
      * @param string $user L'utilisateur courant
      * @param string $passPhrase La pass phrase associée à l'utilisateur courant
+     * @param int $timestamp
      * @return string
      */
-    static public function signature( $user, $passPhrase ) {
-        return  base64_encode( hash_hmac( "ripemd160",$user , $passPhrase ) ) ;
+    static public function signature( $user, $passPhrase, $timestamp ) {
+        // @todo le md5 devrait provenir de la bdd
+        return  base64_encode( hash_hmac( "sha256", $user , $passPhrase . $timestamp ) ) ;
     }
 
 }

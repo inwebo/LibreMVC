@@ -16,22 +16,38 @@
 //@todo filter chain pour le nettoyage de l'uri
 //@todo http://www.inwebo.dev/LibreMVC/ base controller byg
 /* Exemple
+var user = "inwebo";
+var pwd = CryptoJS.MD5("inwebo");
+var pwd = pwd.toString();
+
+
+
 $.ajax({
 type: "GET",
 url: "http://www.inwebo.dev/LibreMVC/bookmark/",
-data: { name: "John", location: "Boston" },
 // Seter le type par default par text et heriter de la methode
     headers: {
         Accept : "application/json",
         "Content-Type": "application/json"
     },
     beforeSend:function(xhr){
-        xhr.setRequestHeader('Timestamp', Date.now());
-        xhr.setRequestHeader('Token', Date.now());
-        xhr.setRequestHeader('User', Date.now());
+        var timestamp = Date.now();
+        xhr.setRequestHeader('User', user);
+        xhr.setRequestHeader('Timestamp', timestamp);
+        xhr.setRequestHeader('Token', restSignature(user, pwd,timestamp));
+
     }
 
 }).done(function( msg ) {
 console.log( msg );
 });
+
+
+function restSignature(user, pwd, timestamp) {
+    var hash = CryptoJS.HmacSHA256(user, pwd + timestamp);
+    console.log(btoa(hash));
+    return btoa(hash);
+}
+
+
  */
