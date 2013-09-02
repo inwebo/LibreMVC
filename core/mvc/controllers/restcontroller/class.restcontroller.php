@@ -13,6 +13,8 @@ use LibreMVC\Http\Context;
 use LibreMVC\Http\Header;
 use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Http\Rest\Reply;
+use LibreMVC\Http\Rest\Client;
+use LibreMVC\Mvc\Environnement;
 
 class RestController extends  PageController {
 
@@ -52,72 +54,92 @@ class RestController extends  PageController {
 
     protected $httpReply;
 
+
     public function __construct() {
-        $this->verb = strtolower(Context::getHttpVerb());
+        $this->verb = strtolower( Context::getHttpVerb() );
         $this->negotiateHttpContentType();
         Header::noCache();
         $this->httpHeader = (object)apache_request_headers();
-        $this->httpReply = new Reply();
-        if($this->isLoginIn()) {
-            $this->user      = $this->httpHeader->user;
+        $this->httpReply = new Reply("");
+        $this->setUser();
+        $this->validateRequest();
+    }
+
+    protected function setUser() {
+        if( $this->isLoginIn() ) {
+            $this->user      = $this->httpHeader->User;
             $this->token     = $this->httpHeader->Token;
             $this->timestamp = $this->httpHeader->Timestamp;
-            // Okay
-            if( $this->isValidUser() ) {
+        }
+    }
 
+    protected function validateRequest() {
+        if( !$this->public ) {
+            if( !$this->isLoginIn() ) {
+                Header::unauthorized();
+                $this->httpReply->valid = false;
+                $this->httpReply->msg = "Unauthorized request.";
             }
-            // Quit
             else {
-
+                if( !$this->isValidUser() ) {
+                    Header::badRequest();
+                    $this->httpReply->valid = false;
+                    $this->httpReply->msg = "Bad request.";
+                }
+                else {
+                    $this->httpReply = new Reply("", $this->user, Client::signature($this->user, md5("inwebo"), $this->timestamp), $this->timestamp);
+                }
             }
         }
+    }
 
-
+    protected function isValidUser() {
+        return true;
     }
 
     /**
-     * @param null $id
-     * @todo les paramétres devraient être transmis !
+     * @todo Check si la méthode existe sinon 405 405 	Method Not Allowed
      */
-    public function indexAction( $id = null ){
+    public function indexAction(){
+        $args = Environnement::this()->params;
         switch( $this->verb ) {
             case 'get':
-                $this->get();
+                $this->get($args);
                 break;
             case 'post':
-                $this->post();
+                $this->post($args);
                 break;
             case 'update':
-                $this->update();
+                $this->update($args);
                 break;
             case 'delete':
-                $this->delete();
+                $this->delete($args);
                 break;
         }
     }
 
-    public function get() {
+    /**
+     * Doit etre surchargée
+     */
+
+    public function get($args) {
         echo __METHOD__;
     }
 
-    public function post() {
+    public function post($args) {
         echo __METHOD__;
     }
 
-    public function update() {
+    public function update($args) {
         echo __METHOD__;
     }
 
-    public function delete() {
+    public function delete($args) {
 
     }
 
     public function isLoginIn() {
         return ( isset( $this->httpHeader->User ) && isset( $this->httpHeader->Token ) && isset( $this->httpHeader->Timestamp ));
-    }
-
-    public function isValidUser() {
-        return true;
     }
 
     public function negotiateHttpContentType() {
