@@ -11,7 +11,7 @@ namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
 use LibreMVC\Files\Directory;
-use LibreMVC\Html\Helpers\Includer\Js;
+use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Instance;
@@ -27,7 +27,6 @@ use LibreMVC\System\Hooks;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Database\Driver\SQlite;
 use LibreMVC\Routing\Route;
-use LibreMVC\Html\Helpers\Includer\Css;
 
 class Steps {
 
@@ -39,16 +38,19 @@ class Steps {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
     }
 
-    static public function includeInstanceAutoloadFile() {
+    static public function autoloadInstance() {
         Environnement::this()->paths = Instance::current()->processPattern(Config::load( "config/paths.ini" ), "", '' );
         Environnement::this()->instance = new Instance( Context::getUrl() );
-        if(is_file( Environnement::this()->paths['base_autoload'] )) {
-            include(Environnement::this()->paths['base_autoload'] );
+
+        Environnement::this()->baseUrls = Environnement::this()->instance->processBaseIncludePattern( Environnement::this()->instance->baseUrl, Environnement::this()->paths );
+
+        if(is_file( Environnement::this()->paths->base_autoload )) {
+            include(Environnement::this()->paths->base_autoload );
         }
     }
 
     static public function autoloadPlugins() {
-        $dir = new Directory( Environnement::this()->paths['base_modules'] );
+        $dir = new Directory( Environnement::this()->paths->base_modules );
         $dir->folders->rewind();
         while($dir->folders->valid()) {
             if(is_file($dir->folders->current()->realPath . '/autoload.php')) {
@@ -59,7 +61,7 @@ class Steps {
     }
 
     static public function loadSystemDb() {
-        Environnement::this()->_dbSystem = Database::setup('system', new SQlite(Environnement::this()->paths['base_routes']));
+        Environnement::this()->_dbSystem = Database::setup('system', new SQlite(Environnement::this()->paths->base_routes));
         Environnement::this()->_dbSystem = Database::get('system');
     }
 
@@ -88,59 +90,18 @@ class Steps {
         //echo(new Sessions(null, $sessions_vars[1]));
     }
 
-    static public function preRender() {
-        try {
+    static public function selectThemes() {
+        $config = Config::load("config/paths.ini", true);
+        $themeConf =  $config->Theme;
+        Hooks::get()->callHooks('loadTheme', $themeConf );
 
-        }
-        catch(\Exception $e) {
+        $theme = new Theme(Environnement::this()->paths->base_theme, Environnement::this()->instance->baseUrl ,$themeConf[1]->current);
 
-        }
-
-    }
-
-    static public function loadThemes() {
-        $js   = Js::this();
-        $css  = Css::this();
-
-        Hooks::get()->callHooks('loadThemes');
-
-        // 0 - Recherche du themes courant du site
-        $themeRealPath = "";
-        $dir = new Directory( Environnement::this()->paths['base_themes'] );
-        $dir->folders->rewind();
-        while($dir->folders->valid()) {
-            $themeRealPath = $dir->folders->current()->realPath;
-            $dir->folders->next();
-        }
-
-        // 1 - Parser Config
-        $config = Config::load( $themeRealPath . "/theme.ini" );
-
-        // 2 - Extract CSS / JS & order them by key
-
-        $bufferJs = (array)$config->Scripts;
-        ksort($bufferJs, SORT_NUMERIC);
-        foreach($bufferJs as $v) {
-            if( is_file( $themeRealPath . Js::this()->getType() . $v) ) {
-                $js->assets->js->$v =  Js::this()->getType() . $v;
-            }
-        }
-
-
-        $bufferCss = (array)$config->StyleSheets;
-
-        ksort($bufferCss, SORT_NUMERIC);
-
-        foreach($bufferCss as $v) {
-            if( is_file( $themeRealPath . "/css/" . $v) ) {
-                $css->assets->css->$v =  "/css/" . $v;
-            }
-            //echo ( $themeRealPath . Css::this()->getType() . $v);
-        }
-
-
+        Environnement::this()->Theme = $themeConf[1];
+        Environnement::this()->Theme->assets = $theme;
 
     }
+
 
     /**
      * Devrait être un Object Front controller

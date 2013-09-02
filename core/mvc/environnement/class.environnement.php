@@ -21,7 +21,7 @@ class Environnement {
     public $viewPath;
     public $instance;
     public $paths;
-
+    public $baseUrls;
 
 
     /**
