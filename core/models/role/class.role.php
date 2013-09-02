@@ -39,6 +39,17 @@ class Role {
     }
 
     static public function getRolePermissions($role_id = 3) {
+        /**
+        SELECT users.id as id, users.password as password, users.mail as mail,users.login as login,
+        roles.id as id_role, roles.type as role_type
+        FROM users
+        JOIN user_role on users.id_role = 1
+        JOIN roles on roles.id = users.id_role
+        JOIN role_perm on role_perm.id_role = users.id_role
+
+        WHERE users.id=1 LIMIT 1
+         */
+
         $role = new Role();
         $row = Driver::get("mysql")->query("SELECT perm_id, description
                                             FROM mvc_role_perm AS T1
