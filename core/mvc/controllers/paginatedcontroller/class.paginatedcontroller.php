@@ -10,6 +10,12 @@
 namespace LibreMVC\Mvc\Controllers;
 
 //@todo
-class PaginatedController {
+class PaginatedController extends PageController{
+
+
+
+    public function __construct() {
+        parent::__construct();
+    }
 
 }

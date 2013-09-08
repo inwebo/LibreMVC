@@ -33,7 +33,4 @@ define('ACTION', 'string');
 define('PARAMS','string');
 
 define('LIBREMVC_MINIMUM_PHP', '5.4');
-
-function includeCss() {
-
-}
+define('CSV', ';');
