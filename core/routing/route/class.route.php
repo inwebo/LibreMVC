@@ -70,4 +70,8 @@ class Route extends Entity{
         return $buffer;
     }
 
+    public function toString() {
+
+    }
+
 }
