@@ -11,6 +11,7 @@ namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
 use LibreMVC\Files\Directory;
+use LibreMVC\Helpers\BreadCrumbs;
 use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
@@ -102,6 +103,11 @@ class Steps {
 
     }
 
+    static public function loadBreadCrumbs() {
+        Environnement::this()->BreadCrumbs = BreadCrumbs::this();
+        //var_dump(Environnement::this()->BreadCrumbs = BreadCrumbs::this());
+        Hooks::get()->callHooks('addItemsToBreadCrumbs', Environnement::this()->BreadCrumbs);
+    }
 
     /**
      * Devrait être un Object Front controller
