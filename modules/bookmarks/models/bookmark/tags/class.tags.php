@@ -20,14 +20,24 @@ class Tags {
     }
 
     public function cleanInput() {
-        $cleaned= preg_replace("#,+#",' ',$this->rawData);
+        $cleaned= preg_replace("#(,)+#",' ',$this->rawData);
+        $cleaned= preg_replace("#-+#",' ',$cleaned);
+        $cleaned= preg_replace("#'+#",' ',$cleaned);
+        $cleaned= preg_replace("#\+#",' ',$cleaned);
+        $cleaned= preg_replace("#(\(|\))+#",' ',$cleaned);
+        $cleaned= preg_replace("#(<[a-zA-z]*>)+#",' ',$cleaned);
         return preg_replace("#( )+#",' ',$cleaned);
     }
 
     public function toArray() {
 		return $this->buffer;
     }
-	
+    public function toNormalizedArray(){
+        $t = $this->buffer;
+        $t = array_map('strtolower', $t);
+        asort($t);
+        return $t;
+    }
 	public function toString( $glue = " "){
 		return implode( $glue, $this->buffer );
 	}
