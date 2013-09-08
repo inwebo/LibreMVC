@@ -192,36 +192,35 @@ class Pagination {
      * </code>
      * 
      * @param int $items Le nombre d'items à paginés
-     * @param int $limite Nombre maximum d'items par page
+     * @param int $limit Nombre maximum d'items par page
      * @param int $page Le numéro de page demandé
      * @return Mixed Un tableau si les limites pour le numéro de page existent.
      * sinon null
      */
-    static public function sqlLimit($items, $limite, $page) {
-        $totalPage= ceil($items/$limite);
+    static public function sqlLimit($items, $limit, $page) {
+        $totalPage= ceil($items/$limit);
         if($page > $totalPage) {
-            $limit = null;
+            $_limit = null;
         }
         else {
-            $limit['start'] = $limite * $page - $limite;
-            $limit['end'] = $limite * $page - 1;
+            $_limit['start'] = $limit * $page - $limit;
+            $_limit['end'] = $limit * $page - 1;
         }
-        return $limit;
+
+        return $_limit;
     }
 
     /**
-     * 
-     * @param type $attribut
-     * @param type $value
+     * @param $items
+     * @param int $page
+     * @param int $limit
+     * @return Pagination
      */
     static public function dummyPagination($items, $page = 1, $limit = 20) {
         $subject = array_fill(0, $items, null);
         $pagination = new Pagination( $subject, $page, $limit );
         return $pagination;
     }
-
-
-
 
     public function __set($attribut, $value) {
         $this->$attribut = $value;

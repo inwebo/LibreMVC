@@ -98,7 +98,7 @@ class Theme {
 
         Hooks::get()->callHooks('prependJs');
         foreach($this->config->Js as $k => $v) {
-            echo $this->realPath . "js/" . $v;
+            //echo $this->realPath . "js/" . $v;
             if(is_file($this->realPath . "js/" . $v)) {
                 $url = "<script type='text/javascript' src='". $this->baseUrls->js . "" .$v . "' ></script>" . "\n";
                 $this->css->$k = $url;
