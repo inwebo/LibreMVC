@@ -2,7 +2,7 @@
     use LibreMVC\Views;
     use LibreMVC\Views\Template\ViewBag;
     use LibreMVC\Mvc\Environnement;
-
+/*
     $user = new \LibreMVC\Models\User();
     $a = \LibreMVC\Models\User::getById(1);
     var_dump($a);
@@ -13,6 +13,7 @@
     $inwebo = new \LibreMVC\Models\User(1);
 
     var_dump($inwebo);
+*/
 ?>
 <html>
 <head>
@@ -39,39 +40,62 @@
 </head>
 <body>
 <header>
-
-
-    <div class="row navbar unfixed" id="nav1">
-        <!-- Toggle for mobile navigation, targeting the <ul> -->
-        <a class="toggle" gumby-trigger="#nav1 > .row > ul" href="#"><i class="icon-menu"></i></a>
-        <h1 class="four columns logo">
-            <a href="#">
-                LibreMVC
-            </a>
-        </h1>
-        <ul class="eight columns">
-            {loop="$menus"}
-            <li> <a href="{$value}">{$value}</a></li>
-            {/loop}
-        </ul>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Bookmarks</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav pull-right">
+                    {loop="$menus"}
+                    <li> <a href="{$value}">{$value}</a></li>
+                    {/loop}
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
     </div>
-
-    <nav>
-        <ul>
-
-        </ul>
-    </nav>
 </header>
-<div class="example-grid grid">
-    <div class="row">
-        <div class="fourteen columns">
-<?php Views::render( Environnement::this()->viewPath ); ?>
+<div id="parallax-wrapper">
+    <div class="container">
+        <div class="starter-template">
+            <h1>Annuaire</h1>
+            <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
+                    <?php
+                    var_dump(ViewBag::get()->breadcrumbs);
+                        foreach( ViewBag::get()->breadcrumbs->items as $k => $v ) {
+                            if($v==="") {
+                                echo '<li>'.$k.'</li>';
+                            }
+                            else {
+                                echo '<li><a href="'.$v.'">'.$k.'</a></li>';
+                            }
+
+                        }
+                    ?>
+                </ol>
+            </div>
+                    <?php Views::render( Environnement::this()->viewPath ); ?>
+
         </div>
     </div>
 </div>
 
 <footer>
-    Inwebo | LibreMVC framework Août 2013
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10"><div class="col-container"><p>Lorem</p></div></div>
+            <div class="col-md-2"><div class="col-container text-center"><a class="footer-backtotop" href="">TOP</a> </div></div>
+        </div>
+    </div>
 </footer>
 </body>
 </html>
