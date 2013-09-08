@@ -150,6 +150,10 @@ abstract class PageController {
             $this->_cache->stop();
         }
 
+        if(isset($this->breadcrumbs)) {
+            Environnement::this()->BreadCrumbs =$this->breadcrumbs[1] ;
+        }
+
     }
 
 }
