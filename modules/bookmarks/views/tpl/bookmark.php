@@ -1,11 +1,28 @@
-<!-- One bookmark -->
-<li class="oneBookmark" data-hash="<?php //echo $row->hash; ?>" data-id="<?php //echo $row -> id; ?>" data-dt="<?php echo ViewBag::get()->bookmark['dt']; ?>" data-tags="<?php echo $row -> tagsAsString; ?>" data-category="<?php echo ViewBag::get()->bookmark['category']; ?>" data-visibility="<?php echo ViewBag::get()->bookmark['public']; ?>">
-    <h4><img src="<?php //echo $row->favicon; ?>" title="favicon">&nbsp;<a href="<?php echo ViewBag::get()->bookmark['url'] ?>"><span class="data-title"><?php echo stripcslashes(ViewBag::get()->bookmark['title']); ?></span></a></h4>
-    <p class="data-desc"><?php echo stripcslashes(ViewBag::get()->bookmark['description']); ?></p>
-    <ul class="meta">
-        <?php foreach (explode(' ',ViewBag::get()->bookmark['tags']) as $key => $value) { ?>
-            <li class="tags"><a href="<?php echo PATH_TAGS . $value ?>"><?php echo $value ?></a></li>
-        <?php } ?>
-    </ul>
-</li>
-<!-- /One bookmark -->
+<?php
+use LibreMVC\Views\Template\ViewBag;
+var_dump(md5("http://hannotin.julien.is.free.fr/"));
+?>
+
+<div data-bookmark-id="<?php echo md5( ViewBag::get()->bookmarks->current->url) ?>" data-bookmark-dt="<?php echo ViewBag::get()->bookmarks->current->dt ?>" data-bookmark-id-category="<?php echo ViewBag::get()->bookmarks->current->category ?>">
+    <dt>
+        <img width="16" height="16" src="http://www.inwebo.dev/LibreMVC/assets/img/favicon/<?php echo md5( ViewBag::get()->bookmarks->current->url) ?>.png">
+        <a href="<?php echo ViewBag::get()->bookmarks->current->url ?>"><?php echo ViewBag::get()->bookmarks->current->title ?></a>
+                                <span class="bookmark-panel">
+                                    <span class="label label-danger pull-right"><a href="">X</a></span>
+                                    <span class="label label-info pull-right"><a href="">Edit</a></span>
+                                </span>
+
+    </dt>
+    <dd><?php echo ViewBag::get()->bookmarks->current->description ?>
+        <?php
+            $tags = new \LibreMVC\Modules\Bookmarks\Models\Bookmark\Tags(ViewBag::get()->bookmarks->current->tags);
+            $tags = $tags->toArray();
+        ?>
+        <ul class="">
+            <li><span class="label label-info"><a href=""><span class="glyphicon glyphicon-tags"></span> Tags</a></span></li>
+            <?php foreach($tags as $tag) {?>
+                <li><span class="label label-primary"><a href="bookmarks/tag/<?php echo( $tag )?>"><?php echo( $tag )?></a></span></li>
+            <?php } ?>
+        </ul>
+    </dd>
+</div>
