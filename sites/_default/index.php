@@ -70,9 +70,8 @@
             <div class="col-md-12">
                 <ol class="breadcrumb">
                     <?php
-                    var_dump(ViewBag::get()->breadcrumbs);
                         foreach( ViewBag::get()->breadcrumbs->items as $k => $v ) {
-                            if($v==="") {
+                            if($v=="") {
                                 echo '<li>'.$k.'</li>';
                             }
                             else {

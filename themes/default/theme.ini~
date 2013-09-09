@@ -1,14 +1,22 @@
-[Misc]
+[Informations]
 name        = "Default"
 description = "Default main theme"
 version     = "01-09-2013"
 core        = "beta"
 screenshot  = ""
 
-[StyleSheets]
-1 = "gumby.css"
-2 = "style.css"
+[Core]
+css_1 = "bootstrap.min.css"
 
-[Scripts]
-1 = "jquery-1.10.2.min.js"
-2 = "ripemd160.js"
+js_1  = "jquery.min.js"
+js_1  = "jquery.min.js"
+js_2  = "ripemd160.js"
+js_3  = "md5.js"
+js_4  = "hmac-sha256.js"
+js_5  = "sha256.js"
+
+[Css]
+1 = "style.css"
+
+[Js]
+

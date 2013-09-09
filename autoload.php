@@ -7,12 +7,16 @@ try {
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
 
 
-    new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
+    new LibreMVC\System\Boot( 0);
+    //new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
 
     //var_dump(LibreMVC\Mvc\Environnement::this());
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
-    echo $message;
+    //echo $message;
+    \LibreMVC\Http\Header::serverError();
+    \LibreMVC\Views\Template\ViewBag::get()->error = $message;
+    include('error500.php');
 }
 /*
 if(php_sapi_name() == 'cli') {

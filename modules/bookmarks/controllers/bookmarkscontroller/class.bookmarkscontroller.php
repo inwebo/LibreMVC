@@ -44,8 +44,9 @@ class BookmarksController extends PageController{
         $this->_db = Database::get('bookmarks');
         $this->_meta->base .="bookmarks/";
 
+
+        $this->breadcrumbs[1]->items->home = Environnement::this()->instance->baseUrl ;
         $this->breadcrumbs[1]->items->bookmarks = $this->breadcrumbs[1]->items->home . "bookmarks/";
-        var_dump($this->breadcrumbs);
         ViewBag::get()->bookmarks = "";
         ViewBag::get()->bookmarks->categories = "";
     }
@@ -99,7 +100,7 @@ class BookmarksController extends PageController{
                                         WHERE t2.id = ?
                                         AND t1.category = ? Order by t1.dt desc LIMIT ' . $sqlLimit['start'] . ',25', array($idCategorie, $idCategorie));
 
-
+        $this->breadcrumbs[1]->items->category = "";
         $this->breadcrumbs[1]->items->$category[0]['name'] = $this->breadcrumbs[1]->items->category ."category/" .$category[0]['id'];
         $this->breadcrumbs[1]->items->page = $this->breadcrumbs[1]->items->category ."category/" .$category[0]['id'] . '/page/' . $page;
         $this->breadcrumbs[1]->items->$category[0]['id'] = "";
@@ -121,19 +122,18 @@ class BookmarksController extends PageController{
         //echo $tag;
         $tags = $this->_db->query('SELECT * FROM my_tables_bookmarks WHERE tags LIKE "%'.$tag.'%"', array($tag));
         $total = $this->_db->query('SELECT count(*) as total FROM my_tables_bookmarks WHERE tags LIKE "%'.$tag.'%"', array($tag));
-        var_dump('SELECT * FROM my_tables_bookmarks WHERE tags LIKE "%'.$tag.'%"');
+        //var_dump('SELECT * FROM my_tables_bookmarks WHERE tags LIKE "%'.$tag.'%"');
         $cat = new \StdClass();
         $cat->id = "";
         $cat->name = $tag;
         $cat->total = $total[0]['total'];
         $cat->bookmarks = $tags;
+        $this->breadcrumbs[1]->items->tag = "";
+        $this->breadcrumbs[1]->items->$tag = "";
         ViewBag::get()->bookmarks->categories = null;
         ViewBag::get()->bookmarks->categories->current = $cat;
+        ViewBag::get()->breadcrumbs = $this->breadcrumbs[1];
         Views::renderAction();
-    }
-
-    public function tagNormalize() {
-
     }
 
     public function tagsAction($tag="") {
@@ -144,7 +144,7 @@ class BookmarksController extends PageController{
         foreach($tags as $tag) {
             $t = new Tags($tag['tags']);
             $tagsArray = array_merge($tagsArray, $t->buffer);
-
+            var_dump($t->toNormalizedArray());
             //$imploded = strtolower(implode(" ", $t->buffer));
             //echo "UPDATE my_tables_bookmarks SET tags = '".$imploded."' WHERE my_tables_bookmarks.id = ". $tag['id'] ."" . '<br>';
             //$this->_db->query("UPDATE my_tables_bookmarks SET tags = '".$imploded."' WHERE my_tables_bookmarks.id = ". $tag['id'] .";");

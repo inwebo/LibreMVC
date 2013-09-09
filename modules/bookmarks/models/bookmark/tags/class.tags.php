@@ -35,6 +35,8 @@ class Tags {
     public function toNormalizedArray(){
         $t = $this->buffer;
         $t = array_map('strtolower', $t);
+        $t = array_flip($t);
+        $t = array_flip($t);
         asort($t);
         return $t;
     }

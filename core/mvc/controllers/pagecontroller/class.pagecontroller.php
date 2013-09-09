@@ -74,6 +74,7 @@ abstract class PageController {
         $this->_metaStart = clone $this->_meta;
         $this->_viewbag->meta = $this->_meta;
         $this->_viewbag->meta->baseUrl = Environnement::this()->instance->baseUrl;
+        $this->_viewbag->menus = $this->toMenuEntries();
         if($this->_cachable) {
             $this->_cache = new Cache( array( 'path' => Environnement::this()->paths['base_cache'],
                                               'id'=>$this->formatFileCacheName())

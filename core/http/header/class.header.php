@@ -70,6 +70,10 @@ class Header {
         header('HTTP/1.1 400 Bad Request');
     }
 
+    public static function serverError() {
+        header('HTTP/1.1 500 Server Error');
+    }
+
     public static function contentLength($size) {
         header('Content-Length: '.$size);
     }

@@ -1,12 +1,11 @@
 <?php
 use LibreMVC\Views\Template\ViewBag;
-var_dump(md5("http://hannotin.julien.is.free.fr/"));
 ?>
 
 <div data-bookmark-id="<?php echo md5( ViewBag::get()->bookmarks->current->url) ?>" data-bookmark-dt="<?php echo ViewBag::get()->bookmarks->current->dt ?>" data-bookmark-id-category="<?php echo ViewBag::get()->bookmarks->current->category ?>">
     <dt>
         <img width="16" height="16" src="http://www.inwebo.dev/LibreMVC/assets/img/favicon/<?php echo md5( ViewBag::get()->bookmarks->current->url) ?>.png">
-        <a href="<?php echo ViewBag::get()->bookmarks->current->url ?>"><?php echo ViewBag::get()->bookmarks->current->title ?></a>
+        <a href="<?php echo ViewBag::get()->bookmarks->current->url ?>"><?php echo stripslashes(ViewBag::get()->bookmarks->current->title) ?></a>
                                 <span class="bookmark-panel">
                                     <span class="label label-danger pull-right"><a href="">X</a></span>
                                     <span class="label label-info pull-right"><a href="">Edit</a></span>
