@@ -8,6 +8,10 @@ try {
         $args[1]->current = "default";
     });
 
+    Hooks::get()->addHook( 'addItemsToBreadCrumbs', function (&$array) {
+        $array[1]->items->home = Environnement::this()->instance->baseUrl;
+        $array = $array[1];
+    });
 
 } catch (\Exception $e) {
     $message = time() . ', ' . $e->getCode() . ', ' . $e->getFile() . ', ' . $e->getLine() . ', ' . $e->getMessage() . "\n";

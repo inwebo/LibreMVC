@@ -67,6 +67,7 @@ class Theme {
     protected function processConfig() {
         // Frameworks
         Hooks::get()->callHooks('prependCoreAssets');
+
         foreach($this->config->Core as $k => $v) {
             if( substr($k, 0,2) =='js' ) {
                 //echo $this->baseUrls->assets . 'js/' . $v . "<br>";

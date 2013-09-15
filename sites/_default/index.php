@@ -23,20 +23,9 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <base href="<?php echo ViewBag::get()->meta->baseUrl; ?>">
-    <?php
+    <?php css() ?>
+    <?php js()  ?>
 
-    foreach (Environnement::this()->Theme->assets->css as $css) {
-        echo $css;
-        }
-
-    ?>
-    <?php
-
-    foreach (Environnement::this()->Theme->assets->js as $js) {
-        echo $js;
-    }
-
-    ?>
 </head>
 <body>
 <header>
@@ -66,24 +55,29 @@
             <h1>Annuaire</h1>
             <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <ol class="breadcrumb">
-                    <?php
-                        foreach( ViewBag::get()->breadcrumbs->items as $k => $v ) {
-                            if($v=="") {
-                                echo '<li>'.$k.'</li>';
-                            }
-                            else {
-                                echo '<li><a href="'.$v.'">'.$k.'</a></li>';
-                            }
 
-                        }
-                    ?>
-                </ol>
-            </div>
-                    <?php Views::render( Environnement::this()->viewPath ); ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="breadcrumbs" data-spy="affix" data-offset-top="100">
+                    <ol class="breadcrumb">
+                        <?php
 
+                            foreach( ev()->BreadCrumbs->items as $k => $v ) {
+                                if($v=="") {
+                                    echo '<li>'.$k.'</li>';
+                                }
+                                else {
+                                    echo '<li><a href="'.$v.'">'.$k.'</a></li>';
+                                }
+
+                            }
+                        ?>
+                    </ol>
+                    </div>
+                </div>
+
+
+            <?php Views::render( Environnement::this()->viewPath ); ?>
         </div>
     </div>
 </div>

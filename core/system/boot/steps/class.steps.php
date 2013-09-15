@@ -57,6 +57,12 @@ class Steps {
             if(is_file($dir->folders->current()->realPath . '/autoload.php')) {
                 include($dir->folders->current()->realPath . '/autoload.php');
             }
+            if(is_file($dir->folders->current()->realPath . '/module.ini')) {
+                $currentValue = $dir->folders->current()->realPath . '/module.ini';
+                $currentKey = ucfirst($dir->folders->current()->name);
+                Environnement::this()->Modules = null;
+                Environnement::this()->Modules->$currentKey->config = $dir->folders->current() . "/module.ini";
+            }
             $dir->folders->next();
         }
     }
@@ -85,9 +91,9 @@ class Steps {
     }
 
     static public function startSession() {
-        $sessions_vars = array('lg'=>'fr');
-        Hooks::get()->callHooks('addDefaultSessionsVars', $sessions_vars);
-        new Sessions(null, $sessions_vars[1]);
+        //$sessions_vars = array('lg'=>'fr');
+        //Hooks::get()->callHooks('addDefaultSessionsVars', $sessions_vars);
+        //new Sessions(null, $sessions_vars[1]);
         //echo(new Sessions(null, $sessions_vars[1]));
     }
 
@@ -104,6 +110,7 @@ class Steps {
     }
 
     static public function loadBreadCrumbs() {
+        //var_dump(BreadCrumbs::this());
         Environnement::this()->BreadCrumbs = BreadCrumbs::this();
         //var_dump(Environnement::this()->BreadCrumbs = BreadCrumbs::this());
         Hooks::get()->callHooks('addItemsToBreadCrumbs', Environnement::this()->BreadCrumbs);

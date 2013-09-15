@@ -15,7 +15,14 @@
 //@todo _db->query("SELECT * FROM my_tables_bookmarks",array("my_tables_")); plante car pas de ?
 //@todo filter chain pour le nettoyage de l'uri
 //@todo http://www.inwebo.dev/LibreMVC/ base controller byg
+
+//@todo Widget bookmarks
+//@todo Clean Inputs au démarrage puis les placés dans $_ENV::Get(), Env::Post()
+//@todo Clean controllers bookmarks
+//@todo Autoload js
+//@todo Charger l'autoload du site AVANT celui des modules
 /* Exemple
+
 var user = "inwebo";
 var pwd = CryptoJS.MD5("inwebo");
 var pwd = pwd.toString();
@@ -48,6 +55,7 @@ function restSignature(user, pwd, timestamp) {
     console.log(btoa(hash));
     return btoa(hash);
 }
-
+// Favicon service
+$from = fopen( 'http://www.google.com/s2/favicons?domain='.$_GET['favicon'],'rb');
 
  */

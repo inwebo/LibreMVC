@@ -60,28 +60,54 @@ abstract class PageController {
     protected $_cachable = false;
     protected $_cache;
 
+    protected $_breadCrumbs;
+
     /**
      * 
      */
     public function __construct() {
         $this->_viewbag = ViewBag::get();
+        $this->prepareHeadMeta();
+        $this->prepareCache();
+        $this->prepareBreadcrumbs();
+        $this->prepareViewBag();
+    }
+
+    protected function prepareCache() {
+        if($this->_cachable) {
+            $this->_cache = new Cache( array( 'path' => Environnement::this()->paths->base_cache,
+                    'id'   => $this->formatFileCacheName())
+
+            );
+            $this->_cache->start();
+        }
+    }
+
+    // Devrait être invoqué AVANT prepareViewBag()
+    protected function prepareBreadcrumbs() {
+        $this->_breadCrumbs = Environnement::this()->BreadCrumbs;
+        $this->_breadCrumbs->items->home = Environnement::this()->instance->baseUrl ;
+    }
+
+    /**
+     * Par défault le viewbag contient les informations meta.
+     * 1 breadcrumbs
+     * 1 menu
+     */
+    protected function prepareViewBag() {
+        $this->_viewbag->meta = $this->_meta;
+        $this->_viewbag->meta->baseUrl = Environnement::this()->instance->baseUrl;
+        $this->_viewbag->menus = $this->toMenuEntries();
+    }
+
+    protected function prepareHeadMeta() {
         Head::orm(Environnement::this()->_dbSystem, 'heads', 'md5');
         $head = Head::getById( md5( Environnement::this()->instance->url ) );
         if($head === false) {
             $head = new Head(Environnement::this()->instance->url,'welcome');
         }
-        $this->_meta = $head;
-        $this->_metaStart = clone $this->_meta;
-        $this->_viewbag->meta = $this->_meta;
-        $this->_viewbag->meta->baseUrl = Environnement::this()->instance->baseUrl;
-        $this->_viewbag->menus = $this->toMenuEntries();
-        if($this->_cachable) {
-            $this->_cache = new Cache( array( 'path' => Environnement::this()->paths['base_cache'],
-                                              'id'=>$this->formatFileCacheName())
-
-            );
-            $this->_cache->start();
-        }
+        $this->_meta          = $head;
+        $this->_metaStart     = clone $this->_meta;
     }
 
     protected function formatFileCacheName() {
@@ -108,6 +134,10 @@ abstract class PageController {
         $this->$member = $value;
     }
 
+    /**
+     * @todo Trop de ressource
+     * @return object
+     */
     public function toMenuEntries() {
         $class = new \ReflectionClass($this);
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -134,10 +164,6 @@ abstract class PageController {
         }
     }
 
-    private function isMetaUpToDate() {
-        return $this->_meta === $this->_viewbag->_meta;
-    }
-
     public function __destruct() {
         // Meta
         $this->_metaEnd = $this->_meta;
@@ -151,8 +177,9 @@ abstract class PageController {
             $this->_cache->stop();
         }
 
-        if(isset($this->breadcrumbs)) {
-            Environnement::this()->BreadCrumbs =$this->breadcrumbs[1] ;
+        if( isset( $this->_breadCrumbs ) ) {
+            Environnement::this()->BreadCrumbs = $this->_breadCrumbs;
+            //var_dump($this->_breadCrumbs);
         }
 
     }

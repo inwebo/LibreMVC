@@ -10,6 +10,7 @@
 namespace LibreMVC\Modules\Bookmarks\Controllers;
 
 use LibreMVC\Errors;
+use LibreMVC\Form;
 use LibreMVC\Http\Header;
 use LibreMVC\Mvc\Controllers\RestController;
 use LibreMVC\Views;
@@ -34,5 +35,11 @@ class BookmarkController extends RestController{
 
     protected function isValidUser() {
         return ($this->token === Client::signature($this->user, md5("inwebo"), $this->timestamp));
+    }
+
+    public function formAction(){
+        //$form = new Form();
+        //$this->_viewbag->form = $form->toHtml(true);
+        //Views::renderAction();
     }
 }

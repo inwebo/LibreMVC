@@ -27,6 +27,7 @@ class HomeController extends PageController {
     }
 
     public function debugAction() {
+        $this->_breadCrumbs->items->debug="";
         ViewBag::get()->env = Environnement::this();
         Views::renderAction();
     }

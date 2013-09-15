@@ -222,3 +222,17 @@ FORM
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+#breadcrumbs.affix {
+    left: 0;
+    position: fixed;
+    top: 51px;
+    width: 100%;
+    z-index: 99999;
+    text-align: center;
+
+}
+
+#breadcrumbs.affix ol{
+    border-bottom: solid 1px #000000;
+}

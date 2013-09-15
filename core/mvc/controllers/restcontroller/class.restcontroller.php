@@ -167,7 +167,6 @@ class RestController extends  PageController {
 
     public function __destruct() {
         switch($this->httpHeader->Accept) {
-
             case 'application/json':
                 echo $this->httpReply->toJson();
                 break;
@@ -184,7 +183,6 @@ class RestController extends  PageController {
             case 'text/plain':
                 echo $this->httpReply->toString();
                 break;
-
         }
     }
 
