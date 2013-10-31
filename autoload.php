@@ -9,7 +9,7 @@ try {
 
 
     //new LibreMVC\System\Boot( 0);
-    new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Steps() );
+    new LibreMVC\System\Boot( new \LibreMVC\System\Boot\Mvc() );
     //echo \LibreMVC\Http\Context::getServer(true, true);
     //var_dump(LibreMVC\Mvc\Environnement::this());
 } catch (\Exception $e) {
