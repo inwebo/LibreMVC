@@ -29,6 +29,7 @@ use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Database\Driver\SQlite;
 use LibreMVC\Routing\Route;
 
+//@todo Boot MVC, peut exister boot CLI
 class Steps {
 
     static public function registerEnvironnement() {
@@ -102,7 +103,7 @@ class Steps {
         $themeConf =  $config->Theme;
         Hooks::get()->callHooks('loadTheme', $themeConf );
 
-        $theme = new Theme(Environnement::this()->paths->base_theme, Environnement::this()->instance->baseUrl ,$themeConf[1]->current);
+        $theme = new Theme( Environnement::this()->paths->base_theme, Environnement::this()->instance->baseUrl ,$themeConf[1]->current );
 
         Environnement::this()->Theme = $themeConf[1];
         Environnement::this()->Theme->assets = $theme;
@@ -114,6 +115,13 @@ class Steps {
         Environnement::this()->BreadCrumbs = BreadCrumbs::this();
         //var_dump(Environnement::this()->BreadCrumbs = BreadCrumbs::this());
         Hooks::get()->callHooks('addItemsToBreadCrumbs', Environnement::this()->BreadCrumbs);
+    }
+
+    static public function sanitizeSuperGlobal() {
+        //var_dump( $_GET );
+        $filterGet = new \LibreMvc\Helpers\Sanitize\SuperGlobal( $_GET );
+        $_GET = $filterGet->get();
+        //var_dump( $filterGet->get() );
     }
 
     /**
