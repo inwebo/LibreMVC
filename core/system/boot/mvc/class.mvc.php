@@ -21,7 +21,6 @@ use LibreMVC\Routing\Router;
 use LibreMVC\Http\Uri;
 use LibreMVC\Routing\RoutesCollection;
 use LibreMVC\Routing\UriParser\Asserts;
-use LibreMVC\Mvc;
 use LibreMVC\Http\Context;
 use LibreMVC\Sessions;
 use LibreMVC\System\Hooks;
@@ -30,7 +29,7 @@ use LibreMVC\Database\Driver\SQlite;
 use LibreMVC\Routing\Route;
 
 //@todo Boot MVC, peut exister boot CLI
-class Steps {
+class Mvc {
 
     static public function registerEnvironnement() {
         Environnement::this()->server = Context::getServer(true,true);
@@ -141,7 +140,7 @@ class Steps {
         Environnement::this()->params      = $routedRoute->params;
         Environnement::this()->routedRoute = $routedRoute;
 
-        Mvc::invoker(
+        \LibreMVC\Mvc::invoker(
             $routedRoute->controller,
             $routedRoute->action,
             $routedRoute->params
