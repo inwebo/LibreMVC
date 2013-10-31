@@ -46,7 +46,12 @@ class BookmarksController extends PageController{
         $this->_meta->base .="bookmarks/";
         $this->_prefixTables = Config::load(Environnement::this()->Modules->Bookmarks->config);
         $this->_prefixTables =  $this->_prefixTables->Db->tablePreffix ;
+        $menus = new \StdClass;
+        $menus->Tags = "bookmarks/tags/";
+        $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories");
+        $this->_viewbag->categories = $categories;
 
+        $this->_viewbag->menus =$menus;
         ViewBag::get()->bookmarks = "";
         ViewBag::get()->bookmarks->categories = "";
 
@@ -65,7 +70,7 @@ class BookmarksController extends PageController{
             $cat->total = $this->_db->query("SELECT count(*) as total FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=?", array($category['id']))[0]['total'];
 
             ViewBag::get()->bookmarks->categories->$category['name'] = $cat;
-            $bookmarks = $this->_db->query("SELECT * FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=? LIMIT 0,10", array($category['id']));
+            $bookmarks = $this->_db->query("SELECT * FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=? ORDER BY `t1`.`dt` DESC LIMIT 0,10", array($category['id']));
             ViewBag::get()->bookmarks->categories->$category['name']->bookmarks = $bookmarks;
         }
         Views::renderAction();
@@ -159,10 +164,11 @@ class BookmarksController extends PageController{
         foreach($tags as $tag) {
             $t = new Tags($tag['tags']);
             $tagsArray = array_merge($tagsArray, $t->buffer);
+            //$t->toNormalizedArray();
             //var_dump($t->toNormalizedArray());
             $imploded = strtolower(implode(" ", $t->buffer));
             //echo "UPDATE my_tables_bookmarks SET tags = '".$imploded."' WHERE my_tables_bookmarks.id = ". $tag['id'] ."" . '<br>';
-            $this->_db->query("UPDATE my_tables_bookmarks SET tags = '".$imploded."' WHERE my_tables_bookmarks.id = ". $tag['id'] .";");
+            //$this->_db->query("UPDATE my_tables_bookmarks SET tags = '".$imploded."' WHERE my_tables_bookmarks.id = ". $tag['id'] .";");
         }
         //@todo normalize tags
         $tagsArray = array_map('strtolower', $tagsArray);
@@ -184,12 +190,16 @@ class BookmarksController extends PageController{
         Views::renderAction();
     }
 
+    /**
+     * Widget
+     */
     public function formAction( ) {
         $cat = $this->getAllCategories();
         $this->_viewbag->Bookmarks = "";
         foreach($cat as $v) {
             $this->_viewbag->Bookmarks->categories->$v['name'] = $v['id'];
         }
+
         Views::renderAction();
     }
 
