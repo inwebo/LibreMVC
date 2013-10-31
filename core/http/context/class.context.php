@@ -79,8 +79,13 @@ class Context {
             $pageURL .= "://";
         }
 
-        $pageURL .=$_SERVER["SERVER_NAME"];
-        $pageURL .= ($_SERVER["SERVER_PORT"] != "80") ? ":" . $_SERVER["SERVER_PORT"] : '' ;
+        $pageURL .= (isset($_SERVER["SERVER_NAME"])) ? $_SERVER["SERVER_NAME"] : "";
+        if( isset($_SERVER["SERVER_PORT"]) ) {
+            if($_SERVER["SERVER_PORT"]!=80) {
+                $pageURL .= ":".$_SERVER["SERVER_PORT"];
+            }
+        }
+        //$pageURL .= ($_SERVER["SERVER_PORT"] != "80") ? ":" . $_SERVER["SERVER_PORT"] : '' ;
         $pageURL .= ($trailingSlash) ? '/' : '';
         return $pageURL;
     }

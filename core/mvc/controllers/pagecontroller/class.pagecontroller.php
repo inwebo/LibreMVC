@@ -173,7 +173,6 @@ abstract class PageController {
         }
 
         if($this->_cachable) {
-
             $this->_cache->stop();
         }
 
