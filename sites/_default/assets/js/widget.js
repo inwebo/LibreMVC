@@ -1,14 +1,9 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: inwebo
- * Date: 15/09/13
- * Time: 02:15
- * To change this template use File | Settings | File Templates.
- */
 javascript:(function(){
 
+    var publicKey = '';
+    var restService = 'http://localhost/LibreMVC/bookmarks/form';
+
     var url = encodeURIComponent(location.href);
-    var publicKey = "";
 
     var title = encodeURIComponent(document.title);
 
@@ -29,7 +24,5 @@ javascript:(function(){
         }
     }
 
-    console.log(url,title,favicon,description, keywords);
-
-    window.open("http://localhost/LibreMVC/bookmarks/form?url="+url+"&title="+title+"&description="+"&keywords="+keywords,"AddBookmaks","location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0").focus();
+    window.open(restService+'?url='+url+'&title='+title+'&description='+'&keywords='+keywords,'AddBookmaks','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
 })();
