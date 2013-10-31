@@ -9,16 +9,26 @@
 
 namespace LibreMVC\System;
 
-
+/**
+ * Class Singleton
+ *
+ * Exemple d'utilisation
+ *
+ * class FooSingleton extends Singleton {
+ *      protected static $instance;
+ * }
+ *
+ * @package LibreMVC\System
+ */
 class Singleton {
 
     /**
-     * Instance unique du ViewBag
+     * Instance
      *
      * @param object $instance contient l'instance courante.
      * @static
      */
-    protected static $instance;
+    private static $instance;
 
     /**
      * Constructeur privé.
@@ -34,12 +44,12 @@ class Singleton {
      * @static
      */
     public static function this() {
-        if (!isset(self::$instance)) {
-            $c = get_called_class();
-            self::$instance = new $c;
-        }
+        $calledClass = get_called_class();
 
-        return self::$instance;
+        if (!isset($calledClass::$instance)) {
+            $calledClass::$instance = new $calledClass;
+        }
+        return $calledClass::$instance;
     }
 
     /**
