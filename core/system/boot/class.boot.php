@@ -31,7 +31,7 @@ class Boot {
     }
 
     /**
-     * Process each steps
+     * Process each mvc
      */
     public function start() {
         $members = get_class_methods( $this->_steps );
