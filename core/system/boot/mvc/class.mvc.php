@@ -25,8 +25,10 @@ use LibreMVC\Http\Context;
 use LibreMVC\Sessions;
 use LibreMVC\System\Hooks;
 use LibreMVC\Views\Template\ViewBag;
-use LibreMVC\Database\Driver\SQlite;
 use LibreMVC\Routing\Route;
+use LibreMVC\Models\User;
+use LibreMVC\Models\Role;
+use LibreMVC\Database\Driver\SqLite;
 
 //@todo Boot MVC, peut exister boot CLI
 class Mvc {
@@ -68,8 +70,8 @@ class Mvc {
     }
 
     static public function loadSystemDb() {
-        Environnement::this()->_dbSystem = Database::setup('system', new SQlite(Environnement::this()->paths->base_routes));
-        Environnement::this()->_dbSystem = Database::get('system');
+        Database\Provider::add('system', new SQlite(Environnement::this()->paths->base_routes));
+        Environnement::this()->_dbSystem = Database\Provider::get('system');
     }
 
     static public function localisation() {
@@ -91,11 +93,23 @@ class Mvc {
     }
 
     static public function startSession() {
-        //$sessions_vars = array('lg'=>'fr');
-        //Hooks::get()->callHooks('addDefaultSessionsVars', $sessions_vars);
-        //new Sessions(null, $sessions_vars[1]);
-        //echo(new Sessions(null, $sessions_vars[1]));
+        $sessions_vars = array('lg'=>'fr');
+        Hooks::get()->callHooks('addDefaultSessionsVars', $sessions_vars);
+        new Sessions();
     }
+
+    static public function registerUser(){
+        User::binder( Database\Provider::get( 'system' ), 'Users', 'id' );
+        if( is_null(Sessions::get('User')) ) {
+            $user = User::load(0);
+            Sessions::set('User', $user);
+        }
+
+        Role::binder( Database\Provider::get( 'system' ), 'Roles', 'id' );
+
+        //var_dump(Sessions::this());
+    }
+
 
     static public function selectThemes() {
         $config = Config::load("config/paths.ini", true);

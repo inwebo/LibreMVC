@@ -2,7 +2,7 @@
     $("h1").hide();
     $(".starter-template").hide();
     $("#breadcrumbs").hide();
-    $("footer").hide();
+    $("footer").css('display', 'none');
     $("header").hide();
     $("body").css('padding-top', '1em');
 

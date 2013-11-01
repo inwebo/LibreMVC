@@ -24,11 +24,12 @@ use LibreMVC\Http\Header;
 use LibreMVC\Mvc;
 use LibreMVC\Controllers;
 use LibreMVC\Mvc\Controllers\PageController;
+use LibreMVC\Mvc\Controllers\ProtectedController;
 // @todo page > total
 use LibreMVC\Mvc\Controllers\ErrorsController;
 use LibreMVC\System\Hooks;
 
-class BookmarksController extends PageController{
+class BookmarksController extends ProtectedController{
 
     protected $_db;
     protected $_paths;
@@ -41,14 +42,14 @@ class BookmarksController extends PageController{
         parent::__construct();
         $this->_paths = Environnement::this()->paths;
         $this->_config = Config::load( $this->_paths->base_config . '_db.ini' , false);
-        Database::setup( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user, $this->_config->db_password ) );
-        $this->_db = Database::get('bookmarks');
-        $this->_meta->base .="bookmarks/";
+        Database\Provider::add( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user, $this->_config->db_password ) );
+        $this->_db = Database\Provider::get('bookmarks');
+        //$this->_meta->base .="bookmarks/";
         $this->_prefixTables = Config::load(Environnement::this()->Modules->Bookmarks->config);
         $this->_prefixTables =  $this->_prefixTables->Db->tablePreffix ;
         $menus = new \StdClass;
         $menus->Tags = "bookmarks/tags/";
-        $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories");
+        $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories")->all();
         $this->_viewbag->categories = $categories;
 
         $this->_viewbag->menus =$menus;
@@ -62,16 +63,16 @@ class BookmarksController extends PageController{
 
     public function indexAction( $page = 1 ) {
 
-        $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories");
+        $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories")->all();
         foreach($categories as $category) {
             $cat = new \StdClass();
             $cat->id = $category['id'];
             $cat->name = $category['name'];
-            $cat->total = $this->_db->query("SELECT count(*) as total FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=?", array($category['id']))[0]['total'];
+            $cat->total = $this->_db->query("SELECT count(*) as total FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=?", array($category['id']))->first()['total'];
 
             ViewBag::get()->bookmarks->categories->$category['name'] = $cat;
             $bookmarks = $this->_db->query("SELECT * FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=? ORDER BY `t1`.`dt` DESC LIMIT 0,10", array($category['id']));
-            ViewBag::get()->bookmarks->categories->$category['name']->bookmarks = $bookmarks;
+            ViewBag::get()->bookmarks->categories->$category['name']->bookmarks = $bookmarks->all();
         }
         Views::renderAction();
     }
@@ -79,7 +80,7 @@ class BookmarksController extends PageController{
 
 
     protected function getAllCategories() {
-        $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories");
+        $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories")->all();
         return $categories;
     }
 
@@ -96,32 +97,28 @@ class BookmarksController extends PageController{
         $total = $this->_db->query('
                                         SELECT count( * ) as "total"
                                         FROM '.$this->_prefixTables.'bookmarks as t1
-
-                                        WHERE t1.category =?', array($idCategorie))[0]['total'];
-
-        $pagination = Pagination::dummyPagination($total, $page, 25);
-        $sqlLimit = $pagination->sqlLimit($total, 25, $page);
-
-        $category = $this->_db->query(' SELECT *
+                                        WHERE t1.category =?', array($idCategorie))->first();
+        $pagination = Pagination::dummyPagination($total['total'], $page, 25);
+        $sqlLimit = $pagination->sqlLimit($total['total'], 25, $page);
+        $this->_db->toAssoc();
+        $bookmarks = $this->_db->query(' SELECT *
                                         FROM `'.$this->_prefixTables.'bookmarks` AS t1, (
                                         SELECT count( * ) as "total"
                                         FROM '.$this->_prefixTables.'bookmarks
                                         ) AS totalBookmarks
                                         JOIN '.$this->_prefixTables.'categories AS t2
                                         WHERE t2.id = ?
-                                        AND t1.category = ? Order by t1.dt desc LIMIT ' . $sqlLimit['start'] . ',25', array($idCategorie, $idCategorie));
-
+                                        AND t1.category = ? Order by t1.dt desc LIMIT ' . $sqlLimit['start'] . ',25', array($idCategorie, $idCategorie))->all();
         $this->_breadCrumbs->items->category="";
-        $this->_breadCrumbs->items->$category[0]['name']="";
+        $this->_breadCrumbs->items->$bookmarks[0]["name"]="";
         $p = "page&nbsp;".$page;
         $this->_breadCrumbs->items->$p="";
 
-
         $cat = new \StdClass();
-        $cat->id = $category[0]['id'];
-        $cat->name = $category[0]['name'];
-        $cat->total = $total;
-        $cat->bookmarks = $category;
+        $cat->id = $bookmarks[0]['id'];
+        $cat->name = $bookmarks[0]['name'];
+        $cat->total = $bookmarks[0]['total'];
+        $cat->bookmarks = $bookmarks;
 
         ViewBag::get()->bookmarks->categories = null;
         ViewBag::get()->bookmarks->categories->current = $cat;
@@ -144,7 +141,6 @@ class BookmarksController extends PageController{
 
         $this->_breadCrumbs->items->tag = "";
         $this->_breadCrumbs->items->$tag = "";
-
 
         ViewBag::get()->bookmarks->categories = null;
         ViewBag::get()->bookmarks->categories->current = $cat;
@@ -181,7 +177,6 @@ class BookmarksController extends PageController{
             $return[$v] = count(array_keys($tagsArray, $v));
             //echo $v . "<br>";
         }
-
 
         //var_dump( $tagsArray );
         //var_dump( $_tagsArray );

@@ -47,9 +47,10 @@ namespace LibreMVC\Mvc\Controllers;
  */
 use LibreMVC\Cache;
 use LibreMVC\Html\Document\Head;
+use LibreMVC\Mvc\Controllers;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Mvc\Environnement;
-abstract class PageController {
+abstract class PageController extends Controllers{
 
     protected $_viewbag;
 
@@ -77,7 +78,6 @@ abstract class PageController {
         if($this->_cachable) {
             $this->_cache = new Cache( array( 'path' => Environnement::this()->paths->base_cache,
                     'id'   => $this->formatFileCacheName())
-
             );
             $this->_cache->start();
         }
@@ -101,9 +101,11 @@ abstract class PageController {
     }
 
     protected function prepareHeadMeta() {
-        Head::orm(Environnement::this()->_dbSystem, 'heads', 'md5');
-        $head = Head::getById( md5( Environnement::this()->instance->url ) );
-        if($head === false) {
+        //Head::orm(Environnement::this()->_dbSystem, 'heads', 'md5');
+        Head::binder(Environnement::this()->_dbSystem, 'heads', 'md5');
+        $head = Head::load( md5( Environnement::this()->instance->url ) );
+
+        if($head === false || is_null($head)) {
             $head = new Head(Environnement::this()->instance->url,'welcome');
         }
         $this->_meta          = $head;
@@ -125,14 +127,6 @@ abstract class PageController {
         Views::renderAction();
     }
 
-    /**
-     * Setter
-     * @param string $member
-     * @param string $value
-     */
-    public function __set($member, $value) {
-        $this->$member = $value;
-    }
 
     /**
      * @todo Trop de ressource
@@ -151,17 +145,6 @@ abstract class PageController {
             }
         }
         return (object)$methods;
-    }
-
-    /**
-     * Getter
-     * @param string $attribut
-     * @return Mixed
-     */
-    public function __get($attribut) {
-        if (property_exists($this, $attribut)) {
-            return $this->$attribut;
-        }
     }
 
     public function __destruct() {

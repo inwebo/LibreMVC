@@ -15,7 +15,6 @@ class Head extends Entity{
     public $keywords;
 
     public function __construct( $uri, $title, $description = '', $keywords = '', $base = null) {
-        parent::__construct();
         $this->uri = $uri;
         $this->md5 = md5($this->uri);
         $this->title = $title;

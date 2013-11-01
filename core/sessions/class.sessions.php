@@ -164,7 +164,7 @@ class Sessions {
      * @param  mixed  $_value conserve le type
      * @return bool   true si la variable est ajoutée sinon false
      */
-    static function setParam($_key, $_value) {
+    static function set($_key, $_value) {
         if (!isset($_SESSION[$_key])) {
             if (is_array($_value)) {
                 (array) $_SESSION[$_key] = $_value;
@@ -225,6 +225,15 @@ class Sessions {
         if (isset($_SESSION[$_key])) {
             return $_SESSION[$_key];
         }
+    }
+    static public function get($_key) {
+        if (isset($_SESSION[$_key])) {
+            return $_SESSION[$_key];
+        }
+    }
+
+    static public function this() {
+        return $_SESSION;
     }
 
     /**
