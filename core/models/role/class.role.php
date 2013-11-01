@@ -3,6 +3,7 @@
 namespace LibreMVC\Models;
 
 use LibreMVC\Database\Driver;
+use LibreMVC\Database\Entity;
 use \stdClass;
 use \PDO;
 
@@ -25,41 +26,21 @@ use \PDO;
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
  */
-class Role {
+class Role extends Entity{
 
-    /**
-     * Description
-     *
-     * @var type
-     */
+    protected $id;
+    protected $type;
+
     protected $permissions;
 
     protected function __construct() {
-        $this->permissions = array();
     }
 
-    static public function getRolePermissions($role_id = 3) {
-        /**
-        SELECT users.id as id, users.password as password, users.mail as mail,users.login as login,
-        roles.id as id_role, roles.type as role_type
-        FROM users
-        JOIN user_role on users.id_role = 1
-        JOIN roles on roles.id = users.id_role
-        JOIN role_perm on role_perm.id_role = users.id_role
-
-        WHERE users.id=1 LIMIT 1
-         */
-
-        $role = new Role();
-        $row = Driver::get("mysql")->query("SELECT perm_id, description
-                                            FROM mvc_role_perm AS T1
-                                            JOIN mvc_permissions AS T2 ON T1.perm_id = T2.id
-                                            WHERE T1.role_id =?", array($role_id), array(PDO::FETCH_ASSOC));
-        $j = -1;
-        while (isset($row[++$j])) {
-            $role->permissions[$row[$j]['description']] = $row[$j]['perm_id'];
-        }
-        return $role;
+    static public function getRolePermissions($role_id) {
+        $class = get_called_class();
+        $query = "SELECT id_role, id_perm, description FROM role_perm AS T1 JOIN Permissions AS T2 ON T1.id_perm = T2.id WHERE T1.id_role =?";
+        $permissions = $class::$_statement->query($query, array( $role_id) )->All();
+        return($permissions);
     }
 
     public function hasPermission($permission) {
