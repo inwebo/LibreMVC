@@ -16,6 +16,11 @@ use LibreMVC\Http\Rest\Reply;
 use LibreMVC\Http\Rest\Client;
 use LibreMVC\Mvc\Environnement;
 
+/**
+ * Class RestController
+ * @package LibreMVC\Mvc\Controllers
+ * @todo Ne devrait pas étendre PageController
+ */
 class RestController extends  PageController {
 
     /**
@@ -104,9 +109,13 @@ class RestController extends  PageController {
         $args = Environnement::this()->params;
         switch( $this->verb ) {
             case 'get':
+                // Peuple variable globale
+                parse_str(file_get_contents('php://input'), $_GET);
                 $this->get($args);
                 break;
             case 'post':
+                // Peuple variable globale
+                parse_str(file_get_contents('php://input'), $_POST);
                 $this->post($args);
                 break;
             case 'update':
@@ -114,6 +123,9 @@ class RestController extends  PageController {
                 break;
             case 'delete':
                 $this->delete($args);
+                break;
+            case 'put':
+                $this->put($args);
                 break;
         }
     }
@@ -135,7 +147,11 @@ class RestController extends  PageController {
     }
 
     public function delete($args) {
+        echo __METHOD__;
+    }
 
+    public function put($args) {
+        echo __METHOD__;
     }
 
     public function isLoginIn() {
