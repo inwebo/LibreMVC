@@ -7,17 +7,14 @@ use Exception;
 class BenchmarkCallBackException extends Exception{}
 
 /**
- * Simple benchmark d'expression régulière
+ * Simple benchmark.
  * 
  * @category   LibreMVC
- * @package    View
- * @subpackage Template
+ * @package    Helpers
  * @copyright  Copyright (c) 1793-2222 Inwebo Veritas (http://www.inwebo.net)
  * @license    http://framework.zend.com/license   BSD License
  * @version    $Id:$
- * @link       https://github.com/inwebo/Template
- * @since      File available since Beta
- * @static
+ * @link       https://github.com/inwebo/LibreMVC/blob/master/core/helpers/benchmark/class.benchmark.php
  */
 class Benchmark {
 
@@ -82,10 +79,10 @@ class Benchmark {
         return explode(' ', microtime())[0];
     }
 
-    protected function nanoSecondesToSeconde( $fancySeconde = true ) {
+    protected function nanoSecondesToSeconde( $floatToString = true ) {
         $result = $this->timeEnd - $this->timeStart;
         // Est un exposant
-        if(strpos($result,'E') && $fancySeconde) {
+        if(strpos($result,'E') && $floatToString) {
             $buffer = explode('E', $result);
             /*
              * Se lit de droite a gauche
@@ -93,6 +90,7 @@ class Benchmark {
              * et le retourne sous forme de chaine de charactere
              */
             $return = implode('', array_fill(0,abs($buffer[1])+1,'0'));
+            // Une chaine est également un tableau
             $return[1] = ".";
             $result = $return . str_replace('.','',$buffer[0]);
         }
@@ -105,7 +103,7 @@ class Benchmark {
             $this->callback->__invoke();
         }
         $this->timeEnd =  self::getCleanMicrotime();
-        // Hack pour les résultats negatifs. Fausse les résultats d'une nanoseconde.
+        //Hack pour les résultats negatifs. Fausse les résultats d'une nanoseconde.
         //time_nanosleep( 0, 1 );
         $this->elapsedTime = $this->nanoSecondesToSeconde();
         $this->memory      = memory_get_usage() - $this->memoryStart;
