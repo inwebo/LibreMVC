@@ -9,7 +9,7 @@
 
 namespace LibreMVC\Database;
 
-
+include('../query/class.query.php');
 class Entity {
 
     static public $_primaryKey;
@@ -41,6 +41,7 @@ class Entity {
     }
 
     public function save() {
+        Query::toKey(";");
         $class = get_called_class();
         $tableCols = $this->GetInstanceValues();
         $pk = $class::$_primaryKey;
@@ -56,7 +57,7 @@ class Entity {
             return (!$statement) ? false : true;
         } else {
             try {
-                $query = "UPDATE " . $class::$_table . ' SET ' . QueryString::toUpdate($tableCols) . ' WHERE ' . $pk . ' =?';
+                $query = "UPDATE " . $class::$_table . ' SET ' . Query::toUpdate($tableCols) . ' WHERE ' . $pk . ' =?';
                 $arrayValues = array_merge($arrayValues, array($this->$pk));
                 $statement = $class::$_statement->query($query, $arrayValues );
                 return (!$statement) ? false : true;

@@ -14,4 +14,4 @@ include('driver/sqlite/class.sqlite.php');
 include('results/class.results.php');
 include('statement/class.statement.php');
 include('entity/class.entity.php');
-include('querystring/class.querystring.php');
+include('query/class.query.php');
