@@ -5,7 +5,7 @@ class Header {
     
     public static function forbidden( $content='' ) {
         header('HTTP/1.1 403 Forbidden');
-        echo ($content === '') ? '403 Forbiden' : $content;
+        echo ($content === '') ? '403 Forbidden' : $content;
         die();
     }
 
@@ -68,6 +68,10 @@ class Header {
 
     public static function badRequest() {
         header('HTTP/1.1 400 Bad Request');
+    }
+
+    public static function methodNotAllowed() {
+        header('HTTP/1.1 405 Bad Request');
     }
 
     public static function serverError() {
