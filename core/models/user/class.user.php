@@ -22,7 +22,6 @@ class User extends Entity {
     public function __construct() {
         $this->roles = $this->getRoles();
         $this->permissions = Role::getRolePermissions(4);
-        //var_dump(Role::getRolePermissions(0));
     }
 
     static public function isValidUser( $user, $mdp ) {
@@ -73,7 +72,21 @@ class User extends Entity {
         return isset( $this->roles[$idPermission] );
     }
 
+    /**
+     * @param $login string Plain text
+     * @param $password string MD5 string
+     * @return string string MD5 Public key
+     */
+    static public function hashPublicKey( $login, $password ) {
+        return md5( $login . $password );
+    }
 
+    static protected function hashPrivateKey( $login, $password, $passPhrase ) {
+        return md5( md5( $login, $password ) . $passPhrase );
+    }
 
+    static public function compareKeys( $privateKey, $publicKey ) {
+        return $privateKey === $publicKey;
+    }
 
 }
