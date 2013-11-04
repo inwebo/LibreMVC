@@ -2,16 +2,9 @@
 
 namespace LibreMVC;
 
-class __Cache{
+use Exception;
 
-    public $id;
-    public $fileName;
-    public $path;
-    public $birth;
-    public $death;
-    public $life;
-    public $isValid;
-}
+class CacheException extends Exception{};
 
 /**
  * Class Cache
@@ -29,7 +22,7 @@ class Cache {
      * Chemin d'accés au répertoire contenant les fichiers de cache 
      * @var string
      */
-    public $path = '../LibreMVC/sites/_default/cache/';
+    public $path;
 
     /**
      * Temps unix de creation du fichier cache
@@ -77,11 +70,11 @@ class Cache {
         $this->file = $this->path . $this->id;
 
         if (!file_exists($this->path)) {
-            throw new \Exception('Dir ' . $this->path . ' doesn\'t exists ');
+            throw new CacheException('Dir ' . $this->path . ' doesn\'t exists ');
         } elseif (!is_writable($this->path)) {
-            throw new \Exception('Dir ' . $this->path . ' isn\'t writable ');
+            throw new CacheException('Dir ' . $this->path . ' isn\'t writable ');
         } elseif (file_exists($this->file) && !is_writable($this->file)) {
-            throw new \Exception('File ' . $this->file . ' isn\'t writable ');
+            throw new CacheException('File ' . $this->file . ' isn\'t writable ');
         }
         
         ( $this->htmlComments ) ? $this->setComments() : null;
