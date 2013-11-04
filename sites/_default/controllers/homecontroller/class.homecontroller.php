@@ -21,7 +21,6 @@ class HomeController extends PageController {
     }
 
     public function indexAction() {
-        $this->_viewbag->demoViewBag = "Depuis le viewbag !";
         $this->_meta->title ="Welcome home visitors from futur.";
         Views::renderAction();
     }

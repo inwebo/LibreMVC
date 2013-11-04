@@ -8,7 +8,7 @@ try {
         $args[1]->current = "default";
     });
 
-    Hooks::get()->addHook( 'addItemsToBreadCrumbs', function (&$array) {
+    \LibreMVC\System\Hooks::get()->addHook( 'addItemsToBreadCrumbs', function (&$array) {
         $array[1]->items->home = Environnement::this()->instance->baseUrl;
         $array = $array[1];
     });

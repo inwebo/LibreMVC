@@ -12,6 +12,7 @@ namespace LibreMVC\Modules\Bookmarks\Controllers;
 use LibreMVC\Form;
 use LibreMVC\Http\Request;
 use LibreMVC\Modules\Bookmarks\Models\Bookmark\Tags;
+use LibreMVC\Sessions;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Database;
 use LibreMVC\Helpers\Pagination;
@@ -40,35 +41,46 @@ class BookmarksController extends ProtectedController{
 
     public function __construct() {
         parent::__construct();
+        // Context
         $this->_paths = Environnement::this()->paths;
         $this->_config = Config::load( $this->_paths->base_config . '_db.ini' , false);
+
+        // Database
         Database\Provider::add( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user, $this->_config->db_password ) );
         $this->_db = Database\Provider::get('bookmarks');
-        //$this->_meta->base .="bookmarks/";
         $this->_prefixTables = Config::load(Environnement::this()->Modules->Bookmarks->config);
         $this->_prefixTables =  $this->_prefixTables->Db->tablePreffix ;
+
+        // Menu
         $menus = new \StdClass;
         $menus->Tags = "bookmarks/tags/";
         $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories")->all();
-        $this->_viewbag->categories = $categories;
 
+        // ViewBag
+        $this->_viewbag->categories = $categories;
         $this->_viewbag->menus =$menus;
+
         ViewBag::get()->bookmarks = "";
         ViewBag::get()->bookmarks->categories = "";
 
+        //BreadCrumbs
         $this->_breadCrumbs->items->bookmarks = "";
-
 
     }
 
-    public function indexAction( $page = 1 ) {
+    protected function getCurrentTable() {
+        return $this->_prefixTables . $this->_table;
+    }
 
+    public function indexAction( $page = 1 ) {
         $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories")->all();
         foreach($categories as $category) {
             $cat = new \StdClass();
             $cat->id = $category['id'];
             $cat->name = $category['name'];
             $cat->total = $this->_db->query("SELECT count(*) as total FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=?", array($category['id']))->first()['total'];
+
+            $this->_meta->title = "Mon annuaire en ligne avec " . $cat->total . " liens sauvegardés";
 
             ViewBag::get()->bookmarks->categories->$category['name'] = $cat;
             $bookmarks = $this->_db->query("SELECT * FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=? ORDER BY `t1`.`dt` DESC LIMIT 0,10", array($category['id']));
@@ -77,23 +89,21 @@ class BookmarksController extends ProtectedController{
         Views::renderAction();
     }
 
-
-
     protected function getAllCategories() {
         $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories")->all();
         return $categories;
     }
 
     protected function getBookmarksByCategory($categories, $limit = 20 ) {
+
         $buffer = new \StdClass();
         foreach($categories as $categorie) {
-            $buffer->$categorie['name'] = $this->_db->query('SELECT * FROM '.$this->_prefixTables.'bookmarks WHERE category = ? ORDER BY dt desc LIMIT 1,20 ', array($categorie['id']));
+            $buffer->$categorie['name'] = $this->_db->query('SELECT * FROM '.$this->_prefixTables.'bookmarks WHERE category = ? ORDER BY dt desc LIMIT 1,? ', array($categorie['id'],$limit));
         }
         return $buffer;
     }
 
     public function categoryAction( $idCategorie = 1, $page = 1 ) {
-
         $total = $this->_db->query('
                                         SELECT count( * ) as "total"
                                         FROM '.$this->_prefixTables.'bookmarks as t1
@@ -124,6 +134,8 @@ class BookmarksController extends ProtectedController{
         ViewBag::get()->bookmarks->categories->current = $cat;
         ViewBag::get()->bookmarks->pagination = $pagination;
 
+        $this->_meta->title = "Catégorie > " . $bookmarks[0]['name'] . " > page " . $page;
+
         Views::renderAction();
 
     }
@@ -136,8 +148,8 @@ class BookmarksController extends ProtectedController{
         $cat = new \StdClass();
         $cat->id = "";
         $cat->name = $tag;
-        $cat->total = $total[0]['total'];
-        $cat->bookmarks = $tags;
+        $cat->total = $total->first()['total'];
+        $cat->bookmarks = $tags->all();
 
         $this->_breadCrumbs->items->tag = "";
         $this->_breadCrumbs->items->$tag = "";
@@ -154,7 +166,7 @@ class BookmarksController extends ProtectedController{
         $this->_breadCrumbs->items->$tag = "";
 
         $tagsArray = array();
-        $tags = $this->_db->query('SELECT * FROM '.$this->_prefixTables.'bookmarks WHERE tags LIKE "%'.$tag.'%"', array($tag));
+        $tags = $this->_db->query('SELECT * FROM '.$this->_prefixTables.'bookmarks WHERE tags LIKE "%'.$tag.'%"', array($tag))->all();
         $return = array();
 
         foreach($tags as $tag) {
@@ -189,11 +201,25 @@ class BookmarksController extends ProtectedController{
      * Widget
      */
     public function formAction( ) {
+        $this->isForbidden();
         $cat = $this->getAllCategories();
         $this->_viewbag->Bookmarks = "";
         foreach($cat as $v) {
             $this->_viewbag->Bookmarks->categories->$v['name'] = $v['id'];
         }
+
+        Views::renderAction();
+    }
+
+    public function widgetAction() {
+        $widgetFile = getcwd() .'/sites/bookmarks.inwebo.dev/assets/js/widget.js';
+        $widgetFileAsString = file_get_contents($widgetFile, 1024);
+        // unset($_SESSION);
+
+        $widgetFileAsString = str_replace("%user%",Sessions::this()['User']->login,$widgetFileAsString);
+        $widgetFileAsString = str_replace("%password%",Sessions::this()['User']->password,$widgetFileAsString);
+        $widgetFileAsString = str_replace("%restService%", "http://bookmarks.inwebo.dev/form", $widgetFileAsString);
+        $this->_viewbag->get()->widget = $widgetFileAsString;
 
         Views::renderAction();
     }
