@@ -1,5 +1,7 @@
 javascript:(function(){
 
+    var user ="";
+
     var publicKey = '';
     var restService = 'http://localhost/LibreMVC/bookmarks/form';
 

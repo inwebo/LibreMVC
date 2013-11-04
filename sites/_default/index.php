@@ -2,18 +2,6 @@
     use LibreMVC\Views;
     use LibreMVC\Views\Template\ViewBag;
     use LibreMVC\Mvc\Environnement;
-/*
-    $user = new \LibreMVC\Models\User();
-    $a = \LibreMVC\Models\User::getById(1);
-    var_dump($a);
-
-    $c = \LibreMVC\Models\User::isValidUser('inwebo', 'inwebo');
-    var_dump($c);
-
-    $inwebo = new \LibreMVC\Models\User(1);
-
-    var_dump($inwebo);
-*/
 ?>
 <html>
 <head>
@@ -37,31 +25,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Bookmarks</a>
+                <a class="navbar-brand" href="#">LibreMVC</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav pull-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <!--
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                            -->
-                            <?php
-
-                                foreach(ViewBag::get()->categories as $k => $v) {
-                                    echo '<li><a href="bookmarks/category/'.$v['id'].'">'.$v['name'].'</a></li>';
-                                }
-                            ?>
-                        </ul>
-                    </li>
-                    {loop="$menus"}
-                    <li> <a href="{$value}">{$key}</a></li>
-                    {/loop}
+                    <li> <a href="debug/">Debug</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
@@ -70,10 +38,9 @@
 <div id="parallax-wrapper">
     <div class="container">
         <div class="starter-template">
-            <h1>Annuaire</h1>
-            <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+            <h1>Welcome</h1>
+            <p class="lead">Default index page.</p>
         </div>
-
             <div class="row">
                 <div class="col-md-12">
                     <div id="breadcrumbs" data-spy="affix" data-offset-top="100">
@@ -93,10 +60,8 @@
                     </ol>
                     </div>
                 </div>
-
-
-            <?php Views::render( Environnement::this()->viewPath ); ?>
         </div>
+        <?php Views::render( Environnement::this()->viewPath ); ?>
     </div>
 </div>
 
