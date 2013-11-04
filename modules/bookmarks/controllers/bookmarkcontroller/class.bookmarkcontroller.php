@@ -21,16 +21,41 @@ class BookmarkController extends RestController{
 
     public function __construct() {
         parent::__construct();
+
+        //var_dump($_POST);
     }
 
     public function get($args) {
         $this->httpReply->msg = $args[0];
+        $this->httpReply->msg = "get";
     }
 
     public function post($args) {
+        //var_dump($args);
+        $input = file_get_contents('php://input');
+        //$input = parse_str(file_get_contents('php://input'), $_POST);
+        //var_dump( $_POST );
+        //var_dump($_POST);
+        //echo( $_SERVER['REQUEST_METHOD']);
         $this->public = false;
         $this->validateRequest();
-        $this->httpReply->msg = 'Yeah';
+        $this->httpReply->msg = json_encode($_POST);
+    }
+
+    public function delete($args) {
+        //echo __METHOD__;
+        //$input = file_get_contents('php://input');
+        //$input = parse_str(file_get_contents('php://input'), $_POST);
+        //var_dump( $_POST );
+    }
+
+    public function put($args) {
+        //echo __METHOD__;
+        //$input = file_get_contents('php://input');
+        $_PUT = array();
+        parse_str(file_get_contents('php://input'), $_PUT);
+        //var_dump( $_PUT );
+        $this->httpReply->msg = json_encode($_PUT);
     }
 
     protected function isValidUser() {
