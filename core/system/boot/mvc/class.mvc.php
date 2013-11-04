@@ -11,6 +11,7 @@ namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
 use LibreMVC\Files\Directory;
+use LibreMVC\Html\JavascriptConfig;
 use LibreMVC\Helpers\BreadCrumbs;
 use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Localisation;
@@ -29,9 +30,12 @@ use LibreMVC\Routing\Route;
 use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
-
 //@todo Boot MVC, peut exister boot CLI
 class Mvc {
+
+    const LIBREMVC_CONFIG_INI = "config/paths.ini";
+
+    protected static $config;
 
     static public function registerEnvironnement() {
         Environnement::this()->server = Context::getServer(true,true);
@@ -41,8 +45,12 @@ class Mvc {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
     }
 
+    static public function loadConfig() {
+
+    }
+
     static public function autoloadInstance() {
-        Environnement::this()->paths = Instance::current()->processPattern(Config::load( "config/paths.ini" ), "", '' );
+        Environnement::this()->paths = Instance::current()->processPattern(Config::load( self::LIBREMVC_CONFIG_INI ), "", "" );
         Environnement::this()->instance = new Instance( Context::getUrl() );
 
         Environnement::this()->baseUrls = Environnement::this()->instance->processBaseIncludePattern( Environnement::this()->instance->baseUrl, Environnement::this()->paths );
@@ -50,6 +58,18 @@ class Mvc {
         if(is_file( Environnement::this()->paths->base_autoload )) {
             include(Environnement::this()->paths->base_autoload );
         }
+    }
+
+    static public function selectThemes() {
+        $config = Config::load( self::LIBREMVC_CONFIG_INI, true);
+        $themeConf =  $config->Theme;
+        Hooks::get()->callHooks('loadTheme', $themeConf );
+
+        $theme = new Theme( Environnement::this()->paths->base_theme, Environnement::this()->instance->baseUrl ,$themeConf[1]->current );
+
+        Environnement::this()->Theme = $themeConf[1];
+        Environnement::this()->Theme->assets = $theme;
+
     }
 
     static public function autoloadPlugins() {
@@ -110,18 +130,11 @@ class Mvc {
         //var_dump(Sessions::this());
     }
 
-
-    static public function selectThemes() {
-        $config = Config::load("config/paths.ini", true);
-        $themeConf =  $config->Theme;
-        Hooks::get()->callHooks('loadTheme', $themeConf );
-
-        $theme = new Theme( Environnement::this()->paths->base_theme, Environnement::this()->instance->baseUrl ,$themeConf[1]->current );
-
-        Environnement::this()->Theme = $themeConf[1];
-        Environnement::this()->Theme->assets = $theme;
-
+    static public function loadJavascriptConfig() {
+        $jsc = new JavascriptConfig("LibreMVC",Sessions::this()['User'] );
+        ViewBag::get()->JsConfig = $jsc;
     }
+
 
     static public function loadBreadCrumbs() {
         //var_dump(BreadCrumbs::this());
