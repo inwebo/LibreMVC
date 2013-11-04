@@ -1,9 +1,20 @@
 <?php
-include("autoload.php");
-/*
-include('core/helpers/bench/class.bench.php');
+//include("autoload.php");
+
+include('core/helpers/benchmark/class.benchmark.php');
+use LibreMVC\Helpers\Benchmark;
+
+static $i = 0;
 $a = new Benchmark( 1, function() {
-    include("autoload.php");
+
+    new StdClass;
 });
-echo $a->getMemoryUsage("ko");
-*/
+
+echo $a->getElapsedTime() . '<br>';
+//echo $a->getMemoryUsage(). '<br>';
+//$a = microtime();
+//echo $a . '<br>';
+//usleep(10);
+//$b =microtime();
+//echo $b. '<br>';
+//echo floatval($b) - floatval($a). '<br>';
