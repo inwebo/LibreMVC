@@ -73,6 +73,7 @@ class Theme {
                 //echo $this->baseUrls->assets . 'js/' . $v . "<br>";
                 if(is_file(realpath(getcwd()) . "/assets/js/".$v)) {
                     $url = "<script type='text/javascript' src='". $this->baseUrls->assets . "js/" .$v . "' ></script>" . "\n";
+
                     $this->js->$k = $url;
                 }
                 //@todo est en ligne ?
@@ -102,7 +103,7 @@ class Theme {
             //echo $this->realPath . "js/" . $v;
             if(is_file($this->realPath . "js/" . $v)) {
                 $url = "<script type='text/javascript' src='". $this->baseUrls->js . "" .$v . "' ></script>" . "\n";
-                $this->css->$k = $url;
+                $this->js->$k = $url;
             }
         }
         Hooks::get()->callHooks('appendJs');
