@@ -2,6 +2,16 @@
     use \LibreMVC\Mvc\Environnement;
 ?>
 <div class="row">
+    <div class="col-md-16">
+        <div class="col-container">
+            <h3>Sessions</h3>
+            <?php
+                var_dump($_SESSION);
+            ?>
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-4">
         <div class="col-container">
             <h3>Mvc</h3>
