@@ -99,6 +99,7 @@ class AutoLoadDecorator extends \FilterIterator {
         else {
             return false;
         }
+        //return ( strpos( $this->current(), $this->_class ) !== false );
     }
 
     public function setClass( $class ) {
@@ -159,6 +160,8 @@ class AutoLoader {
         $nc = new ClassNamespace($this->_class);
         foreach ( $this->_pools as $directory ){
             if(is_file( $directory . $nc->toFilePath() ) ) {
+                self::instance()->_loaded[$this->_class] = $directory . $nc->toFilePath();
+                //var_dump(self::instance()->_loaded);
                 include_once($directory . $nc->toFilePath());
                 //@ todo Class alias automatique
                 $base =$nc->getNamespace();
