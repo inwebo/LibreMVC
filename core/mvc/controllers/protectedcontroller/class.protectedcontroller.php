@@ -17,7 +17,7 @@ use LibreMVC\Sessions;
 class ProtectedController extends PageController{
 
     /**
-     * @var array Si est vide tous les roles
+     * @var array Si est vide alors tous les roles
      */
     protected $_authorizedRoles;
 
@@ -54,5 +54,7 @@ class ProtectedController extends PageController{
             Header::forbidden();
         }
     }
+
+    public function __destruct(){}
 
 }
