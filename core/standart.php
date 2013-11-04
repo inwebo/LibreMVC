@@ -27,7 +27,7 @@ define('ACTION', 'string');
 /**
  * Tableau sérialisé des paramétres à fournier à ACTION.
  * <p>
- * Par défaut est un <b>tableau null.</b>
+ * Par défaut est un <b>tableau null</b>.
  * </p>
  */
 define('PARAMS','string');
