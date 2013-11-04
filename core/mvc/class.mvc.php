@@ -31,6 +31,11 @@ class MVC {
         return class_exists( $this->class );
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     * @todo Devrait ReflectionClass
+     */
     public function invoke() {
         if( $this->registered ) {
             $this->parameters = (is_null($this->parameters)) ? array() : $this->parameters;
