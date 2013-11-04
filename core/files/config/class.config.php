@@ -1,6 +1,7 @@
 <?php
 
 namespace LibreMVC\Files;
+class ConfigFileException extends \Exception {}
     /**
      * LibreMVC
      *
@@ -66,7 +67,7 @@ class Config
         }
 
         if ( ( $config = @parse_ini_file( $file, $process_sections ) ) == false ) {
-            throw new \Exception('Config file ' . $file . ' not found.');
+            throw new ConfigFileException('Config file ' . $file . ' not found.');
         } else {
             $this->file = $file;
             $this->keys = (object)$config;
