@@ -15,6 +15,7 @@ class BenchmarkCallBackException extends Exception{}
  * @license    http://framework.zend.com/license   BSD License
  * @version    $Id:$
  * @link       https://github.com/inwebo/LibreMVC/blob/master/core/helpers/benchmark/class.benchmark.php
+ * @author     Inwebo
  */
 class Benchmark {
 
@@ -24,39 +25,39 @@ class Benchmark {
     protected $iterations;
 
     /**
-     * @var Closure Une fonction anonyme avec comme corps de function le code à tester
+     * @var Closure Une fonction anonyme avec comme corps de function le code à tester.
      */
     protected $callback;
 
     /**
-     * @var int Timestamp de départ
+     * @var float Timestamp de départ.
      */
     protected $timeStart;
 
     /**
-     * @var int Timestamp de fin
+     * @var float Timestamp de fin.
      */
     protected $timeEnd;
 
     /**
-     * @var int Durée total d'execution
+     * @var float Durée total d'execution en seconde.
      */
     protected $elapsedTime;
 
     /**
-     * @var int Empreinte mémoire avant execution
+     * @var int Empreinte mémoire avant execution.
      */
     protected $memoryStart;
 
     /**
-     * @var int Empreinte mémoire total des test
+     * @var int Empreinte mémoire total des tests.
      */
     protected $memory;
 
     /**
      * @param $iterations int Nombre d'itération du benchmark
      * @param $callback \Closure Une fonction anonyme avec comme corps de function le code à tester
-     * @throw \BenchmarkCallBackException Si le callback n'est pas une closure valide.
+     * @throws \BenchmarkCallBackException Si le callback n'est pas une closure valide.
      */
     public function __construct( $iterations, $callback ) {
         $this->memoryStart = memory_get_usage();
@@ -68,26 +69,26 @@ class Benchmark {
             $this->start();
         }
         else {
-            throw new \BenchmarkCallBackException('Callback is not a closure.');
+            throw new \BenchmarkCallBackException('Callback is not a closure a valid closure.');
         }
     }
 
     /**
-     * @return float Seconde sans la timestamp.
+     * @return float Secondes sans la timestamp.
      */
     static protected function getCleanMicrotime() {
         return explode(' ', microtime())[0];
     }
 
     protected function nanoSecondesToSeconde( $floatToString = true ) {
-        $result = $this->timeEnd - $this->timeStart;
+        $result = $this->elapsedTime;
         // Est un exposant
         if(strpos($result,'E') && $floatToString) {
             $buffer = explode('E', $result);
             /*
              * Se lit de droite a gauche
-             * Remplis un tableau de taille de la valeur absolue de l'exposant + 1, pour permettre l'insertion du point
-             * et le retourne sous forme de chaine de charactere
+             * Récupération de la valeur absolue de l'exposant auquel on ajout 1 ( pour le futur point), on peuple un tableau
+             * avec des char 0. Puis le retourne sous forme de chaine de caractères.
              */
             $return = implode('', array_fill(0,abs($buffer[1])+1,'0'));
             // Une chaine est également un tableau
@@ -99,21 +100,28 @@ class Benchmark {
 
     protected function start() {
         $loop = $this->iterations;
+        $args = func_get_args( $this->callback );
         while( --$loop >= 0  ) {
-            $this->callback->__invoke();
+            if( count($args) > 0 ) {
+                call_user_func_array($this->callback, $args);
+            }
+            else {
+                $this->callback->__invoke();
+            }
         }
         $this->timeEnd =  self::getCleanMicrotime();
         //Hack pour les résultats negatifs. Fausse les résultats d'une nanoseconde.
         //time_nanosleep( 0, 1 );
-        $this->elapsedTime = $this->nanoSecondesToSeconde();
+        $this->elapsedTime = $this->timeEnd - $this->timeStart;
         $this->memory      = memory_get_usage() - $this->memoryStart;
     }
 
     /**
-     * @return float Secondes ecoulées pendant le benchmark
+     * @param $floatToString bool
+     * @return float|string
      */
-    public function getElapsedTime() {
-        return $this->elapsedTime;
+    public function getElapsedTime( $floatToString ) {
+        return $this->nanoSecondesToSeconde($floatToString);
     }
 
     /**
