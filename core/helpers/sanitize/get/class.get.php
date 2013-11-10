@@ -9,7 +9,12 @@
 
 namespace LibreMVC\Helpers\Sanitize;
 
-
 class Get {
+
+    static public function param( $key ) {
+        if(isset($_GET[$key])) {
+            return filter_var($_GET[$key], FILTER_SANITIZE_URL);
+        }
+    }
 
 }
