@@ -166,7 +166,9 @@ class AutoLoader {
                 //@ todo Class alias automatique
                 $base =$nc->getNamespace();
                 $alias = $nc->getClassName();
-                class_alias($base,$alias);
+                //if( !class_exists($base) && !class_exists($alias) ) {
+                    //class_alias($base,$alias);
+                //}
                 return;
             }
         }
