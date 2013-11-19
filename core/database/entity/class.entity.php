@@ -9,7 +9,7 @@
 
 namespace LibreMVC\Database;
 
-include('../query/class.query.php');
+//include('../query/class.query.php');
 class Entity {
 
     static public $_primaryKey;
@@ -19,12 +19,12 @@ class Entity {
 
     static public function binder($statement, $table = null, $primaryKey = null) {
         $class = get_called_class();
-        if( strpos( $class , '\\') ) {
-            $class = explode('\\', $class);
-            $class = $class[count($class)-1];
+       if( strpos( $class , '\\') ) {
+            $className = explode('\\', $class);
+            $className = $class[count($class)-1];
         }
         $class::$_statement        = $statement;
-        $class::$_table            = (!is_null($table)) ? $table : $class.'s';
+        $class::$_table            = (!is_null($table)) ? $table : $className.'s';
         $class::$_tableDescription = $class::$_statement->driver->getColsName($class::$_table);
         $class::$_primaryKey       = (!is_null($primaryKey)) ? $primaryKey : $class::$_statement->driver->getPrimaryKey($class::$_table);
     }
@@ -34,29 +34,30 @@ class Entity {
         return !is_null($class::$_statement) && !is_null($class::$_table) && !is_null($class::$_tableDescription) && !is_null($class::$_primaryKey);
     }
 
-    static public function load( $primaryKey ) {
+    static public function load( $primaryKeyValue, $primaryKey = null ) {
         $class = get_called_class();
+        $pk = (is_null($primaryKey)) ? $class::$_primaryKey : $primaryKey;
         $class::$_statement->toObject($class);
-        return $class::$_statement->query('select * from ' . $class::$_table . ' WHERE ' . $class::$_primaryKey . " =? LIMIT 1",array($primaryKey))->first();
+        return $class::$_statement->query('select * from ' . $class::$_table . ' WHERE ' . $pk . "=? LIMIT 1",array($primaryKeyValue))->first();
     }
 
-    public function save() {
-        Query::toKey(";");
+    public function save( $forceInsert = false ) {
         $class = get_called_class();
         $tableCols = $this->GetInstanceValues();
         $pk = $class::$_primaryKey;
         $arrayKeys=  array_keys((array)$tableCols) ;
         $arrayValues=  array_values((array)$tableCols) ;
 
-        if (is_null($this->$pk)) {
+        if (is_null($this->$pk)||$forceInsert) {
             // Insert
-            array_walk($arrayKeys,__NAMESPACE__ . '\\QueryString::toInsert');
+            array_walk($arrayKeys,__NAMESPACE__ . '\\Query::toInsert');
             $tokens = array_fill(0, count((array)$tableCols), '?');
             $query = "INSERT INTO " . $class::$_table . " ( " . implode(',', $arrayKeys ) . ' ) VALUES ( ' . implode(',', $tokens ) . ' )';
             $statement = $class::$_statement->query($query,$arrayValues );
             return (!$statement) ? false : true;
         } else {
             try {
+
                 $query = "UPDATE " . $class::$_table . ' SET ' . Query::toUpdate($tableCols) . ' WHERE ' . $pk . ' =?';
                 $arrayValues = array_merge($arrayValues, array($this->$pk));
                 $statement = $class::$_statement->query($query, $arrayValues );
@@ -67,6 +68,18 @@ class Entity {
             }
 
         }
+    }
+
+    public function insert() {
+        $class = get_called_class();
+        $tableCols = $this->GetInstanceValues();
+        $pk = $class::$_primaryKey;
+        $arrayKeys=  array_keys((array)$tableCols) ;
+        $arrayValues=  array_values((array)$tableCols) ;
+        array_walk($arrayKeys,__NAMESPACE__ . '\\Query::toInsert');
+        $tokens = array_fill(0, count((array)$tableCols), '?');
+        $query = "INSERT INTO " . $class::$_table . " ( " . implode(',', $arrayKeys ) . ' ) VALUES ( ' . implode(',', $tokens ) . ' )';
+        $statement = $class::$_statement->query($query,$arrayValues );
     }
 
     protected function GetInstanceValues(){

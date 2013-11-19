@@ -14,7 +14,9 @@ class User extends Entity {
     public $id_role;
     public $login;
     public $password;
-    public $mail;
+    protected $mail;
+    public $publicKey;
+    protected $passPhrase;
 
     public $roles = array();
     public $permissions = array();
@@ -25,8 +27,9 @@ class User extends Entity {
     }
 
     static public function isValidUser( $user, $mdp ) {
-        $result = self::$_dbResource->query('SELECT * FROM users WHERE login = ? AND password = ? ', array($user, md5($mdp)));
-        return isset($result[0]);
+        $class = get_called_class();
+        $result = $class::$_statement->query('SELECT * FROM users WHERE login = ? AND password = ? ', array($user, md5($mdp)))->first();
+        return isset($result) && !is_null($result) && !empty($result);
     }
 
     protected function getRoles() {
