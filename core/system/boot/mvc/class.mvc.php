@@ -9,6 +9,7 @@
 
 namespace LibreMVC\System\Boot;
 
+use LibreMVC\Controllers\LoginController;
 use LibreMVC\Database;
 use LibreMVC\Files\Directory;
 use LibreMVC\Html\JavascriptConfig;
@@ -30,6 +31,7 @@ use LibreMVC\Routing\Route;
 use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
+use LibreMVC\Errors\ErrorsHandler;
 //@todo Boot MVC, peut exister boot CLI
 class Mvc {
 
@@ -43,10 +45,10 @@ class Mvc {
 
     static public function registerErrorHandler() {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
+
     }
 
     static public function loadConfig() {
-
     }
 
     static public function autoloadInstance() {
@@ -82,7 +84,9 @@ class Mvc {
             if(is_file($dir->folders->current()->realPath . '/module.ini')) {
                 $currentValue = $dir->folders->current()->realPath . '/module.ini';
                 $currentKey = ucfirst($dir->folders->current()->name);
-                Environnement::this()->Modules = null;
+                // @todo new stdclass puis push ds env
+                Environnement::this()->Modules = new \StdClass;
+                Environnement::this()->Modules->$currentKey = new \StdClass;
                 Environnement::this()->Modules->$currentKey->config = $dir->folders->current() . "/module.ini";
             }
             $dir->folders->next();
@@ -119,12 +123,12 @@ class Mvc {
     }
 
     static public function registerUser(){
-        User::binder( Database\Provider::get( 'system' ), 'Users', 'id' );
+
+        \LibreMVC\Models\User::binder( Database\Provider::get( 'system' ), 'Users', 'id' );
         if( is_null(Sessions::get('User')) ) {
-            $user = User::load(0);
+            $user = \LibreMVC\Models\User::load(0);
             Sessions::set('User', $user);
         }
-
         Role::binder( Database\Provider::get( 'system' ), 'Roles', 'id' );
 
         //var_dump(Sessions::this());
@@ -148,6 +152,7 @@ class Mvc {
         $filterGet = new \LibreMvc\Helpers\Sanitize\SuperGlobal( $_GET );
         $_GET = $filterGet->get();
         //var_dump( $filterGet->get() );
+        ViewBag::get()->errors = ErrorsHandler::$stack;
     }
 
     /**
