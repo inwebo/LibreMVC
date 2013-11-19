@@ -101,13 +101,20 @@ abstract class PageController extends Controllers{
     }
 
     protected function prepareHeadMeta() {
-        //Head::orm(Environnement::this()->_dbSystem, 'heads', 'md5');
-        Head::binder(Environnement::this()->_dbSystem, 'heads', 'md5');
-        $head = Head::load( md5( Environnement::this()->instance->url ) );
+        $uri = trim(Environnement::this()->instance->url, '/').'/';
+        $uri = (strstr($uri, '?')) ? explode('?', $uri)[0]:$uri;
+        $md5Uri = md5($uri);
+
+        Head::binder(Environnement::this()->_dbSystem, 'heads', 'id');
+        $head = Head::load( $md5Uri, 'md5' );
 
         if($head === false || is_null($head)) {
-            $head = new Head(Environnement::this()->instance->url,'welcome');
+            $head = new Head();
+            $head->uri = $uri;
+            $head->md5 = md5($uri);
+            $head->title = "Welcome!";
         }
+
         $this->_meta          = $head;
         $this->_metaStart     = clone $this->_meta;
     }
@@ -150,7 +157,9 @@ abstract class PageController extends Controllers{
     public function __destruct() {
         // Meta
         $this->_metaEnd = $this->_meta;
+        //if( ($this->_metaStart == $this->_metaEnd) === false ) {
         if( ($this->_metaStart == $this->_metaEnd) === false ) {
+
             $this->_viewbag->meta = $this->_meta;
             $this->_meta->save();
         }
