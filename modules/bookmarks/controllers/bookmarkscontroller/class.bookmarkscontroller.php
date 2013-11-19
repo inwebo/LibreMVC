@@ -39,6 +39,7 @@ class BookmarksController extends ProtectedController{
 
     public $breadcrumbs;
 
+
     public function __construct() {
         parent::__construct();
         // Context
@@ -53,18 +54,18 @@ class BookmarksController extends ProtectedController{
 
         // Menu
         $menus = new \StdClass;
-        $menus->Tags = "bookmarks/tags/";
+        $menus->Tags = "tags/";
         $categories = $this->_db->query("SELECT * FROM ".$this->_prefixTables."categories")->all();
 
         // ViewBag
         $this->_viewbag->categories = $categories;
         $this->_viewbag->menus =$menus;
 
-        ViewBag::get()->bookmarks = "";
-        ViewBag::get()->bookmarks->categories = "";
+        $this->_viewbag->bookmarks = new \StdClass;
+        $this->_viewbag->bookmarks->categories = new \StdClass;;
 
         //BreadCrumbs
-        $this->_breadCrumbs->items->bookmarks = "";
+        $this->_breadCrumbs->items->bookmarks = '';
 
     }
 
@@ -82,9 +83,9 @@ class BookmarksController extends ProtectedController{
 
             $this->_meta->title = "Mon annuaire en ligne avec " . $cat->total . " liens sauvegardés";
 
-            ViewBag::get()->bookmarks->categories->$category['name'] = $cat;
+            $this->_viewbag->bookmarks->categories->$category['name'] = $cat;
             $bookmarks = $this->_db->query("SELECT * FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=? ORDER BY `t1`.`dt` DESC LIMIT 0,10", array($category['id']));
-            ViewBag::get()->bookmarks->categories->$category['name']->bookmarks = $bookmarks->all();
+            $this->_viewbag->bookmarks->categories->$category['name']->bookmarks = $bookmarks->all();
         }
         Views::renderAction();
     }
@@ -130,9 +131,9 @@ class BookmarksController extends ProtectedController{
         $cat->total = $bookmarks[0]['total'];
         $cat->bookmarks = $bookmarks;
 
-        ViewBag::get()->bookmarks->categories = null;
-        ViewBag::get()->bookmarks->categories->current = $cat;
-        ViewBag::get()->bookmarks->pagination = $pagination;
+        $this->_viewbag->bookmarks->categories = null;
+        $this->_viewbag->bookmarks->categories->current = $cat;
+        $this->_viewbag->bookmarks->pagination = $pagination;
 
         $this->_meta->title = "Catégorie > " . $bookmarks[0]['name'] . " > page " . $page;
 
@@ -153,15 +154,15 @@ class BookmarksController extends ProtectedController{
 
         $this->_breadCrumbs->items->tag = "";
         $this->_breadCrumbs->items->$tag = "";
-
-        ViewBag::get()->bookmarks->categories = null;
-        ViewBag::get()->bookmarks->categories->current = $cat;
-        ViewBag::get()->breadcrumbs = $this->breadcrumbs[1];
+        $this->_meta->title="Tag : " . $tag;
+        $this->_viewbag->bookmarks->categories = null;
+        $this->_viewbag->bookmarks->categories->current = $cat;
+        $this->_viewbag->breadcrumbs = $this->breadcrumbs[1];
         Views::renderAction();
     }
 
     public function tagsAction($tag="") {
-        $this->_breadCrumbs->items->tags = "bookmarks/tags/";
+        $this->_breadCrumbs->items->tags = "tags/";
         $tag = ($tag==="") ? "all" : $tag;
         $this->_breadCrumbs->items->$tag = "";
 
@@ -193,7 +194,7 @@ class BookmarksController extends ProtectedController{
         //var_dump( $tagsArray );
         //var_dump( $_tagsArray );
         //var_dump( $return );
-        ViewBag::get()->bookmarks->tags = $return;
+        $this->_viewbag->bookmarks->tags = $return;
         Views::renderAction();
     }
 
@@ -203,11 +204,10 @@ class BookmarksController extends ProtectedController{
     public function formAction( ) {
         $this->isForbidden();
         $cat = $this->getAllCategories();
-        $this->_viewbag->Bookmarks = "";
+        $this->_viewbag->Bookmarks = new \StdClass;
         foreach($cat as $v) {
             $this->_viewbag->Bookmarks->categories->$v['name'] = $v['id'];
         }
-
         Views::renderAction();
     }
 
