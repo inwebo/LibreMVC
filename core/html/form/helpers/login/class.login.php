@@ -2,6 +2,8 @@
 
 namespace LibreMVC\Form\Helpers;
 
+use CustomForm;
+
 /**
  * My Framework : My.Forms
  *
