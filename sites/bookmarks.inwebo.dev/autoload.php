@@ -1,5 +1,6 @@
 <?php
-
+use LibreMVC\System\Hooks;
+use LibreMVC\Mvc\Environnement;
 try {
     LibreMVC\AutoLoader::instance()->addPool( './' );
 
