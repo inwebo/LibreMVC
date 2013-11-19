@@ -2,8 +2,6 @@
 
 namespace LibreMVC\System;
 
-// Sale mais obligatoire a ce stade les classes declarees sont vide
-
 /**
  * Class Boot
  *
