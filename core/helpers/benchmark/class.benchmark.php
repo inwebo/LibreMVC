@@ -101,6 +101,7 @@ class Benchmark {
     protected function start() {
         $loop = $this->iterations;
         $args = func_get_args( $this->callback );
+        var_dump($args);
         while( --$loop >= 0  ) {
             if( count($args) > 0 ) {
                 call_user_func_array($this->callback, $args);
@@ -120,7 +121,7 @@ class Benchmark {
      * @param $floatToString bool
      * @return float|string
      */
-    public function getElapsedTime( $floatToString ) {
+    public function getElapsedTime( $floatToString = true) {
         return $this->nanoSecondesToSeconde($floatToString);
     }
 
