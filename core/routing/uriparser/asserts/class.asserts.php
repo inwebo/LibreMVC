@@ -44,7 +44,8 @@ class Asserts {
         foreach( $patternArray as $value ) {
             //echo $patternArray[$j];
             // Creation
-            $segment = new Segment($patternArray[$j], $uriArray[$j]);
+
+               // $segment = new Segment($patternArray[$j], $uriArray[$j]);
             //var_dump($segment);
 
             $mandatory  = !( is_int( strpos($value,'[') ) ) ? true : false;

@@ -54,9 +54,8 @@
                             <li><a href="#">One more separated link</a></li>
                             -->
                             <?php
-
                                 foreach(ViewBag::get()->categories as $k => $v) {
-                                    echo '<li><a href="acategory/'.$v['id'].'">'.$v['name'].'</a></li>';
+                                    echo '<li><a href="category/' . $v['id'] . '">' . $v['name'] . '</a></li>';
                                 }
                             ?>
                         </ul>
