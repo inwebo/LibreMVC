@@ -30,6 +30,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav pull-right">
                     <li> <a href="debug/">Debug</a></li>
+                    <li> <a href="login/">Login</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
@@ -44,23 +45,46 @@
             <div class="row">
                 <div class="col-md-12">
                     <div id="breadcrumbs" data-spy="affix" data-offset-top="100">
-                    <ol class="breadcrumb">
-                        <?php
+                        <ol class="breadcrumb">
+                            <?php
 
-                            foreach( ev()->BreadCrumbs->items as $k => $v ) {
-                                if($v=="") {
-                                    echo '<li>'.$k.'</li>';
+                                foreach( ev()->BreadCrumbs->items as $k => $v ) {
+                                    if($v=="") {
+                                        echo '<li>'.$k.'</li>';
+                                    }
+                                    else {
+                                        echo '<li><a href="'.$v.'">'.$k.'</a></li>';
+                                    }
                                 }
-                                else {
-                                    echo '<li><a href="'.$v.'">'.$k.'</a></li>';
-                                }
-
-                            }
-                        ?>
-                    </ol>
+                            ?>
+                        </ol>
                     </div>
                 </div>
         </div>
+        <?php
+            if( ViewBag::get()->errors != null ) {
+                foreach( ViewBag::get()->errors as $k => $v ) {
+                ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-container">
+                                <h4>Error</h4>
+                                <p><?php echo $v->errstr; ?></p>
+                                <ul>
+                                    <li>No : <?php echo $v->errno; ?></li>
+                                    <li>File : <?php echo $v->errfile; ?></li>
+                                    <li>Line : <?php echo $v->errline; ?></li>
+                                </ul>
+                                <?php
+                                var_dump($v->errcontext);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                }
+            }
+        ?>
         <?php Views::render( Environnement::this()->viewPath ); ?>
     </div>
 </div>
