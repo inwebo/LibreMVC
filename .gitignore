@@ -1,6 +1,5 @@
-/.idea/misc.xml
-/.idea/scopes/scope_settings.xml
-/.idea/vcs.xml
-/.idea/workspace.xml
-/nbproject/private/
-.idea/*.*
+*~
+.idea/*
+.idea/LibreMVC.liml
+assets/img/favicon/
+phar/LibreMVC.phar
