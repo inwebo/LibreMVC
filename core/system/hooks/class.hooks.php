@@ -38,9 +38,12 @@ class Hooks {
         if(count($args) > 1) {
             unset($args[0]);
         }
-        foreach($this->hooks[$name] as $functions) {
-            $functions($args);
+        if( isset($this->hooks[$name]) ) {
+            foreach($this->hooks[$name] as $functions) {
+                $functions($args);
+            }
         }
+
     }
 
     public function __set($key, $value) {
