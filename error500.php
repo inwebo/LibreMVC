@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bootstrap 101 Template</title>
+    <title>Oups</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -28,12 +28,9 @@
 </header>
 <div id="parallax-wrapper">
     <div class="container">
-        <div class="starter-template">
-            <h1>Internal error</h1>
-            <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-        </div>
         <div class="row">
-            <div class="col-md-12"><div class="col-container"><h3>Exception</h3><p><?php var_dump(LibreMVC\Views\Template\ViewBag::get()->error ) ?></p></div></div>
+            <div class="col-md-12"><div class="col-container"><h3><?php echo get_class( \LibreMVC\Views\Template\ViewBag::get()->exception ) ?></h3>            <p class="lead">From <?php echo $e->getFile() ?>, line <?php echo $e->getLine() ?></p>
+                    <p><?php echo $e->getMessage() ?></p><p><?php var_dump(LibreMVC\Views\Template\ViewBag::get()->exception ) ?></p></div></div>
         </div>
     </div>
 
