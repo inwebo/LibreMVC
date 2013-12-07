@@ -22,6 +22,14 @@ try {
     $defaultRoute->action = 'index';
     RoutesCollection::addRoute($defaultRoute);
 
+    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
+    $defaultRoute = new \LibreMVC\Routing\Route();
+    $defaultRoute->name = "";
+    $defaultRoute->pattern = $base_uri.'/login-out[/]';
+    $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
+    $defaultRoute->action = 'logout';
+    RoutesCollection::addRoute($defaultRoute);
+
 } catch (\Exception $e) {
     $message = time() . ', ' . $e->getCode() . ', ' . $e->getFile() . ', ' . $e->getLine() . ', ' . $e->getMessage() . "\n";
     //echo $message;
