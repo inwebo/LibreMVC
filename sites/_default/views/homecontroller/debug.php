@@ -2,7 +2,7 @@
     use \LibreMVC\Mvc\Environnement;
 ?>
 <div class="row">
-    <div class="col-md-16">
+    <div class="col-md-12">
         <div class="col-container">
             <h3>Sessions</h3>
             <?php
