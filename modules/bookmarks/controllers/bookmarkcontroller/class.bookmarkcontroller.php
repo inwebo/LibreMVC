@@ -21,11 +21,12 @@ class BookmarkController extends RestController{
 
     public function __construct() {
         parent::__construct();
-
         //var_dump($_POST);
     }
 
     public function get($args) {
+        $this->public = false;
+        $this->validateRequest();
         $this->httpReply->msg = $args[0];
         $this->httpReply->msg = "get";
     }
