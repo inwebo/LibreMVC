@@ -39,7 +39,7 @@
 <div id="parallax-wrapper">
     <div class="container">
         <div class="starter-template">
-            <h1>Welcome</h1>
+            <h1>Welcome <?php echo \LibreMVC\Sessions::get('User')->login ?></h1>
             <p class="lead">Default index page.</p>
         </div>
             <div class="row">
