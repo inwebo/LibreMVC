@@ -24,16 +24,55 @@ class User extends Entity {
     public function __construct() {
         $this->roles = $this->getRoles();
         $this->permissions = Role::getRolePermissions(4);
+        $class = get_called_class();
+        $class::$_table = 'Users';
     }
 
-    static public function isValidUser( $user, $mdp ) {
+    static public function isValidUser( $user, $mdp, $get = true ) {
         $class = get_called_class();
-        $result = $class::$_statement->query('SELECT * FROM users WHERE login = ? AND password = ? ', array($user, md5($mdp)))->first();
+        $class::$_statement->toObject($class);
+        try {
+        $result = $class::$_statement->query('SELECT * FROM Users WHERE login = ? AND password = ? ', array($user, md5($mdp)))->first();
+        }
+        catch(\Exception $e) {
+
+//            var_dump($e);
+        }
+        $isValid = isset($result) && !is_null($result) && !empty($result);
+        if($get && $isValid) {
+            return $result;
+        }
+        else {
+            return $isValid;
+        }
+        return isset($result) && !is_null($result) && !empty($result);
+    }
+
+    static public function loadByPublicKey( $user, $publicKey, $get = true ) {
+        $class = get_called_class();
+        $class::$_table = 'Users';
+        $class::$_statement->toObject($class);
+        var_dump($class);
+        try{
+            $result = $class::$_statement->query('SELECT * FROM Users WHERE login = ? AND publicKey = ? ', array($user, $publicKey))->first();
+        }
+        catch(\Exception $e) {
+
+            var_dump($e);
+        }
+        $isValid = isset($result) && !is_null($result) && !empty($result);
+        if($get && $isValid) {
+            return $result;
+        }
+        else {
+            return $isValid;
+        }
         return isset($result) && !is_null($result) && !empty($result);
     }
 
     protected function getRoles() {
         $class = get_called_class();
+        $class::$_table = 'Users';
         $query = "SELECT t1.id_role, t2.type FROM ". $class::$_table ." AS t1 JOIN Roles AS t2 ON t1.id_role = t2.id WHERE t1.id =?";
         if(!is_null($this->id) ) {
             $class::$_statement->toStdClass();
@@ -88,8 +127,8 @@ class User extends Entity {
         return md5( md5( $login, $password ) . $passPhrase );
     }
 
-    static public function compareKeys( $privateKey, $publicKey ) {
-        return $privateKey === $publicKey;
+    static public function compareKeys( $key1, $key2 ) {
+        return $key1 === $key2;
     }
 
 }
