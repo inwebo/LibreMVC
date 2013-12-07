@@ -11,6 +11,7 @@ namespace LibreMVC\Mvc\Controllers;
 
 use LibreMVC\Http\Context;
 use LibreMVC\Http\Header;
+use LibreMVC\Models\User;
 use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Http\Rest\Reply;
 use LibreMVC\Http\Rest\Client;
@@ -79,26 +80,38 @@ class RestController extends  PageController {
     }
 
     protected function validateRequest() {
+        //$user = User::loadByPublicKey($this->user, $this->token);
         if( !$this->public ) {
+            // Nécessite une authentification modification header
             if( !$this->isLoginIn() ) {
                 Header::unauthorized();
                 $this->httpReply->valid = false;
                 $this->httpReply->msg = "Unauthorized request.";
             }
+            // Essaye de se valider
             else {
-                if( !$this->isValidUser() ) {
+                if( !$this->isValidUser($this->user, $this->token) ) {
                     Header::badRequest();
                     $this->httpReply->valid = false;
                     $this->httpReply->msg = "Bad request.";
                 }
                 else {
-                    $this->httpReply = new Reply("", $this->user, Client::signature($this->user, md5("inwebo"), $this->timestamp), $this->timestamp);
+                    $this->httpReply = new Reply("x", $this->user, Client::signature($this->user, md5("inwebo"), $this->timestamp), $this->timestamp);
                 }
             }
         }
     }
 
-    protected function isValidUser() {
+    public function isLoginIn() {
+        return ( isset( $this->httpHeader->User ) && isset( $this->httpHeader->Token ) && isset( $this->httpHeader->Timestamp ));
+    }
+
+    // Existe t-il un utilisateur avec ce login
+    // Oui
+    // est ce que sa publicKey + Passphrase == privateKey
+    // Est ce que sa signature reste (user + password + timestamp) est identique a c'elle attendue
+    protected function isValidUser($login, $publicKey) {
+        var_dump('test');
         return true;
     }
 
@@ -154,9 +167,6 @@ class RestController extends  PageController {
         echo __METHOD__;
     }
 
-    public function isLoginIn() {
-        return ( isset( $this->httpHeader->User ) && isset( $this->httpHeader->Token ) && isset( $this->httpHeader->Timestamp ));
-    }
 
     public function negotiateHttpContentType() {
         switch($this->httpHeader->Accept) {
