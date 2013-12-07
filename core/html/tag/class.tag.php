@@ -123,6 +123,11 @@ abstract class Tag {
      * @return void
      * @abstract
      */
+
+    /**
+     * @param array $attributs
+     * @param array $dataAttributs
+     */
     protected function __construct($attributs = array(), $dataAttributs = array()) {
         ++static::$seed;
         $this->attributs = $attributs;

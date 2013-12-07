@@ -16,11 +16,8 @@ try {
     AutoLoader::instance()->addPool( './core/' );
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
 
-
-
     if(php_sapi_name() !== 'cli') {
         //Boot MVC
-
         new Boot( new Mvc() );
 
     }
@@ -29,9 +26,6 @@ try {
     }
 
     new Boot( new Boot\Requirements() );
-
-
-
 
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";

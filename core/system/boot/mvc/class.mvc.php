@@ -125,6 +125,12 @@ class Mvc {
     static public function registerUser(){
 
         \LibreMVC\Models\User::binder( Database\Provider::get( 'system' ), 'Users', 'id' );
+
+        //var_dump(is_null(Sessions::get('User')));
+        //var_dump(Sessions::get('User'));
+
+
+
         if( is_null(Sessions::get('User')) ) {
             $user = \LibreMVC\Models\User::load(0);
             Sessions::set('User', $user);
