@@ -225,12 +225,9 @@ FORM
 
 #breadcrumbs.affix {
     left: 0;
-    position: fixed;
     top: 51px;
     width: 100%;
     z-index: 99999;
-    text-align: center;
-
 }
 
 #breadcrumbs.affix ol{
