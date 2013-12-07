@@ -9,9 +9,14 @@
 
 namespace LibreMVC\Controllers;
 
+use LibreMVC\Http\Context;
+use LibreMVC\Http\Header;
+use LibreMVC\Instance;
 use LibreMVC\Models\User;
+use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Mvc\Controllers\RestController;
 use LibreMVC\Database;
+use LibreMVC\Sessions;
 
 /**
 // login
@@ -56,20 +61,33 @@ return btoa(hash);
 MSG
 
  */
-class LoginController extends RestController{
+class LoginController extends PageController{
 
     public function __construct(){
         parent::__construct();
     }
 
-    public function post($args) {
+    public function indexAction($args) {
         $user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-        $valid = User::isValidUser($user, $password);
-        //var_dump($_POST);
-        //var_dump($args);
-        $this->httpReply->msg = $user;
-        $this->httpReply->valid = $valid;
+        $validUser = User::isValidUser($user, $password,true);
+
+        if($validUser instanceof User) {
+            Sessions::this()['User'] = $validUser;
+            //@todo Ne fonctionne pas
+            Sessions::set('User',$validUser);
+            $_SESSION['User'] = $validUser;
+            Header::redirect(Instance::current()->baseUrl);
+        }
+        else {
+            Header::redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+
+    public function logoutAction() {
+        session_unset();
+        session_destroy();
+        Header::redirect($_SERVER['HTTP_REFERER']);
     }
 
 }
