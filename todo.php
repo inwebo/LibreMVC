@@ -27,6 +27,7 @@
 
 //@todo Clean Inputs au démarrage puis les placés dans $_ENV::Get(), Env::Post()
 //@todo Autoload js
+//@todo x-domain voit Header query Referer
 /* Exemple
 
 var user = "inwebo";
