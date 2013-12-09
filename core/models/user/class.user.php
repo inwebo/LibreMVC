@@ -21,6 +21,11 @@ class User extends Entity {
     public $roles = array();
     public $permissions = array();
 
+    static public $_primaryKey;
+    static public $_table;
+    static public $_tableDescription;
+    static public $_statement;
+
     public function __construct() {
         $this->roles = $this->getRoles();
         $this->permissions = Role::getRolePermissions(4);
@@ -52,7 +57,7 @@ class User extends Entity {
         $class = get_called_class();
         $class::$_table = 'Users';
         $class::$_statement->toObject($class);
-        var_dump($class);
+        //var_dump($class);
         try{
             $result = $class::$_statement->query('SELECT * FROM Users WHERE login = ? AND publicKey = ? ', array($user, $publicKey))->first();
         }

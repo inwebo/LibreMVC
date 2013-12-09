@@ -33,6 +33,11 @@ class Role extends Entity{
 
     protected $permissions;
 
+    static public $_primaryKey;
+    static public $_table;
+    static public $_tableDescription;
+    static public $_statement;
+
     protected function __construct() {
     }
 
