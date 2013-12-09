@@ -26,7 +26,7 @@ $(document).ready(function() {
                     var timestamp = Date.now();
                     xhr.setRequestHeader('User', window.LibreMVC.Config.login);
                     xhr.setRequestHeader('Timestamp', timestamp);
-                    xhr.setRequestHeader('Token', restSignature(window.LibreMVC.Config.login, pwd,timestamp));
+                    xhr.setRequestHeader('Token', "");
 
                 }
 
@@ -49,5 +49,5 @@ $(document).ready(function() {
     };
 
     $('#breadcrumbs').affix({});
-    LibreMVC.Modules.Bookmarks.Ajax('GET');
+    //LibreMVC.Modules.Bookmarks.Ajax('GET');
 });
