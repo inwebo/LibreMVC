@@ -2,7 +2,16 @@
 namespace LibreMVC\Http;
 
 class Header {
-    
+
+    public static function allowXDomain() {
+        //@todo totest
+        //header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Credentials: true");
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+        header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT');
+    }
+
     public static function forbidden( $content='' ) {
         header('HTTP/1.1 403 Forbidden');
         echo ($content === '') ? '403 Forbidden' : $content;
