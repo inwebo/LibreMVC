@@ -10,6 +10,8 @@
 namespace LibreMVC\Database\Driver;
 use LibreMVC\Database\Driver;
 
+class SqliteDriverFileException extends \Exception {}
+
 class SqLite extends Driver implements IDriver{
 
     const COLS_NAME = "name";
@@ -24,7 +26,7 @@ class SqLite extends Driver implements IDriver{
     protected $toMemory;
     protected $version;
 
-    public function __construct( $filename = "", $version = 3 ) {
+    public function __construct( $filename = "", $version = 3, $readonly = false ) {
         parent::__construct();
         try {
             $this->toMemory = empty($filename);
@@ -37,6 +39,32 @@ class SqLite extends Driver implements IDriver{
         } catch (\Exception $error_string) {
             echo $error_string->getMessage();
         }
+    }
+
+    public function isValidDataBaseFile( $filename ) {
+
+        $filenameRealPath = dirname(realpath($_SERVER['SCRIPT_FILENAME'])).'/'.$filename;
+        //var_dump($filenameRealPath);
+        $filenameDirName  = dirname($filenameRealPath).'/';
+        //var_dump($filenameDirName);
+
+
+        if(!$this->toMemory) {
+            // Le fichier n'existe pas ET son parent doit être en ecriture
+            if( !is_file( $filenameRealPath ) && !is_writable( $filenameDirName ) ) {
+                throw new SqliteDriverFileException('Database file : ' . $filenameRealPath . ' doesn\'t exist, ' . $filenameDirName . ' must be writable.');
+            }
+
+            if( !is_file($filename) ) {
+                if(!is_writable($filename)) {
+                    throw new SqliteDriverFileException('Database : ' .  getcwd() . '/' . $filename . ' is not writable.');
+                }
+            }
+            if( !is_writable( getcwd(). '/'. dirname($filename) ) ) {
+                throw new SqliteDriverFileException('Base folder : ' . getcwd() . '/' . dirname($filename) . ' is not writable.');
+            }
+        }
+        return true;
     }
 
     protected function prepareDSN() {
@@ -53,21 +81,6 @@ class SqLite extends Driver implements IDriver{
         }
         $dsn .= ($this->toMemory) ? ':memory:' : $this->filename;
         return $dsn;
-    }
-
-    public function isValidDataBaseFile( $filename ) {
-        if(!$this->toMemory) {
-            if( !is_file($filename) ) {
-                throw new \Exception('Database : ' .  getcwd() . '/' . $filename . ' not found.');
-                if(!is_writable($filename)) {
-                    throw new \Exception('Database : ' .  getcwd() . '/' . $filename . ' is not writable.');
-                }
-            }
-            if( !is_writable( getcwd(). '/'. dirname($filename) ) ) {
-                throw new \Exception('Base folder : ' . getcwd() . '/' . dirname($filename) . ' is not writable.');
-            }
-        }
-        return true;
     }
 
     public function _getTableInfos( $table , $filter = null) {
