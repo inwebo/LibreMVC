@@ -15,8 +15,6 @@
  *      3 - Supprimer de
  */
 
-
-//@todo Ajout des routes ajax pour les bookmarks
 //@todo API cli
 //@todo framework javascript : objet error comme LibreMVC
 //@todo permalinks, pingback voir wikipedia
@@ -24,42 +22,38 @@
 //@todo class mail
 //@todo filter chain pour le nettoyage de l'uri
 //@todo http://www.inwebo.dev/LibreMVC/ base controller byg
-
 //@todo Clean Inputs au démarrage puis les placés dans $_ENV::Get(), Env::Post()
-//@todo Autoload js
-//@todo x-domain voit Header query Referer
-/* Exemple
 
-var user = "inwebo";
-var pwd = CryptoJS.MD5("inwebo");
-var pwd = pwd.toString();
+//@todo x-domain voir Header query Referer et alternatives
+
+//@todo Normalisé les tables sqlite entre les instances !important;
+
+//@todo Les requêtes ajax doivent être faites depuis le widget !
+//@todo Configuration widget correctement.
+/* Exemple
+var user = 'inwebo';
+var pwd = 'inwebo';
+
+//$.post("http://bookmarks.inwebo.dev/bookmark/",{user:"qsd"}).done().fail().always();
 
 $.ajax({
 type: "GET",
-url: "http://bookmarks.inwebo.dev/bookmark/",
-// Seter le type par default par text et heriter de la methode
+url: "http://bookmarks.inwebo.dev/",
     headers: {
         Accept : "application/json",
         "Content-Type": "application/json"
     },
+    crossDomain: true,
     beforeSend:function(xhr){
         var timestamp = Date.now();
         xhr.setRequestHeader('User', user);
         xhr.setRequestHeader('Timestamp', timestamp);
-        xhr.setRequestHeader('Token', restSignature(user, pwd,timestamp));
-
+        xhr.setRequestHeader('Token', 'test');
     }
 
 }).done(function( msg ) {
-console.log( msg );
+console.log( msg.responsetext );
 });
-
-
-function restSignature(user, pwd, timestamp) {
-    var hash = CryptoJS.HmacSHA256(user, pwd + timestamp);
-    console.log(btoa(hash));
-    return btoa(hash);
-}
 // Favicon service
 $from = fopen( 'http://www.google.com/s2/favicons?domain='.$_GET['favicon'],'rb');
 
