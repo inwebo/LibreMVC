@@ -90,7 +90,11 @@ class RestController extends  PageController {
             }
             // Essaye de se valider
             else {
-                if( !$this->isValidUser($this->user, $this->token) ) {
+                /*$a = $this->isValidUser("", "");
+                var_dump( $a );
+                echo($this->user. $this->token);*/
+                //@todo ne comprends pas
+                if( $this->isValidUser($this->user, $this->token) === false ) {
                     Header::badRequest();
                     $this->httpReply->valid = false;
                     $this->httpReply->msg = "Bad request.";
@@ -110,8 +114,15 @@ class RestController extends  PageController {
     // Oui
     // est ce que sa publicKey + Passphrase == privateKey
     // Est ce que sa signature reste (user + password + timestamp) est identique a c'elle attendue
-    protected function isValidUser($login, $publicKey) {
-        var_dump('test');
+    //protected function isValidUser($login, $publicKey) {
+    /*protected function isValidUser($login, $publicKey) {
+        return true;
+    }*/
+    protected function isValidUser(){
+        //@todo Driver a revoir. Partage tous la m
+        //var_dump(User::$_table);
+        $user = User::loadByPublicKey($this->user, "d46a1e7d07cb1bca68b501f85c803abc");
+        //var_dump($user);
         return true;
     }
 
@@ -121,6 +132,11 @@ class RestController extends  PageController {
     public function indexAction(){
         $args = Environnement::this()->params;
         switch( $this->verb ) {
+            //@todo options
+            case 'options':
+                //var_dump('options');
+                break;
+
             case 'get':
                 // Peuple variable globale
                 parse_str(file_get_contents('php://input'), $_GET);
