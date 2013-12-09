@@ -21,7 +21,9 @@ class BookmarkController extends RestController{
 
     public function __construct() {
         parent::__construct();
+        Header::allowXDomain();
         //var_dump($_POST);
+        //var_dump($this->verb);
     }
 
     public function get($args) {
@@ -32,6 +34,7 @@ class BookmarkController extends RestController{
     }
 
     public function post($args) {
+
         //var_dump($args);
         $input = file_get_contents('php://input');
         //$input = parse_str(file_get_contents('php://input'), $_POST);
@@ -59,10 +62,11 @@ class BookmarkController extends RestController{
         $this->httpReply->msg = json_encode($_PUT);
     }
 
+    /*
     protected function isValidUser() {
         return ($this->token === Client::signature($this->user, md5("inwebo"), $this->timestamp));
     }
-
+*/
     public function formAction(){
         //$form = new Form();
         //$this->_viewbag->form = $form->toHtml(true);
