@@ -211,6 +211,7 @@ class BookmarksController extends ProtectedController{
         Views::renderAction();
     }
 
+    //@todo restService ne devrait pas être en dur.
     public function widgetAction() {
         $widgetFile = getcwd() .'/sites/bookmarks.inwebo.dev/assets/js/widget.js';
         $widgetFileAsString = file_get_contents($widgetFile, 1024);

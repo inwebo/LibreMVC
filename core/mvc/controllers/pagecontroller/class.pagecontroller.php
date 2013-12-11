@@ -64,7 +64,7 @@ abstract class PageController extends Controllers{
     protected $_breadCrumbs;
 
     /**
-     * 
+     * @todo Viewbag decrait être une instance
      */
     public function __construct() {
         $this->_viewbag = ViewBag::get();

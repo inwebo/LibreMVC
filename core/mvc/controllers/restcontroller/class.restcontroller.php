@@ -118,6 +118,10 @@ class RestController extends  PageController {
     /*protected function isValidUser($login, $publicKey) {
         return true;
     }*/
+    /**
+     * Devrait être surchargé dans les classes filles
+     * @return bool
+     */
     protected function isValidUser(){
         //@todo Driver a revoir. Partage tous la m
         //var_dump(User::$_table);
@@ -135,6 +139,7 @@ class RestController extends  PageController {
             //@todo options
             case 'options':
                 //var_dump('options');
+                // https://developer.mozilla.org/fr/docs/HTTP/Access_control_CORS !
                 break;
 
             case 'get':

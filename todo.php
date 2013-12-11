@@ -1,60 +1,39 @@
-<?php
+<html>
+<head>
+    <title>Todo list</title>
+    <meta name="description" content="todo list">
+    <meta name="keywords" content="Todo list">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<h1>Todo</h1>
+<ol>
+    <li>API cli</li>
+    <li>permalinks, pingback voir wikipedia</li>
+    <li>framework javascript : objet error comme LibreMVC (?)</li>
+    <li>Module font</li>
+    <li>Module image</li>
+    <li>Module blog</li>
+    <li>Class mail</li>
+    <li>Filter chain pattern pour le nettoyage de l'uri</li>
+    <li>Clean global inputs au démarrage puis les placés dans $_ENV::Get(), Env::Post()</li>
+    <li>Normalisé les tables sqlites</li>
+    <li>X-domain : query referer ?</li>
+    <li>Widget bookmarks doit être correctement configuré</li>
+    <li>Introduire le '~' dans le chemin des vues, est un alias de : instance_courante</li>
+    <li>ViewBag devrait être un membre des controllers.</li>
+    <li>Setter le timezone courant dans la configuration.</li>
+    <li>Ajout d'un DataBag, ou d'un PageBag</li>
+    <li>Plus aucun liens en dur dans l'application</li>
+</ol>
 
-// Script Shell
-/**
- * A - Sites
- *      1 - Lister
- *      2 - Ajouter
- *      3 - Supprimer
- *      4 - Modules
- *      4 - Cloner vers
- *
- * B - Modules
- *      1 - Lister
- *      2 - Ajouter à
- *      3 - Supprimer de
- */
-
-//@todo API cli
-//@todo framework javascript : objet error comme LibreMVC
-//@todo permalinks, pingback voir wikipedia
-//@todo modules font, images
-//@todo class mail
-//@todo filter chain pour le nettoyage de l'uri
-//@todo http://www.inwebo.dev/LibreMVC/ base controller byg
-//@todo Clean Inputs au démarrage puis les placés dans $_ENV::Get(), Env::Post()
-
-//@todo x-domain voir Header query Referer et alternatives
-
-//@todo Normalisé les tables sqlite entre les instances !important;
-
-//@todo Les requêtes ajax doivent être faites depuis le widget !
-//@todo Configuration widget correctement.
-/* Exemple
-var user = 'inwebo';
-var pwd = 'inwebo';
-
-//$.post("http://bookmarks.inwebo.dev/bookmark/",{user:"qsd"}).done().fail().always();
-
-$.ajax({
-type: "GET",
-url: "http://bookmarks.inwebo.dev/",
-    headers: {
-        Accept : "application/json",
-        "Content-Type": "application/json"
-    },
-    crossDomain: true,
-    beforeSend:function(xhr){
-        var timestamp = Date.now();
-        xhr.setRequestHeader('User', user);
-        xhr.setRequestHeader('Timestamp', timestamp);
-        xhr.setRequestHeader('Token', 'test');
-    }
-
-}).done(function( msg ) {
-console.log( msg.responsetext );
-});
-// Favicon service
-$from = fopen( 'http://www.google.com/s2/favicons?domain='.$_GET['favicon'],'rb');
-
-*/
+<h2>Webographie</h2>
+<ul>
+    <li><a href="https://developer.mozilla.org/fr/docs/HTTP/Access_control_CORS" target="_blank">Controle d'accès HTTP</a></li>
+    <li><a href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields" target="_blank">Liste des en-têtes</a></li>
+</ul>
+<h2></h2>
+<ul></ul>
+</body>
+</html>
