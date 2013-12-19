@@ -26,6 +26,7 @@
     <li>Setter le timezone courant dans la configuration.</li>
     <li>Ajout d'un DataBag, ou d'un PageBag</li>
     <li>Plus aucun liens en dur dans l'application</li>
+    <li>Pour l'édition des bookmarks voir g+ !!!</li>
     <li>Widget : Blocage du chargement du contenu mixte actif (mixed active content), certains sites refusent l'injection dans le DOM : https://www.google.fr/search?q=Blocage+du+chargement+du+contenu+mixte+actif+%28mixed+active+content%29+&ie=utf-8&oe=utf-8&rls=org.mozilla:fr:official&client=firefox-a&gws_rd=cr&ei=Gs6yUv_5E6-10QXE9oHwDg</li>
 </ol>
 
