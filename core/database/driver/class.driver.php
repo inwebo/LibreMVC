@@ -8,11 +8,20 @@
  */
 
 namespace LibreMVC\Database;
-
+/**
+ * Class Driver
+ * @package LibreMVC\Database
+ */
 class Driver {
 
+    /**
+     * @var
+     */
     protected $resource;
 
+    /**
+     * @var array
+     */
     protected $tables;
 
     public function __construct(){

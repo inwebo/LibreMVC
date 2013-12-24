@@ -101,7 +101,6 @@ class Benchmark {
     protected function start() {
         $loop = $this->iterations;
         $args = func_get_args( $this->callback );
-        var_dump($args);
         while( --$loop >= 0  ) {
             if( count($args) > 0 ) {
                 call_user_func_array($this->callback, $args);
@@ -141,3 +140,12 @@ class Benchmark {
         return new self( $iterations, $callback );
     }
 }
+$a = 0;
+
+class Foo{
+    public function bar(&$a) {echo ++$a;}
+}
+$foo = new Foo();
+$bench = new Benchmark(200, function() use ($foo, &$a) {
+   $foo->bar($a);
+});

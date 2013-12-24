@@ -10,6 +10,11 @@
 namespace LibreMVC\Database;
 use LibreMVC\Database\Driver\IDriver;
 use LibreMVC\Database\Results;
+
+/**
+ * Class Statement
+ * @package LibreMVC\Database
+ */
 class Statement {
 
     public $driver;
@@ -55,5 +60,13 @@ class Statement {
             $pdoStatement->setFetchMode(\PDO::FETCH_CLASS , $this->toObject);
         }
         return new Results($pdoStatement);
+    }
+
+    /**
+     * Are we able to query a database with instance driver
+     * @return bool
+     */
+    protected function isValidStatement() {
+        return ( !is_object($this->driver) && $this->driver instanceof IDriver );
     }
 }

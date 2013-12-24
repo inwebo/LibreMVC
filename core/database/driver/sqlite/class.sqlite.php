@@ -23,7 +23,7 @@ class SqLite extends Driver implements IDriver{
 
     public $filename;
     protected $dsn;
-    protected $toMemory;
+    public $toMemory;
     protected $version;
 
     public function __construct( $filename = "", $version = 3, $readonly = false ) {
@@ -41,6 +41,11 @@ class SqLite extends Driver implements IDriver{
         }
     }
 
+    /**
+     * @param $filename
+     * @return bool
+     * @throws SqliteDriverFileException
+     */
     public function isValidDataBaseFile( $filename ) {
 
         $filenameRealPath = dirname(realpath($_SERVER['SCRIPT_FILENAME'])).'/'.$filename;

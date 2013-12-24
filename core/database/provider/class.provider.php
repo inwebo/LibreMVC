@@ -12,6 +12,13 @@ namespace LibreMVC\Database;
 use LibreMVC\Database\Driver\IDriver;
 use LibreMVC\Database\Statement;
 
+/**
+ * Class Provider
+ *
+ * Implements multiton pattern. Will store named Driver instances.
+ *
+ * @package LibreMVC\Database
+ */
 class Provider {
 
     /**
@@ -42,6 +49,11 @@ class Provider {
         }
     }
 
+    /**
+     * Add a database driver $driver into named $name pool.
+     * @param string $name
+     * @param IDriver $driver
+     */
     static public function add( $name, IDriver $driver ) {
         if ( !isset( self::$pool ) ) {
             self::$pool = new \stdClass();

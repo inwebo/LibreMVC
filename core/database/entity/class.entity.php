@@ -10,6 +10,10 @@
 namespace LibreMVC\Database;
 
 //include('../query/class.query.php');
+/**
+ * Class Entity
+ * @package LibreMVC\Database
+ */
 class Entity {
 
     static public $_primaryKey;
@@ -18,7 +22,7 @@ class Entity {
     static public $_statement;
 
     static public function binder($statement, $table = null, $primaryKey = null) {
-        $class = get_called_class();
+       $class = get_called_class();
        if( strpos( $class , '\\') ) {
             $className = explode('\\', $class);
             $className = $class[count($class)-1];
@@ -29,14 +33,17 @@ class Entity {
         $class::$_primaryKey       = (!is_null($primaryKey)) ? $primaryKey : $class::$_statement->driver->getPrimaryKey($class::$_table);
     }
 
-    protected function bound() {
+    static function bound() {
         $class = get_called_class();
         return !is_null($class::$_statement) && !is_null($class::$_table) && !is_null($class::$_tableDescription) && !is_null($class::$_primaryKey);
     }
 
     static public function load( $primaryKeyValue, $primaryKey = null ) {
         $class = get_called_class();
-        $pk = (is_null($primaryKey)) ? $class::$_primaryKey : $primaryKey;
+        $pk = ( is_null( $primaryKey ) ) ? $class::$_primaryKey : $primaryKey;
+        if( !is_object($class::$_statement) ) {
+            throw new \Exception("From object" . $class . ' please bind your entity to a table please' );
+        }
         $class::$_statement->toObject($class);
         return $class::$_statement->query('select * from ' . $class::$_table . ' WHERE ' . $pk . "=? LIMIT 1",array($primaryKeyValue))->first();
     }
