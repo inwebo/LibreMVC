@@ -125,7 +125,7 @@ class RestController extends  PageController {
     protected function isValidUser(){
         //@todo Driver a revoir. Partage tous la m
         //var_dump(User::$_table);
-        $user = User::loadByPublicKey($this->user, "d46a1e7d07cb1bca68b501f85c803abc");
+        //$user = User::loadByPublicKey($this->user, "d46a1e7d07cb1bca68b501f85c803abc");
         //var_dump($user);
         return true;
     }

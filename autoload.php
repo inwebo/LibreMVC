@@ -12,6 +12,39 @@ use LibreMVC\Http\Header;
 use LibreMVC\Errors\ErrorsHandler;
 use LibreMVC\Routing\RoutesCollection;
 
+/**
+ * JS
+ */
+
+/*
+
+var user = 'inwebo';
+var pwd = 'inwebo';
+
+$.ajax({
+type: "POST",
+url: "http://bookmarks.inwebo.dev/bookmark/",
+
+headers: {
+    Accept : "application/json",
+    "Content-Type": "application/json"
+},
+beforeSend:function(xhr){
+    var timestamp = Date.now();
+    xhr.setRequestHeader('User', user);
+    xhr.setRequestHeader('Timestamp', timestamp);
+    xhr.setRequestHeader('Token', 'test');
+}
+}).error(function(msg){
+    console.log(msg.responseText);
+})
+.done(function( msg ) {
+    console.log( msg );
+});
+
+
+ */
+
 try {
     AutoLoader::instance()->addPool( './core/' );
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
@@ -19,7 +52,6 @@ try {
     if(php_sapi_name() !== 'cli') {
         //Boot MVC
         new Boot( new Mvc() );
-
     }
     else {
         //Boot cli

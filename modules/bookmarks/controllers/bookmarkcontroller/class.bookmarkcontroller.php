@@ -12,6 +12,7 @@ namespace LibreMVC\Modules\Bookmarks\Controllers;
 use LibreMVC\Errors;
 use LibreMVC\Form;
 use LibreMVC\Http\Header;
+use LibreMVC\Models\User;
 use LibreMVC\Mvc\Controllers\RestController;
 use LibreMVC\Views;
 use LibreMVC\Http\Context;
@@ -33,17 +34,29 @@ class BookmarkController extends RestController{
         $this->httpReply->msg = "get";
     }
 
-    public function post($args) {
+    protected function isValidUser($user, $publicKey) {
+        //var_dump($user, $publicKey);
+        // Charge l'utilisateur par son user & publicKey
+        //$_user = User::loadByPublicKey($user, $publicKey, true);
+        //var_dump($_user);
 
+        return true;
+    }
+
+    public function post($args) {
         //var_dump($args);
-        $input = file_get_contents('php://input');
+
+        //Déjà fait dans la classe parent
+        //$input = file_get_contents('php://input');
         //$input = parse_str(file_get_contents('php://input'), $_POST);
+
         //var_dump( $_POST );
         //var_dump($_POST);
+
         //echo( $_SERVER['REQUEST_METHOD']);
-        $this->public = false;
-        $this->validateRequest();
-        $this->httpReply->msg = json_encode($_POST);
+        //$this->public = false;
+        //$this->validateRequest();
+        $this->httpReply->msg = json_encode('Posted');
     }
 
     public function delete($args) {

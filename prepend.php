@@ -1,4 +1,5 @@
 <?php
+/*
 include( dirname(__FILE__) . "/core/autoloader/class.autoloader.php" );
 include('core/standart.php');
 include('core/helpers.php');
@@ -22,4 +23,4 @@ class _Post {
 
 }
 $g = new Get();
-echo $g->q;
+echo $g->q;*/

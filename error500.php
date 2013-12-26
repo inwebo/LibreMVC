@@ -32,6 +32,7 @@
             <div class="col-md-12"><div class="col-container"><h3><?php echo get_class( \LibreMVC\Views\Template\ViewBag::get()->exception ) ?></h3>            <p class="lead">From <?php echo $e->getFile() ?>, line <?php echo $e->getLine() ?></p>
                     <p><?php echo $e->getMessage() ?></p><p><?php var_dump(LibreMVC\Views\Template\ViewBag::get()->exception ) ?></p></div></div>
         </div>
+
     </div>
 
 

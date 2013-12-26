@@ -94,6 +94,7 @@ class Mvc {
     }
 
     static public function loadSystemDb() {
+
         Database\Provider::add('system', new SQlite(Environnement::this()->paths->base_routes));
         Environnement::this()->_dbSystem = Database\Provider::get('system');
     }
@@ -123,7 +124,7 @@ class Mvc {
     }
 
     static public function registerUser(){
-
+        \LibreMVC\Models\Role::binder( Database\Provider::get( 'system' ), 'Roles', 'id' );
         \LibreMVC\Models\User::binder( Database\Provider::get( 'system' ), 'Users', 'id' );
 
         //var_dump(is_null(Sessions::get('User')));
@@ -135,9 +136,17 @@ class Mvc {
             $user = \LibreMVC\Models\User::load(0);
             Sessions::set('User', $user);
         }
-        Role::binder( Database\Provider::get( 'system' ), 'Roles', 'id' );
 
         //var_dump(Sessions::this());
+    }
+
+    static public function sandBox() {
+        $user = User::loadByPublicKey('inwebo','d46a1e7d07cb1bca68b501f85c803abc');
+        var_dump($user);
+
+        $newUser = new User("James","Password","passPhrase", "test@test.fr++");
+        $newUser->save();
+        var_dump($newUser);
     }
 
     static public function loadJavascriptConfig() {

@@ -39,11 +39,13 @@ class Role extends Entity{
     static public $_statement;
 
     protected function __construct() {
+
     }
 
     static public function getRolePermissions($role_id) {
         $class = get_called_class();
         $query = "SELECT id_role, id_perm, description FROM role_perm AS T1 JOIN Permissions AS T2 ON T1.id_perm = T2.id WHERE T1.id_role =?";
+        //var_dump($class::$_statement);
         $permissions = $class::$_statement->query($query, array( $role_id) )->All();
         return($permissions);
     }
