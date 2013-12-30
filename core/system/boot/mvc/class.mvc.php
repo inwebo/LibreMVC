@@ -141,15 +141,19 @@ class Mvc {
     }
 
     static public function sandBox() {
-        $user = User::loadByPublicKey('inwebo','d46a1e7d07cb1bca68b501f85c803abc');
-        var_dump($user);
 
-        $newUser = new User("James","Password","passPhrase", "test@test.fr++");
-        $newUser->save();
-        var_dump($newUser);
+        $user = User::loadByPublicKey('inwebo','d46a1e7d07cb1bca68b501f85c803abc');
+        //var_dump($user);
+
+        /*
+                $newUser = new User("James","Password","passPhrase", "test@test.fr++");
+                $newUser->save();
+                var_dump($newUser);*/
     }
 
     static public function loadJavascriptConfig() {
+        $profilPublic = Sessions::this()['User'];
+        unset($profilPublic->privateKey, $profilPublic->password);
         $jsc = new JavascriptConfig("LibreMVC",Sessions::this()['User'] );
         ViewBag::get()->JsConfig = $jsc;
     }
