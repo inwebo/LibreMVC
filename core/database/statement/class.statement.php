@@ -63,6 +63,19 @@ class Statement {
     }
 
     /**
+     * @param string $file
+     * @return bool
+     */
+    public function queryFromSqlFile( $file ) {
+        var_dump($file);
+        var_dump(is_file($file));
+        $handle = fopen($file, "r");
+        $contents = fread($handle, filesize($file));
+        $this->query($contents);
+        return true;
+    }
+
+    /**
      * Are we able to query a database with instance driver
      * @return bool
      */
