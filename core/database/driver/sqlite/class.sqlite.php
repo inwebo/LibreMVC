@@ -14,18 +14,27 @@ class SqliteDriverFileException extends \Exception {}
 
 class SqLite extends Driver implements IDriver{
 
-    const COLS_NAME = "name";
-    const COLS_TYPE = "type";
-    const COLS_NULLABLE = "notnull";
-    const COLS_DEFAULT = "dflt_value";
-    const COLS_PRIMARY_KEY = "pk";
+    const COLS_NAME          = "name";
+    const COLS_TYPE          = "type";
+    const COLS_NULLABLE      = "notnull";
+    const COLS_DEFAULT       = "dflt_value";
+    const COLS_PRIMARY_KEY   = "pk";
     const COLS_PRIMARY_VALUE = "1";
 
+    /**
+     * @var string
+     */
     public $filename;
     protected $dsn;
     public $toMemory;
+    protected $memoryPersistence;
     protected $version;
 
+    /**
+     * @param string $filename Absolute database file path.
+     * @param int $version
+     * @param bool $readonly
+     */
     public function __construct( $filename = "", $version = 3, $readonly = false ) {
         parent::__construct();
         try {
@@ -52,23 +61,18 @@ class SqLite extends Driver implements IDriver{
         //var_dump($filenameRealPath);
         $filenameDirName  = dirname($filenameRealPath).'/';
         //var_dump($filenameDirName);
+        /*
+                if(!$this->toMemory) {
+                    // Le dossier contenant le fichier sqlite n'est pas accessible en ecriture.
+                    if( !is_writable( $filenameDirName ) ) {
+                        throw new SqliteDriverFileException('Database file\'s root folder : ' . $filenameDirName . ' must be writable');
+                    }
 
+                    if( !is_file( $filenameRealPath ) && !is_writable( $filenameDirName ) ) {
+                        throw new SqliteDriverFileException('Database file : ' . $filenameRealPath . ' doesn\'t exist, ' . $filenameDirName . ' must be writable.');
+                    }
 
-        if(!$this->toMemory) {
-            // Le fichier n'existe pas ET son parent doit être en ecriture
-            if( !is_file( $filenameRealPath ) && !is_writable( $filenameDirName ) ) {
-                throw new SqliteDriverFileException('Database file : ' . $filenameRealPath . ' doesn\'t exist, ' . $filenameDirName . ' must be writable.');
-            }
-
-            if( !is_file($filename) ) {
-                if(!is_writable($filename)) {
-                    throw new SqliteDriverFileException('Database : ' .  getcwd() . '/' . $filename . ' is not writable.');
-                }
-            }
-            if( !is_writable( getcwd(). '/'. dirname($filename) ) ) {
-                throw new SqliteDriverFileException('Base folder : ' . getcwd() . '/' . dirname($filename) . ' is not writable.');
-            }
-        }
+                }*/
         return true;
     }
 
@@ -84,6 +88,7 @@ class SqLite extends Driver implements IDriver{
                 $dsn .= "2:";
                 break;
         }
+
         $dsn .= ($this->toMemory) ? ':memory:' : $this->filename;
         return $dsn;
     }
