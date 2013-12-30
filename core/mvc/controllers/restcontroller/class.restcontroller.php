@@ -100,7 +100,7 @@ class RestController extends  PageController {
                     $this->httpReply->msg = "Bad request.";
                 }
                 else {
-                    $this->httpReply = new Reply("x", $this->user, Client::signature($this->user, md5("inwebo"), $this->timestamp), $this->timestamp);
+                    $this->httpReply = new Reply($this->user . " is a valid user.", $this->user, Client::signature($this->user, md5("inwebo"), $this->timestamp), $this->timestamp);
                 }
             }
         }
@@ -122,13 +122,14 @@ class RestController extends  PageController {
      * Devrait être surchargé dans les classes filles
      * @return bool
      */
+    /*
     protected function isValidUser(){
         //@todo Driver a revoir. Partage tous la m
         //var_dump(User::$_table);
         //$user = User::loadByPublicKey($this->user, "d46a1e7d07cb1bca68b501f85c803abc");
         //var_dump($user);
         return true;
-    }
+    }*/
 
     /**
      * @todo Check si la méthode existe sinon 405 405 	Method Not Allowed
@@ -136,7 +137,7 @@ class RestController extends  PageController {
     public function indexAction(){
         $args = Environnement::this()->params;
         switch( $this->verb ) {
-            //@todo options
+            //@todo options verb
             case 'options':
                 //var_dump('options');
                 // https://developer.mozilla.org/fr/docs/HTTP/Access_control_CORS !
@@ -147,18 +148,23 @@ class RestController extends  PageController {
                 parse_str(file_get_contents('php://input'), $_GET);
                 $this->get($args);
                 break;
+
             case 'post':
                 // Peuple variable globale
                 parse_str(file_get_contents('php://input'), $_POST);
                 $this->post($args);
                 break;
+
             case 'update':
                 $this->update($args);
                 break;
+
             case 'delete':
                 $this->delete($args);
                 break;
+
             case 'put':
+                parse_str(file_get_contents('php://input'), $_POST);
                 $this->put($args);
                 break;
         }
@@ -200,11 +206,12 @@ class RestController extends  PageController {
                 Header::xml();
                 break;
 
+            default:
             case 'text/html':
                 Header::html();
                 break;
 
-            default:
+
             case 'text/plain':
                 Header::textPlain();
                 break;
