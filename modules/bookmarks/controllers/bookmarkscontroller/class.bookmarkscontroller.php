@@ -218,7 +218,7 @@ class BookmarksController extends ProtectedController{
         // unset($_SESSION);
 
         $widgetFileAsString = str_replace("%user%",Sessions::this()['User']->login,$widgetFileAsString);
-        $widgetFileAsString = str_replace("%password%",Sessions::this()['User']->password,$widgetFileAsString);
+        $widgetFileAsString = str_replace("%publicKey%",Sessions::this()['User']->publicKey,$widgetFileAsString);
         $widgetFileAsString = str_replace("%restService%", "http://bookmarks.inwebo.dev/form", $widgetFileAsString);
         $this->_viewbag->get()->widget = $widgetFileAsString;
 
