@@ -11,6 +11,7 @@ include('driver/class.driver.php');
 include('provider/class.provider.php');
 include('driver/mysql/class.mysql.php');
 include('driver/sqlite/class.sqlite.php');
+include('driver/sqlite/sqlitetomemory/class.sqlitetomemory.php');
 include('results/class.results.php');
 include('statement/class.statement.php');
 include('entity/class.entity.php');
