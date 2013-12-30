@@ -32,14 +32,17 @@ class User extends Entity {
     static public $_tableDescription;
     static public $_statement;
 
-    public function __construct( $login, $password, $passPhrase, $mail ) {
+    public function __construct( $login = null, $password=null, $passPhrase=null, $mail=null ) {
         if( !is_null($login)) {
-            //$this->login = $login ;
+            $this->login = $login ;
         }
         if( is_null($this->id)) {
-            //$this->id = DEFAULT_ID_USER ;
+            $this->id = DEFAULT_ID_USER ;
         }
-        $this->mail = $mail;
+        if( !is_null($mail) ) {
+            $this->mail = $mail;
+        }
+
         $this->password = $this->generateHash($password);
         $this->passPhrase = $this->generateHash($passPhrase);
         $this->publicKey = $this->hashPublicKey($this->login, $this->password);
@@ -85,6 +88,12 @@ class User extends Entity {
         //$user = $class::$_statement->query('SELECT * FROM Users WHERE login = ? AND publicKey = ? ', array($user, $publicKey))->first();
         //var_dump($user);
         return $user;
+    }
+
+    static public function isValidRestQuery($user, $publicKey) {
+        /**
+         * - Est un utilisateur connus
+         */
     }
 
     /*
