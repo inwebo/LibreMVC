@@ -21,6 +21,17 @@ class Entity {
     static public $_tableDescription;
     static public $_statement;
 
+    /**
+     * @todo: Devrait exister 1 constructeur pour l'instanciation ET pour le chargement de la database, cela évite les contructeur
+     * avec des parametres par default inutile (cf Model\User )
+     */
+
+    /**
+     * @param $statement
+     * @param null $table
+     * @param null $primaryKey
+     */
+
     static public function binder($statement, $table = null, $primaryKey = null) {
        $class = get_called_class();
        if( strpos( $class , '\\') ) {
