@@ -17,6 +17,14 @@ try {
     $base_uri = trim(Environnement::this()->instance->baseUri,'/');
     $defaultRoute = new \LibreMVC\Routing\Route();
     $defaultRoute->name = "";
+    $defaultRoute->pattern = $base_uri.'/restservice[/]';
+    $defaultRoute->controller = '\LibreMVC\Controllers\RestServiceController';
+    $defaultRoute->action = 'index';
+    RoutesCollection::addRoute($defaultRoute);
+
+    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
+    $defaultRoute = new \LibreMVC\Routing\Route();
+    $defaultRoute->name = "";
     $defaultRoute->pattern = $base_uri.'/login-in[/]';
     $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
     $defaultRoute->action = 'index';
