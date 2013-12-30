@@ -1,4 +1,4 @@
-javascript:(function(){
+/*javascript:(function(){
 
     var user ="";
 
@@ -27,4 +27,4 @@ javascript:(function(){
     }
 
     window.open(restService+'?url='+url+'&title='+title+'&description='+'&keywords='+keywords,'AddBookmaks','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
-})();
+})();*/
