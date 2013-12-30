@@ -8,6 +8,8 @@
 
     $(document).ready(function(){
         //@todo sauvegarde des bookmarks
+        window.LibreMVC.Config.User.login = '<?php echo $_GET['user'] ?>';
+        window.LibreMVC.Config.User.publicKey = '<?php echo $_GET['publicKey'] ?>';
     });
 
 </script>
@@ -15,7 +17,7 @@
 <?php //var_dump( $_GET ); ?>
 <div class="col-md-12">
     <div class="col-container">
-        <form id="bookmark-edit" class="form-horizontal" role="form">
+        <form id="bookmark" class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="inputEmail1" class="col-lg-2 control-label">Url</label>
                 <div class="col-lg-10">
