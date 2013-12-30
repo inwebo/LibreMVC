@@ -13,7 +13,7 @@
     <base href="<?php echo ViewBag::get()->meta->baseUrl; ?>">
     <?php css() ?>
     <?php js()  ?>
-
+    <?php echo ViewBag::get()->JsConfig; ?>
 </head>
 <body>
 <header>
@@ -63,6 +63,7 @@
         </div>
         <?php
             if( ViewBag::get()->errors != null ) {
+                var_dump(ViewBag::get()->errors);
                 foreach( ViewBag::get()->errors as $k => $v ) {
                 ?>
                     <div class="row">
