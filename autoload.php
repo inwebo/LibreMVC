@@ -19,11 +19,11 @@ use LibreMVC\Routing\RoutesCollection;
 /*
 
 var user = 'inwebo';
-var pwd = 'inwebo';
+var token = 'd46a1e7d07cb1bca68b501f85c803abc';
 
 $.ajax({
 type: "POST",
-url: "http://bookmarks.inwebo.dev/bookmark/",
+url: "http://www.inwebo.dev/LibreMVC/restservice/",
 
 headers: {
     Accept : "application/json",
@@ -33,7 +33,7 @@ beforeSend:function(xhr){
     var timestamp = Date.now();
     xhr.setRequestHeader('User', user);
     xhr.setRequestHeader('Timestamp', timestamp);
-    xhr.setRequestHeader('Token', 'test');
+    xhr.setRequestHeader('Token', token);
 }
 }).error(function(msg){
     console.log(msg.responseText);
