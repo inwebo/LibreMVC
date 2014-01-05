@@ -142,7 +142,7 @@ class Mvc {
 
     static public function sandBox() {
 
-        $user = User::loadByPublicKey('inwebo','d46a1e7d07cb1bca68b501f85c803abc');
+        //$user = User::loadByPublicKey('inwebo','d46a1e7d07cb1bca68b501f85c803abc');
         //var_dump($user);
 
         /*
