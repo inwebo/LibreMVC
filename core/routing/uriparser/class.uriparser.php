@@ -15,6 +15,7 @@ namespace LibreMVC\Routing;
 use LibreMVC\Instance;
 use LibreMVC\Routing\UriParser\Segment;
 use LibreMVC\Http\Uri;
+use LibreMVC\Routing\UriParser\SegmentConstraint;
 
 /**
  * Class UriParser
@@ -45,13 +46,23 @@ class UriParser {
      * Compare chaques segments d'une uri à ceux d'une route
      */
     public function processPattern() {
-
-
         $uriSegments = $this->uri->toSegments();
         $routeSegments = $this->route->toSegments();
 
         $j = 0;
         foreach( $routeSegments as $routeSegment ) {
+
+            if(isset($uriSegments[$j])) {
+                $constraint = new SegmentConstraint($uriSegments[$j],$routeSegment );
+                var_dump($constraint->getController());
+                if( $constraint->isController() ) {
+                    $this->route->controller = $constraint->getController();
+                }
+                if( $constraint->isAction() ) {
+                    $this->route->action = $constraint->getAction();
+                }
+            }
+            /*
             switch( $routeSegment->segment ) {
                 case ":controller":
                     if( isset($uriSegments[$j]) ) {
@@ -71,60 +82,10 @@ class UriParser {
                 default:
                     break;
             }
+            */
             $j++;
         }
         return $this->route;
-        /**
-         * Pour tous les segments du pattern d'une route
-         */
-        /*foreach( $patternArray as $value ) {
-
-            // Est il requis et est il présent dans l'uri
-                // Non route 404
-
-                // Oui
-
-            // Est il optionnel
-            $optional = ( is_int( strpos( $value, '[' ) ) ) ? true : false;
-
-
-            if( $optional !== false ) {
-
-                // Obligatoire, le segment est il présent dans l'uri courante
-                if( isset( $uriArray[$j] ) && $uriArray[$j] !== "/" ) {
-
-                    switch( $value ) {
-                        case "[:controller]":
-                            $this->route->controller = $uriArray[$j];
-                            break;
-
-                        case "[:action]":
-                            $this->route->action = $uriArray[$j];
-                            break;
-
-                        case '[:id]':
-                            $params[] = $uriArray[$j];
-                            break;
-
-                        case '[:instance]':
-                            //$segment[] = Instance::getBaseDirRealPath();
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    if( strpos( $value, ':id|' ) !== false ) {
-                        $parmName = explode( '|', $value );
-                        $params[trim($parmName[1],']')] = $uriArray[$j];
-                    }
-                }
-                $this->route->params = $params;
-            }
-
-            $j++;
-        }
-        return $this->route;*/
     }
 
 }

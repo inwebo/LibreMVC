@@ -60,19 +60,22 @@ class Router {
             // Est une uri qui valide un pattern de route.
             if( $routeConstraint->isValidUri("LibreMVC\\Routing\\UriParser\\SegmentConstraint") ) {
 
-                /**
-                 * Set les valeurs Controller, Action, Params pour la route courante
-                 */
+                // UriIsGreaterThanRoute
+                if( !$routeConstraint->isUriSegmentsGreaterThanRouteSegment() ) {
+                    /**
+                     * Set les valeurs Controller, Action, Params pour la route courante
+                     */
+                    $parser = new UriParser( $this->uri,$this->routesCollection->routes->current());
+                    return $parser->processPattern();
+                }
 
-                $parser = new UriParser( $this->uri,$this->routesCollection->routes->current());
 
-                return $parser->processPattern();
 
             }
 
             $this->routesCollection->routes->next();
         }
-
+        return $this->routesCollection->getDefaultRoute();
 /*
         while( isset( $this->routeCollection[++$j] ) ) {
             $parser = new UriParser( $this->uri, $this->routeCollection[$j], $this->asserts );

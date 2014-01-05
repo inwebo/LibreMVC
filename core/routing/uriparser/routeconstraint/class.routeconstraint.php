@@ -26,17 +26,11 @@ class RouteConstraint {
     protected $valid;
     protected $uri;
     protected $route;
-    protected $segmentsConstraint;
 
     public function __construct( Uri $uri, Route $route ) {
         $this->valid = false;
         $this->uri   = $uri;
         $this->route = $route;
-        //$this->segmentsConstraint = $segmentConstraint;
-    }
-
-    public function setSegmentConstraint(SegmentConstraint $segmentConstraint) {
-        $this->segmentsConstraint = $segmentConstraint;
     }
 
     public function isDefaultRoute() {

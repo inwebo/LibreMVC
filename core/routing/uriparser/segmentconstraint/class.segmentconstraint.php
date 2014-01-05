@@ -24,10 +24,6 @@ class SegmentConstraint implements SegmentComparable {
         $this->segmentRoute = $segmentRoute;
     }
 
-    static public function load(  ) {
-
-    }
-
     public function isValidMandatory() {
         return ($this->segmentRoute->mandatory && $this->segmentUri->mandatory && ($this->segmentUri->segment === $this->segmentRoute->segment) );
     }
@@ -45,7 +41,7 @@ class SegmentConstraint implements SegmentComparable {
     }
 
     public function isParam() {
-        return ($this->segmentRoute->segment === ":id");
+        return ( ( strstr($this->segmentRoute->segment,'[:id') !== false ) ? true : false );
     }
 
     public function isInstance() {
@@ -53,15 +49,15 @@ class SegmentConstraint implements SegmentComparable {
     }
 
     public function getController() {
-        return ($this->isController()) ? $this->segmentUri : null;
+        return ($this->isController()) ? $this->segmentUri->segment : null;
     }
 
     public function getAction() {
-        return ($this->isAction()) ? $this->segmentUri : null;
+        return ($this->isAction()) ? $this->segmentUri->segment : null;
     }
 
     public function getParam() {
-        return ($this->isParam()) ? $this->segmentUri : null;
+        return ($this->isParam()) ? $this->segmentUri->segment : null;
     }
 
 }
