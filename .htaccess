@@ -3,6 +3,12 @@
 	Order allow,deny
 	Deny from all
 </Files>
+<Files ~ "\.sqlite3$">
+	Order allow,deny
+	Deny from all
+</Files>
+#X-domain
+
 RewriteEngine On
 #RewriteBase /LibreMVC
 RewriteCond %{REQUEST_FILENAME} !-f
