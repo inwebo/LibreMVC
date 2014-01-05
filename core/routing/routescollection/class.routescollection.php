@@ -9,13 +9,62 @@
 
 namespace LibreMVC\Routing;
 
-
+/**
+ * Class RoutesCollection
+ *
+ * Multiton
+ *
+ * @package LibreMVC\Routing
+ */
 class RoutesCollection {
 
-    static public $routes = array();
+    static protected $instances;
+    public $routes;
 
-    public function __construct(){}
+    public function __construct(){
+        $this->routes = new \SplObjectStorage();
+    }
 
+    static public function get( $name ) {
+
+        if( is_null( self::$instances ) ) {
+            self::$instances = new \StdClass();
+        }
+
+        if( !isset( self::$instances->$name ) ) {
+            self::$instances->$name = new self;
+        }
+
+        return self::$instances->$name;
+    }
+
+    public function addRoute(Route $route) {
+        $this->routes->attach($route);
+    }
+
+    public function getDefaultRoute() {
+        $this->routes->rewind();
+        return $this->routes->current();
+    }
+
+    public function reset() {
+        $this->routes = new \SplObjectStorage();
+    }
+
+    public function getRoutes() {
+        return $this;
+    }
+
+    public function toString() {
+        return $this->routes->serialize();
+    }
+
+    public function hasRoute( Route $route ) {
+        return $this->routes->offsetExists($route);
+    }
+
+
+    /*
     static public function load(){
         return self::$routes;
     }
@@ -40,7 +89,14 @@ class RoutesCollection {
         }
     }
 
+    static public function getDefaultRoute() {
+        // Est la premiere de la pile FILO
+    }
+
     static public function reset() {
         self::$routes = array();
-    }
+    }*/
+
+
+
 }

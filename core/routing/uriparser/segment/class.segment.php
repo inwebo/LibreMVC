@@ -12,30 +12,30 @@ namespace LibreMVC\Routing\UriParser;
 //@todo todo !
 class Segment {
 
-    public $mandatory;
     public $rawSegment;
     public $segment;
-    public $dataIn;
+
+    public $mandatory;
+
     public $isNamed;
     public $name;
     public $isTyped;
     public $type;
+    public $isRegex;
     public $regex;
     public $validateType;
     public $valid = false;
 
-    public function __construct( $segment, $dataIn ) {
-
+    public function __construct( $segment ) {
         $this->rawSegment       = $segment;
         $this->mandatory        = $this->isMandatory();
         $this->segment          = trim( $segment, '[]' );
-        $this->dataIn           = $dataIn;
         $this->isNamed          = $this->isNamed();
         $this->name             = ( $this->isNamed() ) ? $this->getName()      : null;
         $this->isTyped          = $this->isTyped();
         $this->type             = ( $this->isTyped )   ? $this->getType()      : null ;
-        $this->validateType     = ( $this->isTyped() ) ? $this->validateType() : null ;
         $this->valid            = $this->isValid();
+        $this->isRegex          = $this->isRegex();
     }
 
     protected function isNamed() {
@@ -44,6 +44,7 @@ class Segment {
 
     protected function getName() {
         $name = explode( '|', $this->segment );
+
         if($this->isTyped()) {
             $name[1] = preg_replace('#\(.*\)#','',$name[1]);
         }
@@ -54,7 +55,7 @@ class Segment {
     }
 
     protected function isTyped() {
-        return (preg_match("#\({1}(.*)\){1}#", $this->segment) === 0) ? false : true;
+        return (preg_match('#\({1}(.*)\){1}#', $this->segment) === 0) ? false : true;
     }
 
     protected function isMandatory() {
@@ -65,15 +66,15 @@ class Segment {
         return $this->betweenChar(array('(',')'), $this->segment);
     }
 
-    protected function validateType() {
+    protected function validateType( $data ) {
         switch( $this->type ) {
             case 'int':
-                return !preg_match('#[a-zA-Z]#', $this->dataIn);
+                return !preg_match('#[a-zA-Z]#', $data );
                 break;
 
             case 'regex':
                 preg_match_all("#\#(.*)\##", $this->segment, $match);
-                $result = preg_match($match[0][0], $this->dataIn);
+                $result = preg_match($match[0][0], $data );
                 $this->regex = $match[0][0];
                 return ($result === 0) ? false : true;
                 break;
@@ -88,7 +89,7 @@ class Segment {
     }
 
     protected function isRegex() {
-        return preg_match("#\#(.*)\##", $this->segment);
+        return (bool)preg_match("#\#(.*)\##", $this->segment);
     }
 
     protected function isValid() {

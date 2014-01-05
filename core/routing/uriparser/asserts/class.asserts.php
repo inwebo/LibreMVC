@@ -9,6 +9,8 @@
 
 namespace LibreMVC\Routing\UriParser;
 
+use LibreMVC\Http\Uri;
+use LibreMVC\Routing\Route;
 
 class Asserts {
 
@@ -29,11 +31,17 @@ class Asserts {
         return ( $uri->value === $route->name ) ;
     }
 
-    static public function isUriGreaterThanRoute( $uri, $route ) {
-        return ( count($uri->toArray()) > count($route->patternToArray()) );
+    static public function isUriGreaterThanRoute( Uri $uri, Route $route ) {
+        /*
+        var_dump($uri);
+        var_dump(count($uri->toArray()));
+        var_dump(count($route->patternToArray()));
+*/
+        //return ( count($uri->toArray()) > count( $route->patternToArray()) );
+        return false;
     }
 
-    static public function isValidPattern($uri, $route) {
+    static public function isValidPattern( Uri $uri, Route $route ) {
         //@todo refactoring
         $valid = true;
         $uriArray = $uri->toArray();
@@ -41,17 +49,20 @@ class Asserts {
 
         //var_dump($patternArray);
         $j = 0;
+        /**
+         * Pour tous les segments du pattern
+         */
         foreach( $patternArray as $value ) {
             //echo $patternArray[$j];
             // Creation
 
-               // $segment = new Segment($patternArray[$j], $uriArray[$j]);
+            //$segment = new Segment($patternArray[$j], $uriArray[$j]);
             //var_dump($segment);
 
             $mandatory  = !( is_int( strpos($value,'[') ) ) ? true : false;
             //echo (int) $mandatory;
             $requiredName = self::cleanParam($value);
-
+            //echo $requiredName;
             // Segment obligatoire
             if( $mandatory ) {
                 if( !isset( $uriArray[$j] ) || $uriArray[$j] != $value ) {
@@ -78,7 +89,7 @@ class Asserts {
         return $valid;
     }
 
-    static public function isValidParam() {
+    static public function isValidSegment() {
         return self::$isValidParam;
     }
 

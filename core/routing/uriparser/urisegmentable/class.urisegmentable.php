@@ -2,17 +2,17 @@
 /**
  * Created by JetBrains PhpStorm.
  * User: inwebo
- * Date: 26/04/13
- * Time: 11:51
+ * Date: 05/01/14
+ * Time: 12:25
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMVC\Http;
+namespace LibreMVC\Routing\UriParser;
 
+use LibreMVC\Http\Uri;
+use LibreMVC\Routing\Segmentable;
 
-use LibreMVC\Routing\UriParser\Segment;
-
-class Uri {
+class UriSegmentable implements Segmentable{
 
     protected $raw;
     public $value;
@@ -75,20 +75,11 @@ class Uri {
         return ( $object !== false ) ? (object) $buffer : $buffer;
     }
 
-    public function countSegments() {
-        return count($this->toArray());
-    }
-
     /**
      * @todo
      */
     public function toSegments() {
-        $return = Array();
-        $segments = $this->toArray();
-        foreach($segments as $segment) {
-            $return[] = new Segment($segment,"");
-        }
-        return $return;
+
     }
 
 }

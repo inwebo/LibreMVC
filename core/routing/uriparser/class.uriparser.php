@@ -14,89 +14,85 @@ namespace LibreMVC\Routing;
 
 use LibreMVC\Instance;
 use LibreMVC\Routing\UriParser\Segment;
+use LibreMVC\Http\Uri;
 
+/**
+ * Class UriParser
+ *
+ *
+ *
+ * @package LibreMVC\Routing
+ */
 class UriParser {
 
-    /**
-     * Représentation normée d'une uri
-     * @var object
-     */
     protected $uri;
+    protected $route;
+    protected $segmentConstraintClass;
 
-    /**
-     * @var
-     */
-    public $route;
+    //protected $assertsObject;
 
-    /**
-     * @var object $asserts Un objet contenant les assertions à valider
-     */
-    protected $assertsObject;
-
-    /**
-     * @var array Tableau associatif sous la forme :
-     * <code>
-     * array(
-     *    "nomDeLassertion" => result
-     * );
-     * <code>
-     */
     public $assertsResult = array();
 
-    public function __construct( $uri, $route, $asserts ) {
-        $this->uri = $uri;
-        $this->route = $route;
-        $this->assertsObject = $asserts;
-        $this->assertions();
+    public function __construct( Uri $uri, Route $route) {
+        $this->uri                    = $uri;
+        $this->route                  = $route;
+
     }
 
-    public function assertions() {
-        $methods = get_class_methods($this->assertsObject);
-        foreach( $methods as  $member ) {
-            // Doit commencer par is, est donc une assertion
-            $isAssert = !strncmp($member, "is", strlen("is"));;
 
-            // Invoke l'assertion avec les bons arguments.
-            if($isAssert) {
-                $reflectAssertions = new \ReflectionMethod($this->assertsObject, $member);
-                $this->assertionInvoker($reflectAssertions);
-            }
-        }
-    }
 
-    protected function assertionInvoker( $reflect ) {
-        $arguments = $reflect->getParameters();
-        if( count( $arguments ) === 1 ) {
-            $result = $reflect->invoke( $reflect->name, $this->uri);
-        }
-        else {
-            $result = $reflect->invoke( $reflect->name, $this->uri, $this->route);
-        }
-        $this->assertsResult[$reflect->name] = $result;
-        return $result;
-    }
+    /**
+     * Compare chaques segments d'une uri à ceux d'une route
+     */
+    public function processPattern() {
 
-    public function isValidRoute() {
-        $valid = true;
-        foreach($this->assertsResult as $value) {
-            $valid = $valid || $value;
-        }
-        return $valid;
-    }
 
-    public function processPattern( $namedRoute = false ) {
-        $uriArray     = $this->uri->toArray();
-        $patternArray = $this->route->patternToArray();
+        $uriSegments = $this->uri->toSegments();
+        $routeSegments = $this->route->toSegments();
 
-        $params = array();
         $j = 0;
-        foreach( $patternArray as $value ) {
+        foreach( $routeSegments as $routeSegment ) {
+            switch( $routeSegment->segment ) {
+                case ":controller":
+                    if( isset($uriSegments[$j]) ) {
+                        $this->route->controller = $uriSegments[$j]->segment;
+                    }
+                    break;
+                case ":action":
+                    if( isset($uriSegments[$j]) ) {
+                        $this->route->action = $uriSegments[$j]->segment;
+                    }
+                    break;
 
+                case '[:instance]':
+                    //$segment[] = Instance::getBaseDirRealPath();
+                    break;
+
+                default:
+                    break;
+            }
+            $j++;
+        }
+        return $this->route;
+        /**
+         * Pour tous les segments du pattern d'une route
+         */
+        /*foreach( $patternArray as $value ) {
+
+            // Est il requis et est il présent dans l'uri
+                // Non route 404
+
+                // Oui
+
+            // Est il optionnel
             $optional = ( is_int( strpos( $value, '[' ) ) ) ? true : false;
+
 
             if( $optional !== false ) {
 
+                // Obligatoire, le segment est il présent dans l'uri courante
                 if( isset( $uriArray[$j] ) && $uriArray[$j] !== "/" ) {
+
                     switch( $value ) {
                         case "[:controller]":
                             $this->route->controller = $uriArray[$j];
@@ -110,9 +106,6 @@ class UriParser {
                             $params[] = $uriArray[$j];
                             break;
 
-                        /**
-                         * @todo Ajouter asserts
-                         */
                         case '[:instance]':
                             //$segment[] = Instance::getBaseDirRealPath();
                             break;
@@ -131,7 +124,7 @@ class UriParser {
 
             $j++;
         }
-        return $this->route;
+        return $this->route;*/
     }
 
 }
