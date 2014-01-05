@@ -48,6 +48,15 @@ class Entity {
         $class = get_called_class();
         return !is_null($class::$_statement) && !is_null($class::$_table) && !is_null($class::$_tableDescription) && !is_null($class::$_primaryKey);
     }
+    static function boundTo() {
+        $class = get_called_class();
+        var_dump($class::$_statement);
+        var_dump($class::$_table);
+        var_dump($class::$_tableDescription);
+        var_dump($class::$_primaryKey);
+
+        return !is_null($class::$_statement) && !is_null($class::$_table) && !is_null($class::$_tableDescription) && !is_null($class::$_primaryKey);
+    }
 
     static public function load( $primaryKeyValue, $primaryKey = null ) {
         $class = get_called_class();
@@ -72,6 +81,10 @@ class Entity {
             $tokens = array_fill(0, count((array)$tableCols), '?');
             $query = "INSERT INTO " . $class::$_table . " ( " . implode(',', $arrayKeys ) . ' ) VALUES ( ' . implode(',', $tokens ) . ' )';
             $statement = $class::$_statement->query($query,$arrayValues );
+            if($statement instanceof \Exception) {
+                return false;
+            }
+            //@todo : Test si statement est valid : ex: insert multiple avec la meme clef primaire unique fait renvoit une erreur pas un booléan
             return (!$statement) ? false : true;
         } else {
             try {
@@ -79,6 +92,9 @@ class Entity {
                 $query = "UPDATE " . $class::$_table . ' SET ' . Query::toUpdate($tableCols) . ' WHERE ' . $pk . ' =?';
                 $arrayValues = array_merge($arrayValues, array($this->$pk));
                 $statement = $class::$_statement->query($query, $arrayValues );
+                if($statement instanceof \Exception) {
+                    return false;
+                }
                 return (!$statement) ? false : true;
             }
             catch(\Exception $e) {

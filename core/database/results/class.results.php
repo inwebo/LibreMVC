@@ -18,7 +18,10 @@ class Results {
 
     public function __construct(\PDOStatement $pdoStatement) {
         $this->pdoStatement = $pdoStatement;
-        $this->rows = new \ArrayIterator($this->pdoStatement->fetchAll());
+        // @todo : Après un insert est inutile.
+        $isInsert = (strpos($this->pdoStatement->queryString,'INSERT') );
+        //$this->rows = ($isInsert === false) ? new \ArrayIterator($this->pdoStatement->fetchAll()) :  new \ArrayIterator();
+        $this->rows = ($isInsert === false) ? new \ArrayIterator($this->pdoStatement->fetchAll()) :  new \ArrayIterator();
         $this->rows->rewind();
     }
 
@@ -35,6 +38,6 @@ class Results {
     }
 
     public function count(){
-        return $this->rows->count();
+        return $this->pdoStatement->rowCount();
     }
 }

@@ -46,7 +46,7 @@ class SqLite extends Driver implements IDriver{
             $this->resource->setAttribute(\PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION);
             return $this->resource;
         } catch (\Exception $error_string) {
-            echo $error_string->getMessage();
+            var_dump($error_string);
         }
     }
 

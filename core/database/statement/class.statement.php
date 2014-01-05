@@ -10,6 +10,7 @@
 namespace LibreMVC\Database;
 use LibreMVC\Database\Driver\IDriver;
 use LibreMVC\Database\Results;
+use LibreMVC\Http\Header;
 
 /**
  * Class Statement
@@ -49,13 +50,16 @@ class Statement {
 
     public function query($query, $params = array() ) {
         $pdoStatement = $this->driver->getResource()->prepare($query);
-        if(!$pdoStatement) {
-            trigger_error('Bad resource error');
+        try {
+            (!is_null($params) && is_array($params)) ?
+                $pdoStatement->execute($params) :
+                $pdoStatement->execute();
         }
-        (!is_null($params) && is_array($params)) ?
-            $pdoStatement->execute($params) :
-            $pdoStatement->execute();
-
+        // N'est pas un statement valid
+        catch(\Exception $e) {
+            //Header::badRequest();
+            return $e;
+        }
         if( isset($this->toObject) ) {
             $pdoStatement->setFetchMode(\PDO::FETCH_CLASS , $this->toObject);
         }
