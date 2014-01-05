@@ -233,3 +233,13 @@ FORM
 #breadcrumbs.affix ol{
     border-bottom: solid 1px #000000;
 }
+
+#displayWidget {
+    text-align: center;
+    font-size: large;
+}
+
+#displayWidget a {
+    padding: 0.3em;
+    border: solid 1px darkgrey;
+}
