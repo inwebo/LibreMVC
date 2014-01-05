@@ -32,7 +32,7 @@ class Bookmark extends Entity{
         $tags = new Tags($tags);
         $this->tags = $tags->toString();
         $this->description = $description;
-        $this->dt = $dt;
+        $this->dt = $this->toSqlTimeStamp();
         $this->category = $category;
         $this->public = $public;
         //@todo favicon
@@ -47,10 +47,15 @@ class Bookmark extends Entity{
 	}
 	
 	public function dateUnix() {
-		$date = new DateTime( $this->dt );
+		$date = new \DateTime( $this->dt );
 		return $date->format('U');
 	}
-	
+
+    public function toSqlTimeStamp() {
+        $date = new \DateTime( $this->dt );
+        return $date->format('Y:m:d H:i:s');
+    }
+
 	public function faviconEncode() {
 		return base64_encode($this->favicon);
 	}

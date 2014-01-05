@@ -47,7 +47,12 @@ class BookmarksController extends ProtectedController{
         $this->_config = Config::load( $this->_paths->base_config . '_db.ini' , false);
 
         // Database
-        Database\Provider::add( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user, $this->_config->db_password ) );
+        try {
+            Database\Provider::add( 'bookmarks', new MySQL( $this->_config->db_server, $this->_config->db_database, $this->_config->db_user, $this->_config->db_password ) );
+        }
+        catch(\Exception $e) {
+            //var_dump($e);
+        }
         $this->_db = Database\Provider::get('bookmarks');
         $this->_prefixTables = Config::load(Environnement::this()->Modules->Bookmarks->config);
         $this->_prefixTables =  $this->_prefixTables->Db->tablePreffix ;
@@ -211,17 +216,13 @@ class BookmarksController extends ProtectedController{
         Views::renderAction();
     }
 
-    //@todo restService ne devrait pas être en dur.
     public function widgetAction() {
-        $widgetFile = getcwd() .'/sites/bookmarks.inwebo.dev/assets/js/widget.js';
+        $widgetFile = Environnement::this()->instance->realPath.'/assets/js/widget.js';
         $widgetFileAsString = file_get_contents($widgetFile, 1024);
-        // unset($_SESSION);
-
         $widgetFileAsString = str_replace("%user%",Sessions::this()['User']->login,$widgetFileAsString);
         $widgetFileAsString = str_replace("%publicKey%",Sessions::this()['User']->publicKey,$widgetFileAsString);
-        $widgetFileAsString = str_replace("%restService%", "http://bookmarks.inwebo.dev/form", $widgetFileAsString);
+        $widgetFileAsString = str_replace("%restService%", Environnement::this()->instance->baseUrl."form", $widgetFileAsString);
         $this->_viewbag->get()->widget = $widgetFileAsString;
-
         Views::renderAction();
     }
 
