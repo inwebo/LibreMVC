@@ -1,3 +1,6 @@
+<?php
+    use LibreMVC\Mvc\Environnement;
+?>
 <script>
     $("h1").hide();
     $(".starter-template").hide();
@@ -10,6 +13,42 @@
         //@todo sauvegarde des bookmarks
         window.LibreMVC.Config.User.login = '<?php echo $_GET['user'] ?>';
         window.LibreMVC.Config.User.publicKey = '<?php echo $_GET['publicKey'] ?>';
+
+        $('#save').on('click',function(){
+            $.ajax({
+                type: "PUT",
+                url: "<?php echo Environnement::this()->instance->baseUrl; ?>bookmark",
+                data:$('#bookmark').serialize(),
+                headers: {
+                    Accept : "application/json",
+                    "Content-Type": "application/json"
+                },
+                beforeSend:function(xhr){
+                    var timestamp = Date.now();
+                    xhr.setRequestHeader('User', window.LibreMVC.Config.User.login);
+                    xhr.setRequestHeader('Timestamp', timestamp);
+                    xhr.setRequestHeader('Token', window.LibreMVC.Config.User.publicKey);
+                }
+            }).error(function(msg){
+                    var response = $.parseJSON(msg.responseText);
+                    $('#response').html(response.msg);
+                    console.log(response);
+                    alert('fail');
+                })
+                .done(function( msg ) {
+                    var response = $.parseJSON(msg);
+                    alert(response.valid);
+                    if( msg.valid == false ) {
+                        console.log("Error");
+                    }
+                    else {
+                        alert(msg);
+                        alert('done');
+                        window.close();
+                    }
+
+                });
+        });
     });
 
 </script>
@@ -17,23 +56,24 @@
 <?php //var_dump( $_GET ); ?>
 <div class="col-md-12">
     <div class="col-container">
+        <div id="response"></div>
         <form id="bookmark" class="form-horizontal" role="form">
             <div class="form-group">
-                <label for="inputEmail1" class="col-lg-2 control-label">Url</label>
+                <label for="url" class="col-lg-2 control-label">Url</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="inputEmail1" name="inputEmail1" placeholder="eg : http://www.inwebo.net" value="<?php echo $_GET['url'] ?>">
+                    <input type="text" class="form-control" id="url" name="url" placeholder="eg : http://www.inwebo.net" value="<?php echo $_GET['url'] ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputPassword1" class="col-lg-2 control-label">Title</label>
+                <label for="title" class="col-lg-2 control-label">Title</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="inputPassword1" placeholder="I'm a title" value="<?php echo $_GET['title'] ?>">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="I'm a title" value="<?php echo $_GET['title'] ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="select" class="col-lg-2 control-label">Categorie</label>
+                <label for="category" class="col-lg-2 control-label">Categorie</label>
                 <div class="col-lg-10">
-                    <select class="form-control">
+                    <select class="form-control" id="category" name="category">
                         <?php
                             foreach(vb()->Bookmarks->categories as $k => $v) {
                                 echo '<option value="'.$v.'">' . $k . '</option>';
@@ -43,22 +83,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputPassword1" class="col-lg-2 control-label">keywords</label>
+                <label for="keywords" class="col-lg-2 control-label">keywords</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="inputPassword1" placeholder="eg : hello world these are keywords example" value="<?php echo $_GET['keywords'] ?>">
+                    <input type="text" class="form-control" id="keywords" name="keywords" placeholder="eg : hello world these are keywords example" value="<?php echo $_GET['keywords'] ?>">
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputPassword1" class="col-lg-2 control-label">Description</label>
+                <label for="description" class="col-lg-2 control-label">Description</label>
                 <div class="col-lg-10">
-                    <textarea class="form-control" rows="3" placeholder="A brief description of the current bookmark"><?php echo $_GET['description'] ?></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="A brief description of the current bookmark"><?php echo $_GET['description'] ?></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10">
-                    <id id="bookmark-save" type="submit" class="btn btn-default">Save</id>
+                    <id id="save" name="save" type="submit" class="btn btn-default">Save</id>
                 </div>
             </div>
+            <input id="favicon" name="favicon" type="hidden" value="<?php echo $_GET['favicon'] ?>">
             <!--
 <a target="_blank" href="javascript:(function(){
 

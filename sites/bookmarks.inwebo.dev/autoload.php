@@ -1,6 +1,7 @@
 <?php
 use LibreMVC\System\Hooks;
 use LibreMVC\Mvc\Environnement;
+use LibreMVC\Routing\RoutesCollection;
 try {
     LibreMVC\AutoLoader::instance()->addPool( './' );
 
@@ -13,6 +14,30 @@ try {
         $array[1]->items->home = Environnement::this()->instance->baseUrl;
         $array = $array[1];
     });
+
+    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
+    $defaultRoute = new \LibreMVC\Routing\Route();
+    $defaultRoute->name = "";
+    $defaultRoute->pattern = $base_uri.'/login-in[/]';
+    $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
+    $defaultRoute->action = 'index';
+    RoutesCollection::addRoute($defaultRoute);
+
+    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
+    $defaultRoute = new \LibreMVC\Routing\Route();
+    $defaultRoute->name = "";
+    $defaultRoute->pattern = $base_uri.'/login-out[/]';
+    $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
+    $defaultRoute->action = 'logout';
+    RoutesCollection::addRoute($defaultRoute);
+
+    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
+    $defaultRoute = new \LibreMVC\Routing\Route();
+    $defaultRoute->name = "";
+    $defaultRoute->pattern = $base_uri.'/login-out[/]';
+    $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
+    $defaultRoute->action = 'logout';
+    RoutesCollection::addRoute($defaultRoute);
 
 } catch (\Exception $e) {
     $message = time() . ', ' . $e->getCode() . ', ' . $e->getFile() . ', ' . $e->getLine() . ', ' . $e->getMessage() . "\n";

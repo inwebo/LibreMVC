@@ -10,7 +10,7 @@ javascript:(function(){
     var title = encodeURIComponent(document.title);
 
     var faviconQuery = document.evaluate('//*[contains(@rel,\'shortcut icon\')]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    var favicon = (faviconQuery.snapshotLength != 0) ? faviconQuery.snapshotItem(0).getAttribute('href')  : null;
+    var favicon = (faviconQuery.snapshotLength != 0) ? encodeURIComponent(faviconQuery.snapshotItem(0).getAttribute('href'))  : null;
 
     var description;
     var keywords;
@@ -26,5 +26,5 @@ javascript:(function(){
         }
     }
 
-    window.open(restService+'?user='+user+'&publicKey='+publicKey+'&url='+url+'&title='+title+'&description='+'&keywords='+keywords,'AddBookmaks','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
+    window.open(restService+'?user='+user+'&publicKey='+publicKey+'&url='+url+'&title='+title+'&description='+'&keywords='+keywords+'&favicon='+favicon,'AddBookmaks','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
 })();
