@@ -1,6 +1,8 @@
 <?php
     use \LibreMVC\Mvc\Environnement;
+    use LibreMVC\Sessions;
 ?>
+<?php if(Sessions::this()['User']->id=="1") { ?>
 <div class="row">
     <div class="col-md-12">
         <div class="col-container">
@@ -75,3 +77,4 @@
 <?php
     var_dump(\LibreMVC\Views\Template\ViewBag::get()->env);
 ?>
+<?php } ?>
