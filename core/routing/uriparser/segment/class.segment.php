@@ -12,20 +12,64 @@ namespace LibreMVC\Routing\UriParser;
 //@todo todo !
 class Segment {
 
+    /**
+     * @var string Segment de l'uri.
+     */
     public $rawSegment;
+
+    /**
+     * @var string Segment de l'uri sans les []
+     */
     public $segment;
 
+    /**
+     * @var bool Est il un segment obligatoire dans l'uri.
+     */
     public $mandatory;
 
+    /**
+     * @var bool Si est un paramétre ( pour être un parametre il doit commencer par [:id
+     */
     public $isNamed;
+
+    /**
+     * @var mixed|null Si isNamed alors contient le nom du parametre
+     */
     public $name;
+
+    /**
+     * @var bool Il y a t il une contrainte de type sur le segment courant.
+     */
     public $isTyped;
+
+    /**
+     * @var null|string So isTyped alors le type doit être int|regex
+     */
     public $type;
+
+    /**
+     * @var bool La contrainte du segment est validé par une regex.
+     */
     public $isRegex;
+
+    /**
+     * @var string Une regex de validation du segment.
+     */
     public $regex;
+
+    /**
+     * @var bool Le segment valide t il la contrainte de type.
+     */
     public $validateType;
+
+    /**
+     * @var bool Est il un segment valide.
+     */
     public $valid = false;
 
+    /**
+     * @param $segment string Un segment de l'URI.
+     */
     public function __construct( $segment ) {
         $this->rawSegment       = $segment;
         $this->mandatory        = $this->isMandatory();
@@ -38,6 +82,11 @@ class Segment {
         $this->isRegex          = $this->isRegex();
     }
 
+    /**
+     * Le segment
+     *
+     * @return bool TRUE si est un parametre nomé.
+     */
     protected function isNamed() {
         return ( strpos(  $this->segment, ':id|' ) !== false ) ? true :false;
     }
