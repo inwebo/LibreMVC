@@ -9,6 +9,8 @@
 
 namespace LibreMVC\Routing;
 
+class EmptyRoutesCollection extends \Exception{};
+
 /**
  * Class RoutesCollection
  *
@@ -20,9 +22,17 @@ class RoutesCollection {
 
     static protected $instances;
     public $routes;
+    /**
+     * @var bool Si vrai FILO
+     */
+    protected $stack;
+    /**
+     * @var bool Si vrai FIFO
+     */
+    protected $queue;
 
     public function __construct(){
-        $this->routes = new \SplObjectStorage();
+        $this->routes = new \SplStack();
     }
 
     static public function get( $name ) {
@@ -39,16 +49,20 @@ class RoutesCollection {
     }
 
     public function addRoute(Route $route) {
-        $this->routes->attach($route);
+        $this->routes->push($route);
     }
 
     public function getDefaultRoute() {
-        $this->routes->rewind();
-        return $this->routes->current();
+        if( $this->routes->count() > 0 ) {
+            return $this->routes->offsetGet($this->routes->count()-1);
+        }
+        else {
+            throw new EmptyRoutesCollection('Please populate RoutesCollection before accessing it.');
+        }
     }
 
     public function reset() {
-        $this->routes = new \SplObjectStorage();
+        $this->routes = new \SplStack();
     }
 
     public function getRoutes() {
@@ -62,41 +76,5 @@ class RoutesCollection {
     public function hasRoute( Route $route ) {
         return $this->routes->offsetExists($route);
     }
-
-
-    /*
-    static public function load(){
-        return self::$routes;
-    }
-
-    static public function addRoute($route) {
-        self::$routes[] = $route;
-    }
-
-    static public function getRoute($route) {
-        if(isset(self::$routes[$route])) {
-            return self::$routes[$route];
-        }
-    }
-
-    static public function getRoutes() {
-        return self::$routes;
-    }
-
-    static public function delRoute( $route ) {
-        if(isset(self::$routes[$route])) {
-            unset(self::$routes[$route]);
-        }
-    }
-
-    static public function getDefaultRoute() {
-        // Est la premiere de la pile FILO
-    }
-
-    static public function reset() {
-        self::$routes = array();
-    }*/
-
-
 
 }

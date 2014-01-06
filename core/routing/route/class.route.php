@@ -59,7 +59,7 @@ class Route {
      *
      * @return string
      */
-    public function extractMandatorySegment() {
+    protected function extractMandatorySegment() {
         $crochetStart = strpos($this->pattern,"[");
         if( $crochetStart !== false ) {
             $mandatory = substr( $this->pattern, 0, $crochetStart );

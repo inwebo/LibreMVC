@@ -50,41 +50,39 @@ class UriParser {
         $routeSegments = $this->route->toSegments();
 
         $j = 0;
+        $params = array();
         foreach( $routeSegments as $routeSegment ) {
 
             if(isset($uriSegments[$j])) {
                 $constraint = new SegmentConstraint($uriSegments[$j],$routeSegment );
-                var_dump($constraint->getController());
                 if( $constraint->isController() ) {
                     $this->route->controller = $constraint->getController();
                 }
                 if( $constraint->isAction() ) {
                     $this->route->action = $constraint->getAction();
                 }
-            }
-            /*
-            switch( $routeSegment->segment ) {
-                case ":controller":
-                    if( isset($uriSegments[$j]) ) {
-                        $this->route->controller = $uriSegments[$j]->segment;
-                    }
-                    break;
-                case ":action":
-                    if( isset($uriSegments[$j]) ) {
-                        $this->route->action = $uriSegments[$j]->segment;
-                    }
-                    break;
+                // Est un parametre
+                if( $constraint->isParam() ) {
+                    // est il typé
+                    if( $routeSegment->isTyped ) {
+                        // valide t il la contrainte
+                        if( $routeSegment->validateData( $uriSegments[$j]->segment ) ) {
 
-                case '[:instance]':
-                    //$segment[] = Instance::getBaseDirRealPath();
-                    break;
+                        }
+                    }
+                    else {
 
-                default:
-                    break;
+                    }
+
+                    if( !is_null($routeSegment->paramName) ) {
+                        $params[$routeSegment->paramName] = $uriSegments[$j]->segment;
+                    }
+                }
             }
-            */
             $j++;
         }
+        var_dump($params);
+        $this->route->params = $params;
         return $this->route;
     }
 

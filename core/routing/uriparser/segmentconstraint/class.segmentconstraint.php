@@ -41,7 +41,7 @@ class SegmentConstraint implements SegmentComparable {
     }
 
     public function isParam() {
-        return ( ( strstr($this->segmentRoute->segment,'[:id') !== false ) ? true : false );
+        return ( ( strstr($this->segmentRoute->segment,':id') !== false ) ? true : false );
     }
 
     public function isInstance() {

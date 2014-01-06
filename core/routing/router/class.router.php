@@ -36,9 +36,9 @@ class Router {
     protected $routeConstraint;
 
     public function __construct( Uri $uri, RoutesCollection $routesCollection, $routeConstraintClass) {
-        $this->uri             = $uri;
+        $this->uri              = $uri;
         $this->routesCollection = $routesCollection;
-        $this->routeConstraint = $routeConstraintClass;
+        $this->routeConstraint  = $routeConstraintClass;
     }
 
     /**
@@ -53,62 +53,24 @@ class Router {
 
             // Est une route nommée.
             if( $routeConstraint->isNamedRoute() ) {
-
                 return $this->routesCollection->routes->current();
             }
 
             // Est une uri qui valide un pattern de route.
             if( $routeConstraint->isValidUri("LibreMVC\\Routing\\UriParser\\SegmentConstraint") ) {
-
                 // UriIsGreaterThanRoute
-                if( !$routeConstraint->isUriSegmentsGreaterThanRouteSegment() ) {
-                    /**
-                     * Set les valeurs Controller, Action, Params pour la route courante
-                     */
+                if( $routeConstraint->isUriSegmentsGreaterThanRouteSegment() === false ) {
                     $parser = new UriParser( $this->uri,$this->routesCollection->routes->current());
                     return $parser->processPattern();
                 }
-
-
-
             }
 
             $this->routesCollection->routes->next();
         }
+        // Si on arrive ici est une route inconnue.
+        Header::error(404);
         return $this->routesCollection->getDefaultRoute();
-/*
-        while( isset( $this->routeCollection[++$j] ) ) {
-            $parser = new UriParser( $this->uri, $this->routeCollection[$j], $this->asserts );
 
-
-            // @todo developper cette partie finement
-
-             //@important Est nécessaire pour garder l'unicité des uris. elles doivent être uniques.
-              //@todo : bug routing, ex : category/1 ne fonctionne pas
-
-            if($parser->assertsResult['isUriGreaterThanRoute']) {
-                echo "isUriGreaterThanRoute === true";
-                return null;
-            }
-
-            if( $parser->assertsResult['isNamedRoute'] ) {
-                // Redirection, unicité des routes
-                Header::movedPermanently();
-                header('Location: ' . Context::getServer( true, true ) .$this->routeCollection[$j]->pattern);
-                return $this->routeCollection[$j];
-            }
-
-            if( $parser->assertsResult['isValidSegment'] === false ) {
-                echo "isValidSegment === false";
-                return null;
-            }
-
-            if( $parser->assertsResult['isValidPattern'] ) {
-                return $parser->processPattern();
-            }
-
-        }
-*/
     }
 
 
