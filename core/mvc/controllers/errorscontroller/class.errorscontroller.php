@@ -24,8 +24,8 @@ class ErrorsController {
     public function error404Action() {
         Views::renderAction();
     }
-
-    static public function throwHttpError( $httpErrorNumber ) {
+    //@todo : file to render
+    static public function throwHttpError( $httpErrorNumber, $file = null ) {
         Header::error($httpErrorNumber);
         $controller = new ErrorsController();
         $controller->error404Action();
