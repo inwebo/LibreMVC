@@ -32,7 +32,7 @@ use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
 use LibreMVC\Errors\ErrorsHandler;
-//@todo Boot MVC, peut exister boot CLI
+
 class Mvc {
 
     const LIBREMVC_CONFIG_INI = "config/paths.ini";
@@ -51,10 +51,23 @@ class Mvc {
     static public function loadConfig() {
     }
 
+    static public function initInstance() {
+        Environnement::this()->instance = new Instance( Context::getUrl() );
+    }
+
+    static public function defaultRoute() {
+        Hooks::get()->callHooks('prependRoutes');
+        //@todo bug sur les routes nommées le chemin base_view n'est pas construit
+        $defaultRoute = new Route( "/".trim(Environnement::this()->instance->baseUri,'/').'[/][:action][/][:id][/]',
+            '\LibreMVC\Controllers\HomeController',
+            'index'
+        );
+        RoutesCollection::get('default')->addRoute($defaultRoute);
+        Hooks::get()->callHooks('appendRoutes');
+    }
+
     static public function autoloadInstance() {
         Environnement::this()->paths = Instance::current()->processPattern(Config::load( self::LIBREMVC_CONFIG_INI ), "", "" );
-        Environnement::this()->instance = new Instance( Context::getUrl() );
-
         Environnement::this()->baseUrls = Environnement::this()->instance->processBaseIncludePattern( Environnement::this()->instance->baseUrl, Environnement::this()->paths );
 
         if(is_file( Environnement::this()->paths->base_autoload )) {
@@ -103,19 +116,7 @@ class Mvc {
         Localisation::setup('','','');
     }
 
-    static public function defaultRoute() {
 
-        Hooks::get()->callHooks('prependRoutes');
-        // Default route
-        //@todo bug sur les routes nommées le chemin base_view n'est pas construit
-        $defaultRoute = new Route();
-        $defaultRoute->name = "";
-        $defaultRoute->pattern = trim(Environnement::this()->instance->baseUri,'/').'[/][:action][/][:id][/]';
-        $defaultRoute->controller = '\LibreMVC\Controllers\HomeController';
-        $defaultRoute->action = 'index';
-        RoutesCollection::addRoute($defaultRoute);
-        Hooks::get()->callHooks('appendRoutes');
-    }
 
     static public function startSession() {
         $sessions_vars = array('lg'=>'fr');
@@ -183,19 +184,28 @@ class Mvc {
         // Lock du singleton en lecture seule
         Environnement::this()->readOnly = true;
 
-        $router = new Router( Uri::current(), RoutesCollection::getRoutes(), Asserts::load() );
+        $router = new Router( Uri::current(), RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
 
         $routedRoute = $router->dispatch();
-        Environnement::this()->controller  = $routedRoute->controller;
-        Environnement::this()->action      = $routedRoute->action;
-        Environnement::this()->params      = $routedRoute->params;
-        Environnement::this()->routedRoute = $routedRoute;
 
-        \LibreMVC\Mvc::invoker(
-            $routedRoute->controller,
-            $routedRoute->action,
-            $routedRoute->params
-        );
+        var_dump($routedRoute);
+        // Est ce une route valide ?
+        if( $routedRoute !== false ) {
+            Environnement::this()->controller  = $routedRoute->controller;
+            Environnement::this()->action      = $routedRoute->action;
+            Environnement::this()->params      = $routedRoute->params;
+            Environnement::this()->routedRoute = $routedRoute;
+
+            \LibreMVC\Mvc::invoker(
+                $routedRoute->controller,
+                $routedRoute->action,
+                $routedRoute->params
+            );
+        }
+        // Erreur 404
+        else {
+            ErrorsController::throwHttpError('404');
+        }
 
     }
 
