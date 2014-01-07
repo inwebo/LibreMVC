@@ -2,7 +2,6 @@
 
 ## Objectifs
 
-Nous travaillons avec un systeme Model Vue Controller.
 Nous souhaitons un objet qui permet de lier une URI à un Controller, une Action de Controller, et de Params d'Action.
 Cet objet pourra être intégré dans un objet FrontController.
 
