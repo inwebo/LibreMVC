@@ -20,7 +20,7 @@
     <li>Clean global inputs au démarrage puis les placés dans $_ENV::Get(), Env::Post()</li>
     <li>Normalisé les tables sqlites</li>
     <li>X-domain : query referer ?</li>
-    <li>Widget bookmarks doit être correctement configuré</li>
+    <li><s>Widget bookmarks doit être correctement configuré</s></li>
     <li>Introduire le '~' dans le chemin des vues, est un alias de : instance_courante</li>
     <li>ViewBag devrait être un membre des controllers.</li>
     <li>Setter le timezone courant dans la configuration.</li>
@@ -28,6 +28,7 @@
     <li>Plus aucun liens en dur dans l'application</li>
     <li>Pour l'édition des bookmarks voir g+ !!!</li>
     <li>Widget : Blocage du chargement du contenu mixte actif (mixed active content), certains sites refusent l'injection dans le DOM : https://www.google.fr/search?q=Blocage+du+chargement+du+contenu+mixte+actif+%28mixed+active+content%29+&ie=utf-8&oe=utf-8&rls=org.mozilla:fr:official&client=firefox-a&gws_rd=cr&ei=Gs6yUv_5E6-10QXE9oHwDg</li>
+    <li>Il me manque le layout, http://librairie.immateriel.fr/fr/read_book/9782212123920/chap007</li>
 </ol>
 
 <h2>Webographie</h2>
