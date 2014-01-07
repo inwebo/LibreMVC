@@ -14,7 +14,7 @@ use LibreMVC\Http\Header;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Routing\UriParser;
 use LibreMVC\Routing\RoutesCollection;
-use LibreMVC\Routing\UriParser\RouteConstraint\RouteConstraint;
+use LibreMVC\Routing\UriParser\RouteConstraint;
 use LibreMVC\Routing\UriParser\SegmentConstraint;
 use LibreMVC\Http\Uri;
 /**

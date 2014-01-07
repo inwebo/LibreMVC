@@ -29,7 +29,7 @@ class Route {
     public $action;
     public $params;
 
-    public function __construct( $pattern, $name = null, $controller = null, $action = null, $params = null ) {
+    public function __construct( $pattern, $controller = null, $action = null, $params = null, $name = null ) {
         $this->pattern      = $pattern;
         $this->name         = $name;
         $this->controller   = $controller;
