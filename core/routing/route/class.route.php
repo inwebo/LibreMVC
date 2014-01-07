@@ -8,9 +8,7 @@
  */
 
 namespace LibreMVC\Routing;
-//use LibreMVC\Database\Entity;
 
-//class Route extends Entity{
 use LibreMVC\Routing\UriParser\Segment;
 
 /**
@@ -25,19 +23,18 @@ use LibreMVC\Routing\UriParser\Segment;
 class Route {
 
     public $name;
-    /**
-     * @var string le pattern d'une URI
-     */
+
     public $pattern;
     public $controller;
     public $action;
     public $params;
 
-    protected $segments = array();
-
-    public function __construct($pattern, $controller=null, $action=null, $params=null) {
-        $this->pattern  = $pattern;
-        $this->segments = $this->toSegments();
+    public function __construct( $pattern, $name = null, $controller = null, $action = null, $params = null ) {
+        $this->pattern      = $pattern;
+        $this->name         = $name;
+        $this->controller   = $controller;
+        $this->action       = $action;
+        $this->params       = $params;
     }
 
     public function getMandatorySegments() {
@@ -123,10 +120,6 @@ class Route {
 
     public function countSegments() {
         return count($this->toSegments());
-    }
-
-    public function toString() {
-
     }
 
 }

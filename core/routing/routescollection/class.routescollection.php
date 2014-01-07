@@ -54,7 +54,8 @@ class RoutesCollection {
 
     public function getDefaultRoute() {
         if( $this->routes->count() > 0 ) {
-            return $this->routes->offsetGet($this->routes->count()-1);
+            $this->routes->rewind();
+            return $this->routes->offsetGet(0);
         }
         else {
             throw new EmptyRoutesCollection('Please populate RoutesCollection before accessing it.');

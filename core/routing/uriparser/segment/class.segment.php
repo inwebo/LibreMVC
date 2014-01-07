@@ -15,74 +15,90 @@ class Segment {
     /**
      * @var string Segment de l'uri.
      */
-    public $rawSegment;
+    protected $rawSegment;
 
     /**
      * @var string Segment de l'uri sans les []
      */
-    public $segment;
+    protected $segment;
 
     /**
      * @var bool Est il un segment obligatoire dans l'uri.
      */
-    public $mandatory;
+    protected $mandatory;
 
     /**
      * @var bool Si est un paramétre ( pour être un parametre il doit commencer par [:id
      */
-    public $isParam;
+    protected $isParam;
 
     /**
      * @var mixed|null Si isNamed alors contient le nom du parametre
      */
-    public $paramName;
+    protected $paramName;
 
     /**
      * @var bool Il y a t il une contrainte de type sur le segment courant.
      */
-    public $isTyped;
+    protected $isTyped;
 
     /**
      * @var null|string So isTyped alors le type doit être int|regex
      */
-    public $type;
+    protected $type;
 
     /**
      * @var bool La contrainte du segment est validé par une regex.
      */
-    public $isRegex;
+    protected $isRegex;
 
     /**
      * @var string Une regex de validation du segment.
      */
-    public $regex;
+    protected $regex;
 
     /**
-     * @param $segment string Un segment de l'URI.
+     * @param string $rawSegment Un segment de l'URI.
      */
-    public function __construct( $segment ) {
-        $this->rawSegment       = $segment;
-        $this->segment          = trim( $segment, '[]' );
+    public function __construct( $rawSegment ) {
+        $this->rawSegment       = $rawSegment;
+        $this->segment          = trim( $rawSegment, '[]' );
         $this->mandatory        = $this->isMandatory();
         $this->isParam          = $this->isParam();
-        $this->paramName        = ( $this->isParam ) ? $this->getParamName() : null;
+        $this->paramName        = ( $this->isParam ) ? $this->setParamName() : null;
         $this->isTyped          = $this->isTypedParam();
-        $this->type             = ( $this->isTyped ) ? $this->getTypeParam() : null ;
+        $this->type             = ( $this->isTyped ) ? $this->getParamType() : null ;
         $this->isRegex          = $this->isRegex();
-        $this->regex            = ( $this->isRegex ) ? $this->getRegex() : null ;
+        $this->regex            = ( $this->isRegex ) ? $this->setRegex() : null ;
     }
 
-    protected function isMandatory() {
-        return !($this->rawSegment[0] === "[");
+    public function getSegment() {
+        return $this->segment;
     }
 
-    protected function isParam() {
+    public function getRawSegment() {
+        return $this->rawSegment;
+    }
+
+    public function isMandatory() {
+        return ($this->rawSegment[0] !== "[");
+    }
+
+    public function isParam() {
         return ( strpos(  $this->segment, ':id|' ) !== false ) ? true :false;
     }
 
-    protected function getParamName() {
+    public function getParamName() {
+        return $this->paramName;
+    }
+
+    public function isNamed(){
+        return !is_null($this->paramName);
+    }
+
+    protected function setParamName() {
         $segmentAsArray = explode( '|', $this->segment );
-        $segment = $segmentAsArray[1];
+        $segment        = $segmentAsArray[1];
 
         if( $this->isTypedParam() ) {
             $segment = preg_replace('#\({1}(regex|int)\){1}#','',$segment);
@@ -96,11 +112,11 @@ class Segment {
 
     }
 
-    protected function isTypedParam() {
+    public function isTypedParam() {
         return (preg_match('#\({1}(.*)\){1}#', $this->segment) === 0) ? false : true;
     }
 
-    protected function getTypeParam() {
+    public function getParamType() {
         $_segment = preg_replace('#\#(.*)\##','',$this->segment);
         preg_match('#\((.*)\)#', $_segment,$match);
         if( isset($match[1]) ) {
@@ -108,11 +124,15 @@ class Segment {
         }
     }
 
-    protected function isRegex() {
+    public function isRegex() {
         return (bool)preg_match('#\#{1}(.*)\#{1}#', $this->segment);
     }
 
-    protected function getRegex() {
+    public function getRegex() {
+        return $this->regex;
+    }
+
+    protected function setRegex() {
         if( $this->isRegex() ) {
             preg_match('#\#{1}(.*)\#{1}#', $this->segment, $match);
             return $match[0];
@@ -121,7 +141,6 @@ class Segment {
 
     public function validateData( $data ) {
         switch( $this->type ) {
-            default:
             case 'int':
                 return !preg_match('#[a-zA-Z]#', $data );
                 break;
@@ -133,13 +152,8 @@ class Segment {
                     $this->regex = $match[0][0];
                     return ($result === 0) ? false : true;
                 }
-                else {
-                    false;
-                }
                 break;
         }
     }
-
-
 
 }

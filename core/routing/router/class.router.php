@@ -44,6 +44,9 @@ class Router {
     /**
      * Parcours toute la collection de route, création d'un uriparser par route,
      */
+    /**
+     * @return bool|Route False si aucune route
+     */
     public function dispatch() {
 
         $this->routesCollection->routes->rewind();
@@ -59,17 +62,15 @@ class Router {
             // Est une uri qui valide un pattern de route.
             if( $routeConstraint->isValidUri("LibreMVC\\Routing\\UriParser\\SegmentConstraint") ) {
                 // UriIsGreaterThanRoute
-                if( $routeConstraint->isUriSegmentsGreaterThanRouteSegment() === false ) {
+                if( $routeConstraint->isUriSegmentsGreaterThanRouteSegments() === false ) {
                     $parser = new UriParser( $this->uri,$this->routesCollection->routes->current());
                     return $parser->processPattern();
                 }
             }
-
             $this->routesCollection->routes->next();
         }
         // Si on arrive ici est une route inconnue.
-        Header::error(404);
-        return $this->routesCollection->getDefaultRoute();
+        return false;
 
     }
 

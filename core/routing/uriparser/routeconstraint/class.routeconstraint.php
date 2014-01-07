@@ -17,7 +17,7 @@ use LibreMVC\Routing\UriParser\SegmentConstraint;
 /**
  * Class RouteConstraint
  *
- * Détermine le type de route. Est elle une route nommée, une route par default. N'y a t il pas trop de segments dans l'url
+ * Détermine le type de route. Est elle une route nommée, une route par default. N'y a t il pas trop de segments dans l'url.
  *
  * @package LibreMVC\Routing\UriParser\RouteConstraint
  */
@@ -41,7 +41,7 @@ class RouteConstraint {
         return ( $this->uri->value === $this->route->name ) ;
     }
 
-    public function isUriSegmentsGreaterThanRouteSegment() {
+    public function isUriSegmentsGreaterThanRouteSegments() {
         return $this->uri->countSegments() > $this->route->countSegments();
     }
 
@@ -49,22 +49,26 @@ class RouteConstraint {
      * Tous les segments de l'uri valident t ils les segments de la route. Selon une SegmentConstraint.
      */
     public function isValidUri( $segmentConstraint ) {
-        $valid = true;
-        $uriSegments = $this->uri->toSegments();
+        $valid         = true;
+        $uriSegments   = $this->uri->toSegments();
         $routeSegments = $this->route->toSegments();
 
         $j = 0;
         foreach($routeSegments as $routeSegment) {
-
-            if(isset($uriSegments[$j]) && $routeSegment->mandatory) {
-                $segment = new $segmentConstraint($uriSegments[$j], $routeSegment);
-                // Est il un segment obligatoire présent.
-                $valid &= $segment->isValidMandatory();
-                //var_dump($segment->isValidMandatory());
+            if( $routeSegment->isMandatory() ) {
+                if(isset( $uriSegments[$j] ) ) {
+                    $uriSegment = $uriSegments[$j];
+                    $constraint = new $segmentConstraint( $uriSegment, $routeSegment );
+                    // Est il un segment obligatoire présent.
+                    $valid &= $constraint->isValidMandatory();
+                }
+                else {
+                    $valid &= false;
+                }
             }
             $j++;
         }
-        //var_dump((bool)$valid);
+
         return (bool)$valid;
     }
 
