@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMVC\Routing\UriParser\RouteConstraint;
+namespace LibreMVC\Routing\UriParser;
 
 
 use LibreMVC\Http\Uri;
