@@ -19,6 +19,21 @@ class ClassNamespace {
         return '\\' . ltrim( $this->namespace, '\\' );
     }
 
+    public function registerClass() {
+        $file = $this->toFilePath();
+        if( is_file($file) ) {
+            if( include($file) !== false ) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
     public function getVendorPrefix() {
 
         if( $this->isNamespaced() ) {
@@ -129,7 +144,6 @@ class AutoLoader {
 
     static public function handler( $class ) {
         self::instance()->_class = $class;
-
         if( !is_null(self::instance()->_loaded) && !array_key_exists(self::instance()->_class, self::instance()->_loaded) ) {
             self::instance()->findByNamespace();
         }
