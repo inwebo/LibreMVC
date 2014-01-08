@@ -15,30 +15,27 @@ try {
         $array = $array[1];
     });
 
-    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
-    $defaultRoute = new \LibreMVC\Routing\Route();
-    $defaultRoute->name = "";
-    $defaultRoute->pattern = $base_uri.'/login-in[/]';
+    $base_uri = '/'.trim(Environnement::this()->instance->baseUri,'/');
+    $defaultRoute = new \LibreMVC\Routing\Route($base_uri);
+    $defaultRoute->controller = 'LibreMVC\\Modules\\Bookmarks\\Controllers\\BookmarksController';
+    $defaultRoute->action = 'index';
+    RoutesCollection::get('default')->addRoute($defaultRoute);
+
+    $defaultRoute = new \LibreMVC\Routing\Route($base_uri);
+    $defaultRoute->controller = 'LibreMVC\\Modules\\Bookmarks\\Controllers\\BookmarksController';
+    $defaultRoute->action = 'index';
+    RoutesCollection::get('default')->addRoute($defaultRoute);
+    $defaultRoute = new \LibreMVC\Routing\Route($base_uri.'/login-in');
+    $defaultRoute->name=$base_uri.'/login-in';
     $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
     $defaultRoute->action = 'index';
-    RoutesCollection::addRoute($defaultRoute);
+    RoutesCollection::get('default')->addRoute($defaultRoute);
 
-    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
-    $defaultRoute = new \LibreMVC\Routing\Route();
-    $defaultRoute->name = "";
-    $defaultRoute->pattern = $base_uri.'/login-out[/]';
+    $defaultRoute = new \LibreMVC\Routing\Route($base_uri.'/login-out');
     $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
     $defaultRoute->action = 'logout';
-    RoutesCollection::addRoute($defaultRoute);
-
-    $base_uri = trim(Environnement::this()->instance->baseUri,'/');
-    $defaultRoute = new \LibreMVC\Routing\Route();
-    $defaultRoute->name = "";
-    $defaultRoute->pattern = $base_uri.'/login-out[/]';
-    $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
-    $defaultRoute->action = 'logout';
-    RoutesCollection::addRoute($defaultRoute);
-
+    RoutesCollection::get('default')->addRoute($defaultRoute);
+    
 } catch (\Exception $e) {
     $message = time() . ', ' . $e->getCode() . ', ' . $e->getFile() . ', ' . $e->getLine() . ', ' . $e->getMessage() . "\n";
     //echo $message;
