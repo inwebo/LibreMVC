@@ -53,6 +53,8 @@ use LibreMVC\Files\Config;
  */
 class Views {
 
+    protected $layout;
+
     public function __construct() {
 
     }
