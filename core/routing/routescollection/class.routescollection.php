@@ -22,14 +22,6 @@ class RoutesCollection {
 
     static protected $instances;
     public $routes;
-    /**
-     * @var bool Si vrai FILO
-     */
-    protected $stack;
-    /**
-     * @var bool Si vrai FIFO
-     */
-    protected $queue;
 
     public function __construct(){
         $this->routes = new \SplStack();
@@ -76,6 +68,25 @@ class RoutesCollection {
 
     public function hasRoute( Route $route ) {
         return $this->routes->offsetExists($route);
+    }
+
+    public function __toString() {
+        $return = "";
+        $this->routes->rewind();
+        $j = 0;
+        while($this->routes->valid()) {
+            $return .="<hr>";
+            $return .=$j . " : ";
+            $return .= $this->routes->current()->controller . ', ';
+            $return .= $this->routes->current()->action;
+            //$return .= $this->routes->current()->controller;
+
+            $return .="<hr>";
+            $j++;
+            $this->routes->next();
+        }
+
+        return $return;
     }
 
 }
