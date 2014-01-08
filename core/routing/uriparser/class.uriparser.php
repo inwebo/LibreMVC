@@ -96,7 +96,7 @@ class UriParser {
                         }
                     }
                     // Est il nommé
-                    elseif( $routeSegment->isNamed() ) {
+                    if( $routeSegment->isNamed() ) {
                         $params[$routeSegment->getParamName()] = $uriSegment->getSegment();
                     }
                     else {
