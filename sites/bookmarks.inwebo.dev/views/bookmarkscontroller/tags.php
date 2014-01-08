@@ -40,7 +40,7 @@
             <?php foreach(\LibreMVC\Views\Template\ViewBag::get()->bookmarks->tags as $k=>$v) { ?>
                 <div class="col-md-2">
                     <div>
-                        <a href="bookmarks/tag/<?php echo $k ?>" data-first-letter="<?php echo (isset($k[1])) ? $k[1] : "-" ; ?>">#<?php echo $k ?><span class="badge badge-info"><?php echo $v ?></span> </a>
+                        <a href="tag/<?php echo $k ?>" data-first-letter="<?php echo (isset($k[1])) ? $k[1] : "-" ; ?>">#<?php echo $k ?><span class="badge badge-info"><?php echo $v ?></span> </a>
                     </div>
                 </div>
             <?php } ?>
