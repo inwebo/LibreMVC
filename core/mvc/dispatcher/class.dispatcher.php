@@ -7,9 +7,13 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMVC\Mvc;
+namespace LibreMVC;
 
 use LibreMVC\Mvc\Controllers\ErrorsController;
+use LibreMVC\Mvc\Environnement;
+use LibreMVC\System\Boot\Steps;
+
+
 
 class Dispatcher {
 
@@ -20,6 +24,7 @@ class Dispatcher {
 
     public function __construct( $class, $method, $parameters ) {
         $this->class      = $class;
+        $this->registered = $this->isRegistered();
         $this->method     = $method . 'Action';
         $this->parameters = $parameters;
     }
@@ -33,9 +38,9 @@ class Dispatcher {
      * @throws \Exception
      * @todo Devrait ReflectionClass
      */
-    public function invoke() {
-        if( $this->registered() ) {
-            $this->parameters = (is_null($this->parameters)) ? array() : $this->parameters;
+    public function dispatch() {
+        if( $this->registered ) {
+            $this->parameters = ( is_null( $this->parameters)) ? array() : $this->parameters;
             if( method_exists( $this->class, $this->method ) ) {
                 $reflectionMethod = new  \ReflectionMethod( $this->class, $this->method );
                 return $reflectionMethod->invokeArgs(
@@ -54,9 +59,9 @@ class Dispatcher {
         }
     }
 
-    static public function dispatch( $class, $method, $parameters ) {
+    static public function invoker( $class, $method, $parameters ) {
         $handler = new self( $class, $method, $parameters );
-        $handler->invoke();
+        $handler->dispatch();
     }
 
 }
