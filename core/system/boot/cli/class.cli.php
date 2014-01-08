@@ -106,7 +106,7 @@ class Cli {
         Environnement::this()->params      = $routedRoute->params;
         Environnement::this()->routedRoute = $routedRoute;
 
-        \LibreMVC\Mvc::invoker(
+        \LibreMVC\Dispatcher::invoker(
             $routedRoute->controller,
             $routedRoute->action,
             $routedRoute->params
