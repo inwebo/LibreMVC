@@ -9,7 +9,6 @@
 
 namespace LibreMVC\System\Boot;
 
-use LibreMVC\Controllers\LoginController;
 use LibreMVC\Database;
 use LibreMVC\Files\Directory;
 use LibreMVC\Html\JavascriptConfig;
@@ -32,6 +31,7 @@ use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
 use LibreMVC\Errors\ErrorsHandler;
+use LibreMVC\Mvc\Controllers;
 
 class Mvc {
 
@@ -53,17 +53,6 @@ class Mvc {
 
     static public function initInstance() {
         Environnement::this()->instance = new Instance( Context::getUrl() );
-    }
-
-    static public function defaultRoute() {
-        Hooks::get()->callHooks('prependRoutes');
-        //@todo bug sur les routes nommées le chemin base_view n'est pas construit
-        $defaultRoute = new Route( "/".trim(Environnement::this()->instance->baseUri,'/').'[/][:action][/][:id][/]',
-            '\LibreMVC\Controllers\HomeController',
-            'index'
-        );
-        RoutesCollection::get('default')->addRoute($defaultRoute);
-        Hooks::get()->callHooks('appendRoutes');
     }
 
     static public function autoloadInstance() {
@@ -90,7 +79,9 @@ class Mvc {
     static public function autoloadPlugins() {
         $dir = new Directory( Environnement::this()->paths->base_modules );
         $dir->folders->rewind();
-        while($dir->folders->valid()) {
+        while( $dir->folders->valid() ) {
+
+            // @warning : Le dossier contenant les plugins doit avoir +x !
             if(is_file($dir->folders->current()->realPath . '/autoload.php')) {
                 include($dir->folders->current()->realPath . '/autoload.php');
             }
@@ -106,8 +97,24 @@ class Mvc {
         }
     }
 
-    static public function loadSystemDb() {
+    static public function defaultRoute() {
+        Hooks::get()->callHooks('prependRoutes');
+        /*
+        $baseUri = trim(Environnement::this()->instance->baseUri,'/');
+        $routePattern = "";
+        if( $baseUri !== '') {
+            $routePattern = '/'.$baseUri.'[/][:action][/][:id][/]';
+            $defaultRoute = new Route( $routePattern,
+                '\LibreMVC\Controllers\HomeController',
+                'index'
+            );
+            RoutesCollection::get('default')->addRoute($defaultRoute);
+        }
+        */
+        Hooks::get()->callHooks('appendRoutes');
+    }
 
+    static public function loadSystemDb() {
         Database\Provider::add('system', new SQlite(Environnement::this()->paths->base_routes));
         Environnement::this()->_dbSystem = Database\Provider::get('system');
     }
@@ -115,8 +122,6 @@ class Mvc {
     static public function localisation() {
         Localisation::setup('','','');
     }
-
-
 
     static public function startSession() {
         $sessions_vars = array('lg'=>'fr');
@@ -159,7 +164,6 @@ class Mvc {
         ViewBag::get()->JsConfig = $jsc;
     }
 
-
     static public function loadBreadCrumbs() {
         //var_dump(BreadCrumbs::this());
         Environnement::this()->BreadCrumbs = BreadCrumbs::this();
@@ -175,28 +179,22 @@ class Mvc {
         ViewBag::get()->errors = ErrorsHandler::$stack;
     }
 
-    /**
-     * Devrait être un Object Front controller
-     * Applique le pattron de concéption Commande
-     */
     static public function frontController() {
-        //var_dump(RoutesCollection::getRoutes());
         // Lock du singleton en lecture seule
         Environnement::this()->readOnly = true;
-
         $router = new Router( Uri::current(), RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
 
         $routedRoute = $router->dispatch();
 
-        var_dump($routedRoute);
         // Est ce une route valide ?
         if( $routedRoute !== false ) {
+            //var_dump($routedRoute);
             Environnement::this()->controller  = $routedRoute->controller;
             Environnement::this()->action      = $routedRoute->action;
             Environnement::this()->params      = $routedRoute->params;
             Environnement::this()->routedRoute = $routedRoute;
 
-            \LibreMVC\Mvc::invoker(
+            \LibreMVC\Mvc\Dispatcher::invoker(
                 $routedRoute->controller,
                 $routedRoute->action,
                 $routedRoute->params
@@ -204,7 +202,7 @@ class Mvc {
         }
         // Erreur 404
         else {
-            ErrorsController::throwHttpError('404');
+            Controllers\ErrorsController::throwHttpError('404');
         }
 
     }
