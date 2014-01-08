@@ -18,9 +18,9 @@ use LibreMVC\Views\Template\ViewBag;
             $tags = $tags->toArray();
         ?>
         <ul class="">
-            <li><span class="label label-info"><a href=""><span class="glyphicon glyphicon-tags"></span> Tags</a></span></li>
+            <li><span class="label label-info"><a href="tags/"><span class="glyphicon glyphicon-tags"></span> Tags</a></span></li>
             <?php foreach($tags as $tag) {?>
-                <li><span class="label label-primary"><a href="bookmarks/tag/<?php echo( $tag )?>"><?php echo( $tag )?></a></span></li>
+                <li><span class="label label-primary"><a href="tag/<?php echo( $tag )?>"><?php echo( $tag )?></a></span></li>
             <?php } ?>
         </ul>
     </dd>
