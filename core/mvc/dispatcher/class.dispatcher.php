@@ -7,55 +7,60 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace LibreMVC;
+namespace LibreMVC\Mvc;
 
-use LibreMVC\Mvc\Controllers\ErrorsController;
+use LibreMVC\ClassNamespace;
 use LibreMVC\Mvc\Environnement;
-use LibreMVC\System\Boot\Steps;
 
-
+class DispatcherUnknownController extends \Exception {};
+class DispatcherUnknownActionController extends \Exception {};
 
 class Dispatcher {
 
     public $class;
     public $method;
     public $parameters;
-    protected $registered;
 
     public function __construct( $class, $method, $parameters ) {
         $this->class      = $class;
-        $this->registered = $this->isRegistered();
         $this->method     = $method . 'Action';
         $this->parameters = $parameters;
     }
 
     protected function isRegistered() {
-        return class_exists( $this->class );
+        return class_exists( $this->class, true );
     }
 
     /**
      * @return mixed
-     * @throws \Exception
-     * @todo Devrait ReflectionClass
+     * @throws mixed
      */
     public function dispatch() {
-        if( $this->registered ) {
+        // Le controller est-il une classe déjà connues.
+        if( $this->isRegistered() ) {
+
             $this->parameters = ( is_null( $this->parameters)) ? array() : $this->parameters;
+            // Le controller possede t il la method demandée
             if( method_exists( $this->class, $this->method ) ) {
+
                 $reflectionMethod = new  \ReflectionMethod( $this->class, $this->method );
                 return $reflectionMethod->invokeArgs(
                     new $this->class,
                     $this->parameters
                 );
             }
+            // Sinon
             else {
-                ErrorsController::throwHttpError('404');
+                // @todo Error controller
+                //ErrorsController::throwHttpError('404');
+                throw new DispatcherUnknownActionController( $this->class .'->'. $this->method.'() : ' .  ' is not a method !' );
             }
 
         }
+        // Class inconnue.
         else {
-            ErrorsController::throwHttpError('404');
-            throw new \Exception( $this->class .$this->method.'() ' .  ' is not registered, register it !' );
+            //ErrorsController::throwHttpError('404');
+            throw new DispatcherUnknownController( $this->class .  ' is not registered, register it !' );
         }
     }
 
