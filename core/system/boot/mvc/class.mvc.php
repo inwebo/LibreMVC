@@ -14,6 +14,7 @@ use LibreMVC\Files\Directory;
 use LibreMVC\Html\JavascriptConfig;
 use LibreMVC\Helpers\BreadCrumbs;
 use LibreMVC\Html\Helpers\Theme;
+use LibreMVC\Http\Header;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Instance;
@@ -202,7 +203,10 @@ class Mvc {
         }
         // Erreur 404
         else {
-            Controllers\ErrorsController::throwHttpError('404');
+            $ex = __FILE__ . ' line : ' . __LINE__ . ' : ';
+            //Controllers\ErrorsController::throwHttpError('404');
+            Header::error(503);
+            throw new \Exception($ex . 'Unknow route !');
         }
 
     }
