@@ -14,28 +14,36 @@ try {
         $array[1]->items->home = Environnement::this()->instance->baseUrl;
         $array = $array[1];
     });
+    $baseUri = trim(Environnement::this()->instance->baseUri,'/');
 
-    $base_uri = '/'.trim(Environnement::this()->instance->baseUri,'/');
+    if( $baseUri !== '') {
+        $base_uri = '/'.$baseUri.'/';
+    }
+    else {
+        $base_uri = '/';
+    }
+
     $defaultRoute = new \LibreMVC\Routing\Route($base_uri);
     $defaultRoute->controller = 'LibreMVC\\Modules\\Bookmarks\\Controllers\\BookmarksController';
     $defaultRoute->action = 'index';
     RoutesCollection::get('default')->addRoute($defaultRoute);
 
-    $defaultRoute = new \LibreMVC\Routing\Route($base_uri);
+    $defaultRoute = new \LibreMVC\Routing\Route($base_uri . 'login');
     $defaultRoute->controller = 'LibreMVC\\Modules\\Bookmarks\\Controllers\\BookmarksController';
-    $defaultRoute->action = 'index';
+    $defaultRoute->action = 'login';
     RoutesCollection::get('default')->addRoute($defaultRoute);
-    $defaultRoute = new \LibreMVC\Routing\Route($base_uri.'/login-in');
+
+    $defaultRoute = new \LibreMVC\Routing\Route($base_uri.'login-in');
     $defaultRoute->name=$base_uri.'/login-in';
     $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
     $defaultRoute->action = 'index';
     RoutesCollection::get('default')->addRoute($defaultRoute);
 
-    $defaultRoute = new \LibreMVC\Routing\Route($base_uri.'/login-out');
+    $defaultRoute = new \LibreMVC\Routing\Route($base_uri.'login-out');
     $defaultRoute->controller = '\LibreMVC\Controllers\LoginController';
     $defaultRoute->action = 'logout';
     RoutesCollection::get('default')->addRoute($defaultRoute);
-    
+
 } catch (\Exception $e) {
     $message = time() . ', ' . $e->getCode() . ', ' . $e->getFile() . ', ' . $e->getLine() . ', ' . $e->getMessage() . "\n";
     //echo $message;
