@@ -23,7 +23,7 @@
             </p>
             <div id="displayWidget" class="alert alert-info">
                 &#8595;<br>
-                &#8594;<a href="<?php echo vb()->widget; ?>">J'aime</a>&#8592;<br>
+                &#8594;<a href="<?php echo vb()->widget; ?>">&hearts;J'aime</a>&#8592;<br>
                 &#8593;
             </div>
 
