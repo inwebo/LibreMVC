@@ -22,13 +22,19 @@ class HomeController extends PageController {
 
     public function indexAction() {
         $this->_viewbag->demoViewBag = "Depuis le viewbag !";
-        $this->_meta->title ="Welcome home visitors from futur.";
+        $this->_meta->title ="Welcome home visitors from futur!.";
         Views::renderAction();
     }
 
     public function debugAction() {
         $this->_breadCrumbs->items->debug="";
         ViewBag::get()->env = Environnement::this();
+        Views::renderAction();
+    }
+
+    public function loginAction() {
+        $this->_breadCrumbs->items->login=null;
+        $this->_meta->title = "Please login";
         Views::renderAction();
     }
 
