@@ -47,6 +47,11 @@ Hooks::get()->addHook('prependRoutes', function(){
     $bookmarks->action = 'widget';
     RoutesCollection::get('default')->addRoute($bookmarks);
 
+    $bookmarks = new Route($base_uri . '/login[/]');
+    $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarksController';
+    $bookmarks->action = 'login';
+    RoutesCollection::get('default')->addRoute($bookmarks);
+
     $bookmarks = new Route($base_uri.'/bookmark[/][:id]');
     $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarkController';
     $bookmarks->action = 'index';
