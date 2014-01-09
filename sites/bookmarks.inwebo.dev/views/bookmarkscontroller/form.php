@@ -30,33 +30,35 @@
                     xhr.setRequestHeader('Token', window.LibreMVC.Config.User.publicKey);
                 }
             }).error(function(msg){
-                    var response = $.parseJSON(msg.responseText);
-                    $('#response').html(response.msg);
-                    console.log(response);
-                    alert('fail');
+                    $('#msgRestBookmark').toggle();
+                    $('#msgRestBookmarkFalse').toggle();
+                    setTimeout(function(){
+                        self.close();
+                    },2000);
                 })
                 .done(function( msg ) {
-                    var response = $.parseJSON(msg);
-                    alert(response.valid);
-                    if( msg.valid == false ) {
-                        console.log("Error");
-                    }
-                    else {
-                        alert(msg);
-                        alert('done');
-                        window.close();
-                    }
-
+                    $('#msgRestBookmark').toggle();
+                    $('#msgRestBookmarkTrue').toggle();
+                    setTimeout(function(){
+                        self.close();
+                    },2000);
                 });
         });
     });
 
 </script>
-
+<div id="msgRestBookmark" class="shadowBackground" style="display: none;">
+    <div id="msgRestBookmarkFalse" class="msgRestCreateBookmark msgRestCreateBookmarkError" style="display: none;">
+        <p>Already in base !</p>
+    </div>
+    <div id="msgRestBookmarkTrue" class="msgRestCreateBookmark msgRestCreateBookmarkValid" style="display: none;">
+        <p>Added to the base!</p>
+    </div>
+</div>
 <?php //var_dump( $_GET ); ?>
 <div class="col-md-12">
+
     <div class="col-container">
-        <div id="response"></div>
         <form id="bookmark" class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="url" class="col-lg-2 control-label">Url</label>
