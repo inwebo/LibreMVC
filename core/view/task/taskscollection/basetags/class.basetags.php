@@ -15,7 +15,7 @@ namespace LibreMVC\View\Task\TaskCollection;
  */
 
 use LibreMVC\View\Task;
-use LibreMVC\View\Task\Tag;
+use LibreMVC\View\Parser\Tag;
 use LibreMVC\View\Parser\Logic\Conditions;
 use LibreMVC\View\Parser\Logic\Constant;
 use LibreMVC\View\Parser\Logic\Escapement;

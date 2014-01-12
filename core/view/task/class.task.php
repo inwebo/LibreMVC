@@ -2,7 +2,7 @@
 namespace LibreMVC\View;
 
 use LibreMVC\View\Interfaces\IProcess;
-use LibreMVC\View\Task\Tag;
+use LibreMVC\View\Parser\Tag;
 
 /**
  * Une tâche est la combinaison d'un tag PCRE et d'une logique à lui appliquer.

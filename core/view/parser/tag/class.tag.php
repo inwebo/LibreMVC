@@ -1,5 +1,5 @@
 <?php
-namespace LibreMVC\View\Task;
+namespace LibreMVC\View\Parser;
 /**
  * Représentation d'un tag à parser.
  *
