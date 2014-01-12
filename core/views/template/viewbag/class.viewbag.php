@@ -34,7 +34,7 @@ namespace LibreMVC\Views\Template;
  * 
  * Singleton, permet d'éviter de polluer le namespace global avec les variables
  * des templates. C'est l'interface entre une vue & modéle. Toutes données qui
- * doivent être affichées devraient être définies dans le viewbag.
+ * doivent être affichées devraient être définies dans le viewobject.
  * 
  * @category   LibreMVC
  * @package    Views

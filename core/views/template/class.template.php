@@ -36,13 +36,13 @@ class Template {
 
     /**
      * Chemin d'accès au fichier à parser.
-     * @var string
+     * @vars string
      */
     public $file;
 
     /**
      * La représentation sous forme d'une chaine du contenu du fichier.
-     * @var string
+     * @vars string
      */
     public $content;
 

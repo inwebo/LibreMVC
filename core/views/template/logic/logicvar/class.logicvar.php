@@ -38,7 +38,7 @@ use LibreMVC\Views\Template\Parser;
  * Objet métier, sera le function de callback de preg_match_all voir la class
  * Task
  * <code>
- * {@var}
+ * {@vars}
  * </code>
  *
  * @category   LibreMVC
@@ -71,7 +71,7 @@ class LogicVar extends Logic {
         if ( isset( self::$ViewBag->$match[1] ) ) {
             echo( self::$ViewBag->$match[1] );
         } else {
-            Parser::$trace[] = "ViewBag var ViewBag::$match[1] is not set";
+            Parser::$trace[] = "ViewBag vars ViewBag::$match[1] is not set";
             return null;
         }
         $this->buffer = ob_get_contents();

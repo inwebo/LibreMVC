@@ -59,25 +59,25 @@ class LogicComparison extends Template\Logic {
 
     /**
      * Pile de tâches à effectuer.
-     * @var SplObjectStorage
+     * @vars SplObjectStorage
      */
     public $tasks;
 
     /**
      * Operateur de comparaison en cours.
-     * @var SplObjectStorage
+     * @vars SplObjectStorage
      */
     public $operator;
 
     /**
      * La chaine d'entrée a traiter.
-     * @var string
+     * @vars string
      */
     public $subject;
 
     /**
      * Les operands à comparer
-     * @var SplObjectStorage
+     * @vars SplObjectStorage
      */
     public $operands;
 

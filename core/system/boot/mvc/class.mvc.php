@@ -27,12 +27,12 @@ use LibreMVC\Http\Context;
 use LibreMVC\Sessions;
 use LibreMVC\System\Hooks;
 use LibreMVC\Views\Template\ViewBag;
-use LibreMVC\Routing\Route;
 use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
 use LibreMVC\Errors\ErrorsHandler;
 use LibreMVC\Mvc\Controllers;
+use LibreMVC\Mvc\Dispatcher;
 
 class Mvc {
 
@@ -189,13 +189,12 @@ class Mvc {
 
         // Est ce une route valide ?
         if( $routedRoute !== false ) {
-            //var_dump($routedRoute);
             Environnement::this()->controller  = $routedRoute->controller;
             Environnement::this()->action      = $routedRoute->action;
             Environnement::this()->params      = $routedRoute->params;
             Environnement::this()->routedRoute = $routedRoute;
 
-            \LibreMVC\Mvc\Dispatcher::invoker(
+            Dispatcher::invoker(
                 $routedRoute->controller,
                 $routedRoute->action,
                 $routedRoute->params

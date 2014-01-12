@@ -42,11 +42,11 @@ class TasksTag extends \SplObjectStorage {
         $this->attach( new Task( new Tag(PATTERN_LOOP), new LogicLoop() ) );
         // If pattern {if="condition"}true{else}false{fi}
         $this->attach( new Task( new Tag(PATTERN_IF), new LogicIf() ) );
-        // variable pattern {$var}
+        // variable pattern {$vars}
         $this->attach( new Task( new Tag(PATTERN_VAR), new LogicVar() ) );
         // Constante pattern {CONSTANTE}
         $this->attach( new Task( new Tag(PATTERN_CONST), new LogicConst() ) );
-        // Include pattern {include="fileToInclude"}
+        // Include pattern {includer="fileToInclude"}
         $this->attach( new Task( new Tag(PATTERN_INCLUDE), new LogicInclude() ) );
         // Tpl pattern {tpl="tplToInclude"}
         $this->attach( new Task( new Tag(PATTERN_TPL), new LogicTPL() ) );

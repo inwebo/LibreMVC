@@ -76,6 +76,10 @@ class BookmarkController extends RestController{
         //var_dump( $_POST );
     }
 
+    public function update( $bookmarkJson ) {
+
+    }
+
     public function put($args) {
         //echo __METHOD__;
         //$input = file_get_contents('php://input');

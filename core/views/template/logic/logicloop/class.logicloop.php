@@ -75,7 +75,7 @@ class LogicLoop extends Logic {
         $buffer = array();
         $this->match = $match;
         if (!isset(self::$ViewBag->$match[1])) {
-            Parser::$trace[] = "Loop var $match[1] is not set";
+            Parser::$trace[] = "Loop vars $match[1] is not set";
             return null;
         }
         $logic = new LogicVar();

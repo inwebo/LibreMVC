@@ -55,39 +55,39 @@ class Parser {
     /**
      * Contient l'ensemble des erreurs de l'application.
      * @static
-     * @var array
+     * @vars array
      */
     static public $trace = array();
 
     /**
      * Collection de tâches à effectuer.
-     * @var SplObjectStorage
+     * @vars SplObjectStorage
      */
     public $tasks;
 
     /**
      * Objet template courante
-     * @var object
+     * @vars object
      */
     public $template;
 
     /**
      * Le contenu traité de l'objet courant doit il être
      * affiché à la destruction de l'objet.
-     * @var bool 
+     * @vars bool
      */
     public $autoRender = false;
     
     /**
      * Ensemble des patterns PCRE de l'application. Deviendront des CONSTANTES
-     * @var array
+     * @vars array
      */
     public $constantes = array(
         "PATTERN_NO_PARSE" => "#\{noparse\}(.*)\{/noparse\}#ismU",
         'PATTERN_CONST' => '#\{([A-Z_]*)\}#',
         "PATTERN_LOOP" => '#\{loop={1}"{1}\$([a-z]*)"}(.*)\{{1}\/loop\}{1}#ismU',
         "PATTERN_VAR" => '#\{\$([aA-zZ_]*)\}#',
-        'PATTERN_INCLUDE' => '#\{include="([aA-zZ.]*)"\}#',
+        'PATTERN_INCLUDE' => '#\{includer="([aA-zZ.]*)"\}#',
         'PATTERN_TPL' => '#\{tpl="([aA-zZ\.0-9]*)"\}#',
         'PATTERN_IF' => '#\{if "([aA-zZ0-9<!=>{$}]*)"\}(.*)\{else\}(.*)\{fi\}#ismU',
         'PATTERN_DIF' => '#(!=)[^=!<>]#',
@@ -182,6 +182,7 @@ class Parser {
         catch ( \Exception $e ) {
             //echo $e->getMessage();
             //throw new \Exception('');
+            var_dump($e);
         }
 
     }

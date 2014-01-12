@@ -5,7 +5,17 @@ use Closure;
 use Exception;
 
 class BenchmarkCallBackException extends Exception{}
+/*
+$a = 0;
 
+class Foo{
+    public function bar(&$a) {echo ++$a;}
+}
+$foo = new Foo();
+$bench = new Benchmark(200, function() use ($foo, &$a) {
+   $foo->bar($a);
+});
+*/
 /**
  * Simple benchmark.
  * 
@@ -69,7 +79,7 @@ class Benchmark {
             $this->start();
         }
         else {
-            throw new \BenchmarkCallBackException('Callback is not a closure a valid closure.');
+            throw new \BenchmarkCallBackException('Callback is not a closure.');
         }
     }
 
@@ -111,7 +121,7 @@ class Benchmark {
         }
         $this->timeEnd =  self::getCleanMicrotime();
         //Hack pour les résultats negatifs. Fausse les résultats d'une nanoseconde.
-        //time_nanosleep( 0, 1 );
+        time_nanosleep( 0, 100 );
         $this->elapsedTime = $this->timeEnd - $this->timeStart;
         $this->memory      = memory_get_usage() - $this->memoryStart;
     }
@@ -140,12 +150,3 @@ class Benchmark {
         return new self( $iterations, $callback );
     }
 }
-$a = 0;
-
-class Foo{
-    public function bar(&$a) {echo ++$a;}
-}
-$foo = new Foo();
-$bench = new Benchmark(200, function() use ($foo, &$a) {
-   $foo->bar($a);
-});

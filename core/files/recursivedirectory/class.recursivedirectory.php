@@ -59,7 +59,7 @@ Class RecursiveDirectory {
      */
     public function __construct( $path ) {
         if( !is_dir($path) ) {
-            throw new Exception("Unknow path : $path");
+            throw new \Exception("Unknow path : $path");
         }
         $this->path = $path;
         $inodes = new \RecursiveIteratorIterator(

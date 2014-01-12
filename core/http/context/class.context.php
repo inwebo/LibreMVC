@@ -168,4 +168,11 @@ class Context {
         $pathInfo = pathinfo( $_SERVER['PHP_SELF'] );
         return ltrim($pathInfo['dirname'],'/')."/";
     }
+
+    static public function getRouteBaseUri() {
+        $return = "/";
+        $baseUri = trim(self::getBaseUri(),'/');
+        $return .= ($baseUri !== '') ? $baseUri.'/' : "" ;
+        return $return;
+    }
 }

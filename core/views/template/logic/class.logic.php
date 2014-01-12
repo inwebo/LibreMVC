@@ -46,31 +46,32 @@ namespace LibreMVC\Views\Template;
  * @abstract
  */
 
+use LibreMVC\Views\Template\Logic\ILogic;
 use LibreMVC\Views\Template\ViewBag;
 
-abstract class Logic {
+abstract class Logic implements ILogic {
 
     /**
      * Une chaine correspondant à un pattern PCRE.
-     * @var string
+     * @vars string
      */
     public $match;
 
     /**
      * Une chaine de caractère à afficher dans la sortie courante.
-     * @var string
+     * @vars string
      */
     public $buffer = "";
 
     /**
      * Singleton d'un objet ViewBag
      * @static
-     * @var string
+     * @vars string
      */
     protected static $ViewBag;
 
     /**
-     * Setter viewbag.
+     * Setter viewobject.
      * @todo Injection de dépendance.
      */
     public function __construct() {

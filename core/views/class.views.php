@@ -41,7 +41,7 @@ use LibreMVC\Files\Config;
  * 
  * Singleton, permet d'éviter de polluer le namespace global avec les variables
  * des templates. C'est l'interface entre une vue & modéle. Toutes données qui
- * doivent être affichées devraient être définies dans le viewbag.
+ * doivent être affichées devraient être définies dans le viewobject.
  * 
  * @category   LibreMVC
  * @package    Views
@@ -59,7 +59,10 @@ class Views {
 
     }
 
-    // @todo passer un id pour inclure le template dans une <div id="$id"></div>
+    /**
+     * @param $template
+     * @return mixed
+     */
     static public function render( $template ) {
         return Parser::render( $template );
     }
@@ -79,7 +82,7 @@ class Views {
         /**
          * - Creation contexte
          * - Execution par reflection du controller courant
-         * - C'est le controller qui peuple le viewbag
+         * - C'est le controller qui peuple le viewobject
          * - Rendu du fichier index.php de l'instance courante avec l'inclusion de la vue courante
          *   transmis par le ViewBag dans une partie reservee
          */

@@ -195,7 +195,6 @@ class BookmarksController extends ProtectedController{
         $_tagsArray = array_unique($tagsArray);
 
         foreach($_tagsArray as $k=> $v) {
-            echo $v."<br>";
             $return[$v] = count( array_keys($_tagsArrayCount, $v) );
         }
 

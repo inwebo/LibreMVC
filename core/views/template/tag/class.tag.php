@@ -64,7 +64,7 @@ class Tag {
 
     /**
      * Un pattern PCRE à rechercher dans le template.
-     * @var string
+     * @vars string
      */
     public $pattern = "";
 

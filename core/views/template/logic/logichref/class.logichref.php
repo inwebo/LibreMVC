@@ -32,10 +32,10 @@ namespace LibreMVC\Views\Template\Logic;
  */
 
 /**
- * Class métier à appliqué sur un Tag constante.
+ * Class métier à appliqué sur un Tag constant.
  *
  * Objet métier, sera le function de callback de preg_match_all cf la class Task.
- * Affiche la valeur d'une constante.
+ * Affiche la valeur d'une constant.
  * <code>
  * {THIS_IS_CONSTANTE}
  * </code>

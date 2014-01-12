@@ -11,7 +11,7 @@ namespace LibreMVC\Views\Template\Logic;
  * to adapt the work to make commercial use of the work
  *
  * Under the following conditions:
- * Attribution, You must attribute the work in the manner specified by
+ * Attribution, You must attribute the work in the manner specified byw
  * the author or licensor (but not in any way that suggests that they
  * endorse you or your use of the work).
  *
@@ -36,7 +36,7 @@ namespace LibreMVC\Views\Template\Logic;
  *
  * Objet métier, sera le function de callback de preg_match_all cf la class Task
  * <code>
- * {noparse}Toutes les tags contenus entre ces deux balise {@var}{noparse} sera
+ * {noparse}Toutes les tags contenus entre ces deux balise {@vars}{noparse} sera
  * ignoré
  * </code>
  *

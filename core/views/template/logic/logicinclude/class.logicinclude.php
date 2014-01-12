@@ -37,7 +37,7 @@ namespace LibreMVC\Views\Template\Logic;
  * Permet d'inclure un fichier à la manière de PHP.
  * 
  * <code>
- * {include="README.md"}
+ * {includer="README.md"}
  * </code>
  *
  * @category   LibreMVC

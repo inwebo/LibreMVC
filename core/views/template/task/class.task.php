@@ -17,13 +17,13 @@ Class Task {
 
     /**
      * Objet tag
-     * @var Tag
+     * @vars Tag
      */
     public $tags;
 
     /**
      * Objet logic
-     * @var Logic
+     * @vars Logic
      */
     public $logic;
 
