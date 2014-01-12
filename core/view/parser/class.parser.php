@@ -58,12 +58,15 @@ class Parser {
     public $constants = array(
         "PATTERN_NO_PARSE"  => '#\{noparse\}(.*)\{/noparse\}#ismU',
         'PATTERN_CONST'     => '#\{([A-Z_]*)\}#',
-        "PATTERN_LOOP"      => '#\{loop={1}"{1}\$([a-z]*)"}(.*)\{{1}\/loop\}{1}#ismU',
+        "PATTERN_LOOP"      => '#(\{loop.*\{\/loop})#ism',
+        "PATTERN_LOOP_HEADER" =>'#\{loop="\$(.*)\".*\}#ismU',
+        "PATTERN_LOOP_GET_LOCAL_VARS" => '#(.*)\{loop="\$.*\".*\}|\{\/loop\}#ismU',
+        "PATTERN_INNER_LOOP"=>'#\}(?!\})(.*)\{{1}\/{1}loop\}{1}#ism',
+        "PATTERN_AS_VAR_LOOP"=>'#\{loop="\$(.*)\"(.*)\}#ismU',
+        "PATTERN_KEY_VALUE_LOOP"=>'#as *([a-zA-Z_]*) *=> *([a-zA-Z_]*)#ism',
         "PATTERN_VAR"       => '#\{\$([aA-zZ_]*)\}#',
-        //@todo : A affiner
         'PATTERN_INCLUDE'   => '#\{include="(.*)"\}#',
         'PATTERN_TPL'       => '#\{tpl="(.*)"\}#',
-
         'PATTERN_IF'        => '#\{if "([aA-zZ0-9<!=>{$}]*)"\}(.*)\{else\}(.*)\{fi\}#ismU',
         'PATTERN_DIF'       => '#(!=)[^=!<>]#',
         'PATTERN_EQ'        => '#[^!<>=](==){1}[^!<>=]#',
@@ -74,6 +77,29 @@ class Parser {
         'PATTERN_SDIF'      => '#(!==)[^=!<>]#',
         'PATTERN_LET'       => '#[^<>!=](<=)[^<>!=]#',
         //'PATTERN_HREF' => '#<a href=\\"(.*)\">#U'
+        /**
+         * Regex :
+         *
+         * (\{{1}(.*)\}{1})(?-i)(\}*)
+         *
+         * Tag : loop modificateur gimU
+         *
+          (\{{1}(?!\{)  #Commence Par une seule accolade
+          (.*)          #InnerHtml
+          \}{1})        #Qui si termine par une accolade
+          (?-i)(\}*)    #Ignore les accolades multiples
+          (\{{1}(?!\{)((.*))\}{1})(?-i)(\}*)
+          (\{{1}(?!\{)((.*))\}{1})(?-i)(\}*)(\}?(.*))
+
+            loop content
+
+         * PATTERN_INNER_LOOP = #\}(?!\})(.*)\{\/loop\}#ismU
+
+
+
+
+         *
+         */
     );
 
     /**
@@ -81,7 +107,6 @@ class Parser {
      */
     public function __construct(Template $template, ViewObject $dataProvider) {
         try {
-            //$this->template = new Template($templateFile);
             $this->template = $template;
             $this->dataProvider = $dataProvider;
         } catch (\Exception $e) {
