@@ -23,107 +23,27 @@ use LibreMVC\View\Task\TaskCollection\BaseTags;
 
 class Parser {
 
-    /**
-     * Contient l'ensemble des erreurs de l'application.
-     * @static
-     * @vars array
-     */
-    public $trace = array();
-
-    /**
-     * Collection de tâches à effectuer.
-     * @vars SplObjectStorage
-     */
     public $tasksCollection;
 
     public $dataProvider;
 
-    /**
-     * Objet template courante
-     * @vars object
-     */
     public $template;
 
-    /**
-     * Le contenu traité de l'objet courant doit il être
-     * affiché à la destruction de l'objet.
-     * @vars bool
-     */
-    public $autoRender = false;
-    
-    /**
-     * Ensemble des patterns PCRE de l'application. Deviendront des CONSTANTES
-     * @vars array
-     */
-    public $constants = array(
-        "PATTERN_NO_PARSE"  => '#\{noparse\}(.*)\{/noparse\}#ismU',
-        'PATTERN_CONST'     => '#\{([A-Z_]*)\}#',
-        "PATTERN_LOOP"      => '#(\{loop.*\{\/loop})#ism',
-        "PATTERN_LOOP_HEADER" =>'#\{loop="\$(.*)\".*\}#ismU',
-        "PATTERN_LOOP_GET_LOCAL_VARS" => '#(.*)\{loop="\$.*\".*\}|\{\/loop\}#ismU',
-        "PATTERN_INNER_LOOP"=>'#\}(?!\})(.*)\{{1}\/{1}loop\}{1}#ism',
-        "PATTERN_AS_VAR_LOOP"=>'#\{loop="\$(.*)\"(.*)\}#ismU',
-        "PATTERN_KEY_VALUE_LOOP"=>'#as *([a-zA-Z_]*) *=> *([a-zA-Z_]*)#ism',
-        "PATTERN_VAR"       => '#\{\$([aA-zZ_]*)\}#',
-        'PATTERN_INCLUDE'   => '#\{include="(.*)"\}#',
-        'PATTERN_TPL'       => '#\{tpl="(.*)"\}#',
-        'PATTERN_IF'        => '#\{if "([aA-zZ0-9<!=>{$}]*)"\}(.*)\{else\}(.*)\{fi\}#ismU',
-        'PATTERN_DIF'       => '#(!=)[^=!<>]#',
-        'PATTERN_EQ'        => '#[^!<>=](==){1}[^!<>=]#',
-        'PATTERN_SEQ'       => '#[^!<>=](===)[^!<>=]#',
-        'PATTERN_SGT'       => '#(>){1}[^<>!=]#',
-        'PATTERN_SLT'       => '#(<){1}[^<>!=]#',
-        'PATTERN_GET'       => '#[^<>!=](>=)[^<>!=]#',
-        'PATTERN_SDIF'      => '#(!==)[^=!<>]#',
-        'PATTERN_LET'       => '#[^<>!=](<=)[^<>!=]#',
-        //'PATTERN_HREF' => '#<a href=\\"(.*)\">#U'
-        /**
-         * Regex :
-         *
-         * (\{{1}(.*)\}{1})(?-i)(\}*)
-         *
-         * Tag : loop modificateur gimU
-         *
-          (\{{1}(?!\{)  #Commence Par une seule accolade
-          (.*)          #InnerHtml
-          \}{1})        #Qui si termine par une accolade
-          (?-i)(\}*)    #Ignore les accolades multiples
-          (\{{1}(?!\{)((.*))\}{1})(?-i)(\}*)
-          (\{{1}(?!\{)((.*))\}{1})(?-i)(\}*)(\}?(.*))
-
-            loop content
-
-         * PATTERN_INNER_LOOP = #\}(?!\})(.*)\{\/loop\}#ismU
-
-
-
-
-         *
-         */
-    );
+    public $autoRender;
 
     /**
      * Lecture du contenu du fichier template. Création de l'ensemble des constantes de l'application
      */
-    public function __construct(Template $template, ViewObject $dataProvider) {
+    public function __construct(Template $template, ViewObject $dataProvider, $autoRender = false) {
         try {
             $this->template = $template;
             $this->dataProvider = $dataProvider;
+            $this->autoRender = $autoRender;
         } catch (\Exception $e) {
             var_dump($e);
         }
-        $this->define();
         $this->tasksCollection = new BaseTags( $this->dataProvider );
         $this->process();
-    }
-
-    /**
-     * Definition des constantes nécessaires.
-     */
-    protected function define() {
-        foreach ($this->constants as $key => $value) {
-            (!defined($key) ) ? define($key, $value) : null;
-        }
     }
 
     /**
@@ -155,18 +75,22 @@ class Parser {
         }
 
     }
-    
-    public function getContent( $toString = false ) {
-        if ($toString) {
-            return $this->template->get();
-        }
-        else {
-            echo $this->template->get();
-        }
+
+    public function getContent() {
+        return $this->template->get();
+    }
+
+    public function __toString() {
+        return $this->template->get();
     }
 
     public function __destruct() {
-        ( $this->autoRender ) ? $this->getContent() : null;
+        if($this->autoRender) {
+            echo $this;
+        }
+        else {
+            return $this->getContent();
+        }
     }
 
 }

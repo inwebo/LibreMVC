@@ -10,6 +10,7 @@ include('parser/logic/includer/class.includer.php');
 include('parser/logic/constant/class.constant.php');
 include('parser/logic/comparaison/class.comparison.php');
 include('parser/logic/loop/class.loop.php');
+include('parser/logic/loop/informations/class.informations.php');
 //include('parser/logic/loop/loopheader/class.loopheader.php');
 include('parser/logic/conditions/class.conditions.php');
 include('parser/logic/template/class.template.php');

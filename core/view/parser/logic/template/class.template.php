@@ -68,7 +68,7 @@ class Template extends Logic {
         } catch (\Exception $e) {
             var_dump($e);
         }
-        return $temp->getContent( true );
+        return $temp->getContent();
     }
 
 }

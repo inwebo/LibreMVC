@@ -9,7 +9,18 @@
 
 namespace LibreMVC\Web\Syndication;
 
-
+/**
+ * Class Metas
+ *
+ * Contient les metas informations d'un element
+ *
+ * @package LibreMVC\Web\Syndication
+ */
 class Metas {
 
+    public function __set($key, $value) {
+        if( isset($this->$key)) {
+            $this->$key = $value;
+        }
+    }
 }

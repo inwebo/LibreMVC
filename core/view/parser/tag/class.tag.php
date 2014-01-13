@@ -18,6 +18,28 @@ namespace LibreMVC\View\Parser;
 class Tag {
 
     /**
+     * Echappement du parser
+     */
+    const ESCAPEMENT = '#\{noparse\}(.*)\{\/noparse\}#ismU';
+    /**
+     * Constante est en majuscule {CONSTANTE}.
+     */
+    const CONSTS    = '#\{([A-Z_]*)\}#';
+    const VARS      = '#\{\$([aA-zZ_]*)\}#';
+
+    /**
+     * Boucle
+     */
+    const LOOP          = '#(\{loop *= *"\$.*\".*\}.*\{\/loop\})#ism';
+    const LOOP_HEADER   = '#(\{loop="\$.*\".*\})#ismU';
+    const LOOP_BODY     = '#\}(?!\})(.*)\{{1}\/{1}loop\}{1}#ism';
+    const LOOP_AS       = '#([a-zA-Z_]*)=>([a-zA-Z_]*)#';
+    const LOOP_ITERABLE = '#\{loop="\$(.*)\".*\}#ismU';
+    const LOOP_BODY_VARS= '#(.*)\{loop *= *"\$.*\".*\}.*\{\/loop\}(.*)#ism';
+    const INCLUDER      = '#\{inc=(.*)\}#';
+    const TEMPLATE      = '#\{tpl=(.*)\}#';
+
+    /**
      * Un pattern PCRE à rechercher dans le template.
      * @vars string
      */

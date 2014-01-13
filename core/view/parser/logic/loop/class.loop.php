@@ -33,6 +33,8 @@ use LibreMVC\View\ViewObject;
 
 class Loop extends Logic {
 
+    protected $buffer = "";
+
     /**
      * Boucle sur un tableau
      * 
@@ -43,88 +45,63 @@ class Loop extends Logic {
         //var_dump($match);
         // PAttern complet
         $loop = $match[0];
-        preg_match(PATTERN_LOOP_HEADER,$loop, $header);
 
-        // entete pattern complet
-        $header = $header[0];
-        preg_match(PATTERN_AS_VAR_LOOP, $header, $_dataProvider);
+        $obfuscatedLoop = new Loop\Informations($this->dataProvider);
+        $loopInformations = $obfuscatedLoop->process($loop);
 
-        // Contenu
-        preg_match(PATTERN_INNER_LOOP,$loop, $innerLoop);
-        $innerLoop = $innerLoop[1];
+        //var_dump($loopInformations);
 
-        // ViewObject membre souhaité
-        $dataProviderMember = $_dataProvider[1];
-        $asvarloop = trim($_dataProvider[2],' ');
-
-        $recursive = (bool)preg_match(PATTERN_LOOP, $innerLoop);
-
-        preg_match( PATTERN_KEY_VALUE_LOOP , $header, $keyValue );
-        $key = $keyValue[1];
-        $value = $keyValue[2];
-
-        preg_match(PATTERN_LOOP_GET_LOCAL_VARS,$innerLoop,$buffer);
-        $localVars = $buffer[1];
-        /*
-        var_dump($buffer);
-        var_dump($loop);
-        var_dump($header);
-        var_dump($key);
-        var_dump($value);
-        */
-        // Pour la propriete du viewobject courant.
-        //var_dump($dataProviderMember);
-
-        if(!isset($this->dataProvider->$dataProviderMember)) {
-            return $localVars;
+        // Pas de DataProvider pas de traitement.
+        $dp = $loopInformations->dataProvider;
+        if( !isset( $this->dataProvider->$dp ) ) {
+            return $loop;
         }
 
+        // Est ce une boucle recursive
+        // @todo : Recusivité
+
+        return  $this->processLocalVars($loopInformations);
+    }
+
+    public function processLocalVars($loopInformations) {
+        $dp = $loopInformations->dataProvider;
         $_return = "";
-        foreach( $this->dataProvider->$dataProviderMember as $k => $v) {
-            echo $k.$v;
-            $buffer = $localVars;
-            // Remplace les occurences de $key / $value
-            $buffer = preg_replace('#(\{\$'.$key.'\})#m',$k,$buffer);
-            $buffer = preg_replace('#\{\$'.$value.'\}#m',$v,$buffer);
-            $_return .= $buffer;
+        $j=0;
+        foreach( $this->dataProvider->$dp as $k => $v) {
 
-            // Si est loop imbriquée nouvelle loop
+            if($loopInformations->recursive) {
+
+                // Obfuscation de la loop interne
+                $tempLoop = preg_replace(Tag::LOOP,'####', $loopInformations->body);
+                var_dump($tempLoop);
+
+                $buffer = $tempLoop;
+
+                $obfuscatedLoop = new Loop($this->dataProvider);
+                preg_match(Tag::LOOP, $loopInformations->body, $innerLoop);
+                var_dump($innerLoop[0]);
+
+                $computedInnerLoop =  $obfuscatedLoop->process($innerLoop);
+                var_dump($computedInnerLoop);
+
+            }
+            else {
+                $buffer = $loopInformations->bodyVars;
+                // Remplace les occurences de $key / $value
+                $buffer = $this->processLocalVars($loopInformations->as['key'], $k,$buffer);
+                $buffer = $this->processLocalVars($loopInformations->as['value'], $v,$buffer);
+                //$buffer = preg_replace('#(\{\$'.$loopInformations->as['key'].'\})#m',$k,$buffer);
+                //$buffer = preg_replace('#\{\$'.$loopInformations->as['value'].'\}#m',$v,$buffer);
+                $_return .= $buffer;
+            }
+            $j++;
         }
 
-        //$iterable = $this->dataProvider->$dataProviderMember;
-/*
-        var_dump($iterable);
-        // Dans un nouveau viewobject avec $key->value
-        var_dump($asvarloop);
-        // Nouvelle loop si loop imbriquées.
-        var_dump($innerLoop);
-        var_dump($recursive);
-*/
-        /*
-        $viewObject = new ViewObject();
-        $task = new Task(new Tag(PATTERN_LOOP), new Loop($iterable));
-        $task->getLogic()->process($innerLoop);
-*/
-        /*
-        foreach( $iterable as $key => $value ) {
-            echo $value;
-        }
-*/
-        var_dump($_return);
         return $_return;
-        /*
-        $buffer = array();
-        if (!isset($this->dataProvider->$match[1])) {
-            // Error
-            return null;
-        }
-        $logic = new LogicVar();
-       
-        foreach ($this->dataProvider->$match[1] as $this->dataProvider->$match[1]->key => $this->dataProvider->$match[1]->value) {
-            $buffer[] = preg_replace_callback(PATTERN_VAR, array($logic, 'process'), $match[2]);
-        }
+    }
 
-        return implode('', $buffer);*/
+    public function populateLocalVars($search, $pattern, $subject) {
+        return  preg_replace('#\{\$'.$search.'\}#m',$pattern,$subject);
     }
 
 }

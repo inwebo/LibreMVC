@@ -22,8 +22,6 @@ use LibreMVC\View\Interfaces\IProcess;
 
 abstract class Logic implements IProcess {
 
-    public $errors = array();
-
     /**
      * Singleton d'un objet ViewBag
      * @static
