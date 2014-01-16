@@ -9,6 +9,8 @@
 
 namespace LibreMVC\View\Template;
 
+use LibreMVC\View\Template;
+
 class TemplateFromString extends Template{
 
     public function __construct($string) {

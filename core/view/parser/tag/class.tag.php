@@ -38,6 +38,7 @@ class Tag {
     const LOOP_BODY_VARS= '#(.*)\{loop *= *"\$.*\".*\}.*\{\/loop\}(.*)#ism';
     const INCLUDER      = '#\{inc=(.*)\}#';
     const TEMPLATE      = '#\{tpl=(.*)\}#';
+    const PLACEHOLDER   = '{#}';
 
     /**
      * Un pattern PCRE à rechercher dans le template.
