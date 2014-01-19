@@ -5,6 +5,7 @@ include('parser/class.parser.php');
 include('parser/tag/class.tag.php');
 include('parser/logic/class.logic.php');
 include('parser/logic/vars/class.vars.php');
+include('parser/logic/vardump/class.vardump.php');
 include('parser/logic/escapement/class.escapement.php');
 include('parser/logic/includer/class.includer.php');
 include('parser/logic/constant/class.constant.php');
