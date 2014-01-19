@@ -21,24 +21,62 @@ class Tag {
      * Echappement du parser
      */
     const ESCAPEMENT = '#\{noparse\}(.*)\{\/noparse\}#ismU';
+
     /**
      * Constante est en majuscule {CONSTANTE}.
      */
     const CONSTS    = '#\{([A-Z_]*)\}#';
+    /**
+     * Un membre du ViewObject courant
+     */
     const VARS      = '#\{\$([aA-zZ_]*)\}#';
 
     /**
      * Boucle
      */
-    const LOOP          = '#(\{loop *= *"\$.*\".*\}.*\{\/loop\})#ism';
-    const LOOP_HEADER   = '#(\{loop="\$.*\".*\})#ismU';
-    const LOOP_BODY     = '#\}(?!\})(.*)\{{1}\/{1}loop\}{1}#ism';
-    const LOOP_AS       = '#([a-zA-Z_]*)=>([a-zA-Z_]*)#';
-    const LOOP_ITERABLE = '#\{loop="\$(.*)\".*\}#ismU';
-    const LOOP_BODY_VARS= '#(.*)\{loop *= *"\$.*\".*\}.*\{\/loop\}(.*)#ism';
+    /**
+    (?'loop'(?'header'\{loop *= *"\$(?'iterable'.*)\" *as *(?'key'[^ ].*[^ ]) *=> *(?'value'[^ ].*) *\}){1}(?'body'((?:[^{}]++|(?R))*+))(?:\{\/loop\})){1}#isMu
+     */
+
+    /*
+     * Single
+     * ((?:\{loop *= *"\$.*\".*\})(.*(?(2)(.*)(\{loop\})|(.*)))(?:\{\/loop\})+?)
+     */
+
+    /**
+     * Réponse
+     * (?'loop'(?'header'\{loop=\"\$(?'iterator'.*)\" +as +(?'key'.*)=>(?'value'.*)\})(?'body'(?:[^{}]++|(?R))*+)\{\/loop\})
+     */
+
+//    const LOOP                      = '#(\{loop *= *"\$.*\".*\}(.*)\{\/loop\})#ismU';
+    const LOOP = '#(?<loop>(?<header>\{loop=\"\$(?<iterator>.*)\" +as +(?<key>.*)=>(?<value>.*)\})(?<body>(?:[^{}]++|(?R))*+)\{\/loop\})#';
+
+    const LOOP_HEADER               = '#(\{loop="\$.*\".*\})#ismU';
+    const LOOP_BODY                 = '#\}(?!\})(.*)\{{1}\/{1}loop\}{1}#ism';
+    const LOOP_AS                   = '#([a-zA-Z_]*)=>([a-zA-Z_]*)#';
+    const LOOP_ITERABLE             = '#\{loop="\$(.*)\".*\}#ismU';
+    const LOOP_BODY_VARS_RECURSIVE  = '#(.*)\{loop *= *"\$.*\".*\}.*\{\/loop\}(.*)#ism';
+    const LOOP_BODY_VARS_FLAT       = '([^\{loop *= *"\$.*\".*\}.*\{\/loop\}].*)';
+
+    /**
+     * Inclusion d'un fichier
+     */
     const INCLUDER      = '#\{inc=(.*)\}#';
+
+    /**
+     * Inclusion d'un fichier template (sera parser par Parser)
+     */
     const TEMPLATE      = '#\{tpl=(.*)\}#';
+
+    /**
+     * Internal tags
+     */
     const PLACEHOLDER   = '{#}';
+
+    /**
+     * Dump du ViewObjectCourant
+     */
+    const VAR_DUMP      = '#(\{dump\})#s';
 
     /**
      * Un pattern PCRE à rechercher dans le template.
