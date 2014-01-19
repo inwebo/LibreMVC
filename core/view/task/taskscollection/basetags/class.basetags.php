@@ -14,6 +14,7 @@ namespace LibreMVC\View\Task\TaskCollection;
  * @since      File available since Beta
  */
 
+use LibreMVC\View\Parser\Logic\VarDump;
 use LibreMVC\View\Task;
 use LibreMVC\View\Parser\Tag;
 use LibreMVC\View\Parser\Logic\Conditions;
@@ -34,6 +35,9 @@ class BaseTags extends \SplObjectStorage {
     public function __construct( $dataProvider ) {
 
         $this->dataProvider = $dataProvider;
+
+        // Var_dump
+        $this->attach( new Task( new Tag(Tag::VAR_DUMP), new VarDump($this->dataProvider)) );
 
         // No parse pattern {noparse}{/noparse}
         $this->attach( new Task( new Tag(Tag::ESCAPEMENT), new Escapement($this->dataProvider)) );
