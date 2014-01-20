@@ -1,5 +1,7 @@
 <?php
-include('./core/web/syndication/item/class.item.php');
-include('./core/web/syndication/class.syndication.php');
-include('./core/web/syndication/autoload.php');
-include('./core/web/syndication/metas/class.meta.php');
+
+include('class.syndication.php');
+include('item/class.item.php');
+include('meta/class.meta.php');
+include('rss/class.rss.php');
+include('rss/channel');
