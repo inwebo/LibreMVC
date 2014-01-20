@@ -20,8 +20,15 @@ namespace LibreMVC\View\Parser\Logic;
  */
 
 use LibreMVC\View\Parser\Logic;
-
+use LibreMVC\View\Parser\Tag;
 class Vars extends Logic {
+
+    protected $dataProviderMember;
+
+    protected function initialize($match) {
+        $this->dataProviderMember = $match['dataProvider'];
+        var_dump($this->isObject());
+    }
 
     /**
      * Setter match. Applique une class métier sur un pattern PCRE.
@@ -30,18 +37,65 @@ class Vars extends Logic {
      * @return string Le contenu fichier template modifié par une fonction pcre
      */
     public function process($match) {
+        $this->initialize($match);
         $buffer = "";
-        ob_start();
-        if ( isset( $this->dataProvider->$match[1] ) ) {
-            echo( $this->dataProvider->$match[1] );
-        } else {
-            //Parser::$trace[] = "ViewBag vars ViewBag::$match[1] is not set";
-            // Erreur
-            return null;
+
+        // Est ce un objet ?
+        if( $this->isObject() ) {
+            $toTree = $this->toTree();
+            //if( $this->isValidMember($toTree) ) {
+                //Est ce un membre valide ?
+                ob_start();
+                echo $this->getValidMember($toTree);
+                $buffer = ob_get_contents();
+                ob_end_clean();
+                return $buffer;
+            //}
+
         }
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        else {
+            ob_start();
+            if ( isset( $this->dataProvider->$match[1] ) ) {
+                echo( $this->dataProvider->$match[1] );
+            } else {
+                //Parser::$trace[] = "ViewBag vars ViewBag::$match[1] is not set";
+                // Erreur
+                return null;
+            }
+            $buffer = ob_get_contents();
+            ob_end_clean();
+        }
+
+
         return $buffer;
+    }
+
+    protected function isValidMember($array) {
+        $return = $this->dataProvider->$array[0];
+        foreach($array as $value) {
+            if( !isset($return->$value) ) {
+                return false;
+            }
+        }
+        return $return;
+    }
+
+    protected function getValidMember($array) {
+        $return = $this->dataProvider->$array[0];
+        foreach($array as $value) {
+            if( isset($return->$value) ) {
+                $return = $return->$value;
+            }
+        }
+        return $return;
+    }
+
+    protected function isObject() {
+        return (bool)preg_match(Tag::VARS_SEPARATOR, $this->dataProviderMember);
+    }
+
+    protected function toTree(){
+        return preg_split('#\-\>#',$this->dataProviderMember);
     }
 
     /**

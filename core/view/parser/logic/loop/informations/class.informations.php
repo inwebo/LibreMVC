@@ -12,43 +12,34 @@ namespace LibreMVC\View\Parser\Logic\Loop;
 use LibreMVC\View\Parser\Logic;
 use LibreMVC\View\Parser\Tag;
 
-class Informations extends Logic {
+class Informations {
 
     protected $toString;
     protected $header;
     protected $body;
     protected $dataProvider;
     protected $as;
-    protected $bodyVars;
     protected $recursive;
 
     protected function initialize($loop){
+
         // Representation sous forme de chaine d'une loop
-        $this->toString = $loop;
+        $this->toString = $loop['loop'];
 
         // Header
-        preg_match( Tag::LOOP_HEADER, $loop, $header );
-        $this->header = $header[0];
+        $this->header = $loop['header'];
 
         // Body
-        preg_match( Tag::LOOP_BODY, $loop, $innerLoop );
-        $this->body = $innerLoop[1];
+        $this->body = $loop['body'];
 
         // DataProvider
-        preg_match(Tag::LOOP_ITERABLE, $this->header, $dataProvider);
-        $this->dataProvider = $dataProvider[1];
+        $this->dataProvider = $loop['dataProvider'];
 
         // Key value pair
-        preg_match( Tag::LOOP_AS , $this->header, $keyValue );
-        $this->as = array("key"=>$keyValue[1], "value"=>$keyValue[2]);
-
-        // Body vars
-        preg_match( Tag::LOOP_BODY_VARS, $this->body, $buffer );
-
-        $this->bodyVars = (isset($buffer[1])) ? $buffer[1] : null;
+        $this->as = array("key"=>$loop['key'], "value"=>$loop['value']);
 
         // IsRecursive
-        $this->recursive = (bool)preg_match(Tag::LOOP, $loop);
+        $this->recursive = (bool)preg_match(Tag::LOOP, $this->body);
 
     }
 
@@ -61,31 +52,22 @@ class Informations extends Logic {
         $results = new \StdClass();
 
         // Representation sous forme de chaine d'une loop
-        $results->toString = $loop;
+        $results->toString = $this->toString;
 
         // Header
-        preg_match( Tag::LOOP_HEADER, $loop, $header );
-        $results->header = $header[0];
+        $results->header = $this->header;
 
         // Body
-        preg_match( Tag::LOOP_BODY, $loop, $innerLoop );
-        $results->body = $innerLoop[1];
+        $results->body = $this->body;
 
         // DataProvider
-        preg_match(Tag::LOOP_ITERABLE, $results->header, $dataProvider);
-        $results->dataProvider = $dataProvider[1];
+        $results->dataProvider = $this->dataProvider;
 
         // Key value pair
-        preg_match( Tag::LOOP_AS , $results->header, $keyValue );
-        $results->as = array("key"=>$keyValue[1], "value"=>$keyValue[2]);
-
-        // Body vars
-        preg_match( Tag::LOOP_BODY_VARS, $results->body, $buffer );
-
-        $results->bodyVars = (isset($buffer[1])) ? $buffer[1] : null;
+        $results->as = array("key"=>$this->as['key'], "value"=>$this->as['value']);
 
         // IsRecursive
-        $results->recursive = (bool)preg_match(Tag::LOOP, $loop);
+        $results->recursive = (bool)preg_match(Tag::LOOP, $this->body);
 
         return $results;
     }

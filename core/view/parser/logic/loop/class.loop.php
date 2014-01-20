@@ -37,21 +37,14 @@ class Loop extends Logic {
     protected $loopInformations;
 
     protected function initialize( $pregReplaceCallbackResult ){
-        // Extract de la loop courante du résultat d'une $pregReplaceCallback
-        if( is_string($pregReplaceCallbackResult) ) {
-            $loop = $pregReplaceCallbackResult;
-        }
-        elseif( is_array($pregReplaceCallbackResult) ){
-            $loop = $pregReplaceCallbackResult[0];
-        }
 
         // Informations sur la loop courante
-        $loopInformationsFactory = new Loop\Informations($this->dataProvider);
-        $this->loopInformations = $loopInformationsFactory->process($loop);
+        $loopInformationsFactory = new Loop\Informations();
+        $this->loopInformations = $loopInformationsFactory->process($pregReplaceCallbackResult);
 
         // Pas de DataProvider pas de traitement.
         if( !isset( $this->loopInformations->dataProvider ) || empty($this->loopInformations->dataProvider) || count($this->loopInformations->dataProvider) === 0 ) {
-            return $this->loopInformations->string;
+            return $this->loopInformations->toString;
         }
 
     }
@@ -63,7 +56,6 @@ class Loop extends Logic {
      * @return string Le contenu fichier template modifié par une fonction pcre
      */
     public function process($match) {
-
         $this->initialize( $match );
 
         /**
@@ -92,22 +84,31 @@ class Loop extends Logic {
         return preg_replace(Tag::LOOP, TAG::PLACEHOLDER , $stringLoop);
     }
 
-    protected function iterateDataProvider( $callback ) {
-        foreach($this->dataProvider as $key => $value) {
-            return call_user_func_array($callback, array("key"=>$key,"value"=>$value));
+    protected function iterateDataProvider( $callback, $template = null ) {
+        $buffer = "";
+        $member = $this->loopInformations->dataProvider;
+        foreach($this->dataProvider->$member as $key => $value) {
+            $buffer .= call_user_func_array($callback, array("key"=>$key,"value"=>$value, "template"=>$template));
         }
-
+        return $buffer;
     }
 
-    protected function simpleBodyVarsCallback($key, $value) {
+    protected function simpleBodyVarsCallback($key, $value, $template=null) {
         $_return ="";
-        $buffer = $this->loopInformations->bodyVars;
-        var_dump($this->loopInformations->bodyVars);
+
+        if( is_null($template) ) {
+            $buffer = $this->loopInformations->body;
+        }
+        else {
+            $buffer = $template;
+        }
+
+
         // Remplace les occurences de $key / $value
-        $buffer = $this->populateLocalVars($this->loopInformations->as['key'], $key,$buffer);
-        $buffer = $this->populateLocalVars($this->loopInformations->as['value'], $value,$buffer);
+        $buffer = $this->populateLocalVars($this->loopInformations->as['key'], $key, $buffer);
+        $buffer = $this->populateLocalVars($this->loopInformations->as['value'], $value, $buffer);
         $_return .= $buffer;
-        var_dump($buffer);
+
         return $_return;
     }
 
@@ -115,72 +116,48 @@ class Loop extends Logic {
         return ( isset( $this->dataProvider->$dataProviderMember ) );
     }
 
+    protected function isIterableDataProviderMember($dataProviderMember){
+
+    }
+
     public function processLocalVars($loopInformations) {
         // A partir d'ici nous savons que le data provider est iterable
-        var_dump($loopInformations->recursive);
+        //var_dump($loopInformations->recursive);
         /**
          * Est ce une boucle imbriquée ?
          * N'est pas une boucle imbriquée
          */
         if( !$loopInformations->recursive ) {
-            var_dump("Is not a recursive loop");
+            //var_dump("Is not a recursive loop");
             return $this->iterateDataProvider( array( $this, 'simpleBodyVarsCallback' ) );
         }
         /**
          * Est une boucle imbriquée
          */
         else {
-            var_dump("Is a recursive loop");
+            //var_dump("Is a recursive loop");
             return $this->iterateDataProvider( array( $this, 'includedBodyVarsCallBack' ) );
         }
     }
 
-    protected function processInnerLoopDataProvider($dataMember){
-
-    }
-
     public function includedBodyVarsCallBack($key, $value) {
-        $tempLoop = $this->obfuscateInternalLoop($this->loopInformations->body);
+        // Obfuscation de la loop interne.
+        $obfuscedLoop = $this->obfuscateInternalLoop($this->loopInformations->body);
 
-        // Est un membre du view object
-        if( $this->isValidDataProviderMember($key)  ) {
-            // Scope local
-            $tempLoop = $this->populateLocalVars($this->loopInformations->as['key'], $key, $tempLoop);
-            $tempLoop = $this->populateLocalVars($this->loopInformations->as['value'], $value, $tempLoop);
+        // Traitement du template du scope global
+        $result = $this->iterateDataProvider(array($this, 'simpleBodyVarsCallback'), $obfuscedLoop);
 
-            // Replace le placeHolder avec loop inclue
-            preg_match(Tag::LOOP, $this->loopInformations->body, $innerLoop);
-            $tempLoop = $innerLoop;
-
-            $tempLoopInformations = new Loop\Informations($this->dataProvider->$key);
-            //var_dump($tempLoopInformations->process($innerLoop[0]));
-            $tempLoopInformations->injectDataProviderName($key);
-
-            //var_dump($tempLoop);
-
-        }
-        if( $this->isValidDataProviderMember($key) && is_object($key) ) {
-            // Getter loop inclue
-            // GetResult
-            if( is_array($innerLoop) && isset($innerLoop) && !empty($innerLoop) ) {
-                $innerLoop = $innerLoop[0];
-                $tempLoop = str_replace(Tag::PLACEHOLDER, $innerLoop, $tempLoop);
-            }
-
-            //var_dump($tempLoop);
-            // Inject la donnée
-            //var_dump(preg_match(Tag::LOOP_ITERABLE, $this->loopInformations->body , $tempData));
-            if(is_object($this->dataProvider->$key)) {
-                //var_dump(preg_replace(Tag::LOOP_ITERABLE,$this->dataProvider->$key,$tempData[0]));
-                //var_dump($tempData[0]);
-            }
-        }
-        //var_dump($tempLoop[0]);
-        return $tempLoop[0];
+        return $result;
     }
 
     public function populateLocalVars( $search, $replacement, $subject ) {
-        return  preg_replace( '#\{\$'.$search.'\}#m',$replacement, $subject );
+        if(!is_object($replacement)) {
+            return  preg_replace( '#\{\$'.$search.'\}#m',$replacement, $subject );
+        }
+        else {
+            return '';
+        }
+
     }
 
 }

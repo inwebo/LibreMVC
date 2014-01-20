@@ -29,34 +29,11 @@ class Tag {
     /**
      * Un membre du ViewObject courant
      */
-    const VARS      = '#\{\$([aA-zZ_]*)\}#';
+    //const VARS      = '#\{\$([aA-zZ_]*)\}#';
+    const VARS      = '#(?<var>\{\$(?<dataProvider>(?:[a-zA-Z]*)(?:(?:->){1}(?:[a-zA-Z1-9]*){1})*)\})#';
+    const VARS_SEPARATOR = '#\-\>#';
 
-    /**
-     * Boucle
-     */
-    /**
-    (?'loop'(?'header'\{loop *= *"\$(?'iterable'.*)\" *as *(?'key'[^ ].*[^ ]) *=> *(?'value'[^ ].*) *\}){1}(?'body'((?:[^{}]++|(?R))*+))(?:\{\/loop\})){1}#isMu
-     */
-
-    /*
-     * Single
-     * ((?:\{loop *= *"\$.*\".*\})(.*(?(2)(.*)(\{loop\})|(.*)))(?:\{\/loop\})+?)
-     */
-
-    /**
-     * Réponse
-     * (?'loop'(?'header'\{loop=\"\$(?'iterator'.*)\" +as +(?'key'.*)=>(?'value'.*)\})(?'body'(?:[^{}]++|(?R))*+)\{\/loop\})
-     */
-
-//    const LOOP                      = '#(\{loop *= *"\$.*\".*\}(.*)\{\/loop\})#ismU';
-    const LOOP = '#(?<loop>(?<header>\{loop=\"\$(?<iterator>.*)\" +as +(?<key>.*)=>(?<value>.*)\})(?<body>(?:[^{}]++|(?R))*+)\{\/loop\})#';
-
-    const LOOP_HEADER               = '#(\{loop="\$.*\".*\})#ismU';
-    const LOOP_BODY                 = '#\}(?!\})(.*)\{{1}\/{1}loop\}{1}#ism';
-    const LOOP_AS                   = '#([a-zA-Z_]*)=>([a-zA-Z_]*)#';
-    const LOOP_ITERABLE             = '#\{loop="\$(.*)\".*\}#ismU';
-    const LOOP_BODY_VARS_RECURSIVE  = '#(.*)\{loop *= *"\$.*\".*\}.*\{\/loop\}(.*)#ism';
-    const LOOP_BODY_VARS_FLAT       = '([^\{loop *= *"\$.*\".*\}.*\{\/loop\}].*)';
+    const LOOP = '#(?<loop>(?<header>\[loop=\"\$(?<dataProvider>.*)\" +as +(?<key>.*)=>(?<value>.*)\])(?<body>(?:[^\[\]]++|(?R))*+)\[\/loop\])#';
 
     /**
      * Inclusion d'un fichier
