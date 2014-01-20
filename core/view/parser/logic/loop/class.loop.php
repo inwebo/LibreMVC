@@ -62,14 +62,12 @@ class Loop extends Logic {
          * N'est pas iterable, ne posséde donc pas de membre. donc pas de traitement retourne tag loop inchangé.
          */
         if( ! is_object($this->dataProvider) ) {
-            var_dump("Is not a validDataProvider");
             return $this->loopInformations->toString;
         }
         /**
          * Le remplacement peut se faire.
          */
         else {
-            var_dump("Process localVars");
             return  $this->processLocalVars($this->loopInformations);
         }
 
@@ -105,8 +103,8 @@ class Loop extends Logic {
 
 
         // Remplace les occurences de $key / $value
-        $buffer = $this->populateLocalVars($this->loopInformations->as['key'], $key, $buffer);
-        $buffer = $this->populateLocalVars($this->loopInformations->as['value'], $value, $buffer);
+        $buffer = $this->populateLocalVars($this->loopInformations->key, $key, $buffer);
+        $buffer = $this->populateLocalVars($this->loopInformations->value, $value, $buffer);
         $_return .= $buffer;
 
         return $_return;
@@ -117,7 +115,7 @@ class Loop extends Logic {
     }
 
     protected function isIterableDataProviderMember($dataProviderMember){
-
+        return is_object($dataProviderMember) || is_array($dataProviderMember);
     }
 
     public function processLocalVars($loopInformations) {
@@ -146,6 +144,48 @@ class Loop extends Logic {
 
         // Traitement du template du scope global
         $result = $this->iterateDataProvider(array($this, 'simpleBodyVarsCallback'), $obfuscedLoop);
+
+
+        //var_dump( $this->isIterableDataProviderMember( $value ) );
+
+        // Est ce que $value est iterable ?
+        if( $this->isIterableDataProviderMember($value) ) {
+            //var_dump($result);
+            // Injection dans la boucle imbriquée
+            // Nouvelle boucle informations pour récupérer le dataprovider et pouvoir injecter la clef courante de
+
+            // Boucle inclue
+            preg_match(Tag::LOOP, $this->loopInformations->body, $loop);
+
+            // Les infos de la boucle inclue
+            $boucleInformations = new Loop\Informations();
+            $toInjectDataProvider = $boucleInformations->process($loop);
+            //var_dump($toInjectDataProvider);
+
+            // Injection de la variable
+            $injected=str_replace('$'.$boucleInformations->dataProvider,'$'.$key, $toInjectDataProvider->loop);
+            $injectedHeader=str_replace('$'.$boucleInformations->dataProvider,'$'.$key, $toInjectDataProvider->header);
+            $injectedDataProvider=str_replace($boucleInformations->dataProvider,$key, $toInjectDataProvider->dataProvider);
+            //var_dump($injected);
+            $boucleInformations->loop = $injected;
+            $boucleInformations->header = $injectedHeader;
+            $boucleInformations->dataProvider = $injectedDataProvider;
+            // Parser la nouvelle boucle avec le dataProvider courant $value
+            $template = new TemplateFromString($injected);
+            //var_dump($value);
+            $vo = new ViewObject();
+            $vo->$key = $value;
+            //var_dump($vo);
+            $taskLoop = new Task( new Tag(Tag::LOOP), new Loop($vo) );
+            //var_dump($boucleInformations->toArray());
+            $processedLoop = $taskLoop->getLogic()->process($boucleInformations->toArray());
+
+            // Remplacement de la boucle obfuscée.
+            $a = str_replace(Tag::PLACEHOLDER, $processedLoop, $obfuscedLoop);
+            //var_dump($a);
+            $result = $a;
+        }
+
 
         return $result;
     }

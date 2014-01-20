@@ -14,17 +14,18 @@ use LibreMVC\View\Parser\Tag;
 
 class Informations {
 
-    protected $toString;
-    protected $header;
+    public $loop;
+    public $header;
     protected $body;
-    protected $dataProvider;
-    protected $as;
+    public $dataProvider;
+    protected $key;
+    protected $value;
     protected $recursive;
 
     protected function initialize($loop){
 
         // Representation sous forme de chaine d'une loop
-        $this->toString = $loop['loop'];
+        $this->loop = $loop['loop'];
 
         // Header
         $this->header = $loop['header'];
@@ -36,15 +37,21 @@ class Informations {
         $this->dataProvider = $loop['dataProvider'];
 
         // Key value pair
-        $this->as = array("key"=>$loop['key'], "value"=>$loop['value']);
+        $this->key = $loop['key'];
+        $this->value = $loop['value'];
+        //$this->as = array("key"=>$loop['key'], "value"=>$loop['value']);
 
         // IsRecursive
         $this->recursive = (bool)preg_match(Tag::LOOP, $this->body);
 
     }
 
-    public function injectDataProviderName( $dataProviderName ) {
-
+    public function toArray() {
+        $array = array();
+        foreach($this as $key => $value) {
+            $array[$key]=$value;
+        }
+        return $array;
     }
 
     public function process( $loop ) {
@@ -52,7 +59,7 @@ class Informations {
         $results = new \StdClass();
 
         // Representation sous forme de chaine d'une loop
-        $results->toString = $this->toString;
+        $results->loop = $this->loop;
 
         // Header
         $results->header = $this->header;
@@ -64,7 +71,10 @@ class Informations {
         $results->dataProvider = $this->dataProvider;
 
         // Key value pair
-        $results->as = array("key"=>$this->as['key'], "value"=>$this->as['value']);
+        //$results->as = array("key"=>$this->as['key'], "value"=>$this->as['value']);
+        $results->key = $this->key;
+        $results->value = $this->value;
+        //$results->value = array("key"=>$this->as['key'], "value"=>$this->as['value']);
 
         // IsRecursive
         $results->recursive = (bool)preg_match(Tag::LOOP, $this->body);

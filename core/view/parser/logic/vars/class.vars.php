@@ -27,7 +27,6 @@ class Vars extends Logic {
 
     protected function initialize($match) {
         $this->dataProviderMember = $match['dataProvider'];
-        var_dump($this->isObject());
     }
 
     /**
@@ -41,26 +40,26 @@ class Vars extends Logic {
         $buffer = "";
 
         // Est ce un objet ?
-        if( $this->isObject() ) {
-            $toTree = $this->toTree();
-            //if( $this->isValidMember($toTree) ) {
+        if( $this->isFlat() ) {
+            $toTree = $this->split();
+            if( $this->isValidMember($toTree) ) {
                 //Est ce un membre valide ?
                 ob_start();
                 echo $this->getValidMember($toTree);
                 $buffer = ob_get_contents();
                 ob_end_clean();
                 return $buffer;
-            //}
-
+            }
+            else {
+                return $match[0];
+            }
         }
         else {
             ob_start();
-            if ( isset( $this->dataProvider->$match[1] ) ) {
-                echo( $this->dataProvider->$match[1] );
+            if ( isset( $this->dataProvider->$match['dataProvider'] ) ) {
+                echo( $this->dataProvider->$match['dataProvider'] );
             } else {
-                //Parser::$trace[] = "ViewBag vars ViewBag::$match[1] is not set";
-                // Erreur
-                return null;
+                return $match[0];
             }
             $buffer = ob_get_contents();
             ob_end_clean();
@@ -73,7 +72,12 @@ class Vars extends Logic {
     protected function isValidMember($array) {
         $return = $this->dataProvider->$array[0];
         foreach($array as $value) {
-            if( !isset($return->$value) ) {
+            if(is_object($return)) {
+                if( !isset($return->$value) ) {
+                    return false;
+                }
+            }
+            else {
                 return false;
             }
         }
@@ -83,18 +87,20 @@ class Vars extends Logic {
     protected function getValidMember($array) {
         $return = $this->dataProvider->$array[0];
         foreach($array as $value) {
-            if( isset($return->$value) ) {
-                $return = $return->$value;
+            if(is_object($return)) {
+                if( isset($return->$value) ) {
+                    $return = $return->$value;
+                }
             }
         }
         return $return;
     }
 
-    protected function isObject() {
+    protected function isFlat() {
         return (bool)preg_match(Tag::VARS_SEPARATOR, $this->dataProviderMember);
     }
 
-    protected function toTree(){
+    protected function split(){
         return preg_split('#\-\>#',$this->dataProviderMember);
     }
 
