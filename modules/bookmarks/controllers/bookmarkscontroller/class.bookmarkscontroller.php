@@ -85,7 +85,6 @@ class BookmarksController extends ProtectedController{
             $cat->id = $category['id'];
             $cat->name = $category['name'];
             $cat->total = $this->_db->query("SELECT count(*) as total FROM ".$this->_prefixTables."bookmarks as t1 where t1.category=?", array($category['id']))->first()['total'];
-
             $this->_meta->title = "Mon annuaire en ligne avec " . $cat->total . " liens sauvegardés";
 
             $this->_viewbag->bookmarks->categories->$category['name'] = $cat;
@@ -133,7 +132,7 @@ class BookmarksController extends ProtectedController{
         $cat = new \StdClass();
         $cat->id = $bookmarks[0]['id'];
         $cat->name = $bookmarks[0]['name'];
-        $cat->total = $bookmarks[0]['total'];
+        $cat->total = $total[0];
         $cat->bookmarks = $bookmarks;
 
         $this->_viewbag->bookmarks->categories = null;
@@ -171,32 +170,37 @@ class BookmarksController extends ProtectedController{
         $tag = ($tag==="") ? "all" : $tag;
         $this->_breadCrumbs->items->$tag = "";
 
+        // Tous les tags
         $tagsArray = array();
         $tags = $this->_db->query('SELECT * FROM '.$this->_prefixTables.'bookmarks WHERE tags LIKE "%'.$tag.'%"', array($tag))->all();
         $return = array();
 
-        foreach($tags as $tag) {
-            $t = new Tags($tag['tags']);
-            $tagsArray = array_merge($tagsArray, $t->buffer);
+        // Transforme tableau de tags en objets tags.
+        foreach( $tags as $tag ) {
+            $tag = new Tags($tag['tags']);
+            $tagsArray = array_merge($tagsArray, $tag->toNormalizedArray());
             //$t->toNormalizedArray();
             //var_dump($t->toNormalizedArray());
             //$imploded = strtolower(implode(" ", $t->buffer));
             //echo "UPDATE my_tables_bookmarks SET tags = '".$imploded."' WHERE my_tables_bookmarks.id = ". $tag['id'] ."" . '<br>';
             //$this->_db->query("UPDATE my_tables_bookmarks SET tags = '".$imploded."' WHERE my_tables_bookmarks.id = ". $tag['id'] .";");
         }
-        //@todo normalize tags
 
         $_tagsArrayCount = $tagsArray;
-        //var_dump(count(array_keys($_tagsArrayCount,'icon')));
         $tagsArray = array_map('strtolower', $tagsArray);
         $tagsArray = array_filter($tagsArray);
         asort($tagsArray);
         array_flip($tagsArray);
-        $_tagsArray = array_unique($tagsArray);
 
-        foreach($_tagsArray as $k=> $v) {
-            $return[$v] = count( array_keys($_tagsArrayCount, $v) );
+        foreach($tagsArray as $k=> $v) {
+            $return[$v] = '';
         }
+
+        foreach($return as $k => $v) {
+            $return[$k] = count(array_keys( $_tagsArrayCount, $k ) );
+        }
+
+
 
         //var_dump( $tagsArray );
         //var_dump( $_tagsArrayCount );
