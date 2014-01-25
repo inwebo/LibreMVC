@@ -15,4 +15,20 @@ use \StdClass;
  * @since      File available since Beta
  * @static
  */
-class ViewObject extends StdClass{}
+class ViewObject extends StdClass{
+
+    public function propertyExists($property) {
+
+    }
+
+    public function isIterableMember($property) {
+        return is_array($property) || $property instanceof \Traversable;
+    }
+
+    public function isMember( $property ) {
+        return isset($this->$property);
+    }
+
+
+
+}
