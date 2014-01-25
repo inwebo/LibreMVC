@@ -47,13 +47,6 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <!--
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                            -->
                             <?php
                                 foreach(ViewBag::get()->categories as $k => $v) {
                                     echo '<li><a href="category/' . $v['id'] . '">' . $v['name'] . '</a></li>';
@@ -64,6 +57,13 @@
                     {loop="$menus"}
                     <li> <a href="{$value}">{$key}</a></li>
                     {/loop}
+                    <?php if($_SESSION['User']->login === 'guest') { ?>
+                        <li><a href="/login">Login</a></li>
+                    <?php } else {?>
+                        <li><a href="/login">Logout : "<em><?php echo $_SESSION['User']->login ?></em>"</a></li>
+                    <?php } ?>
+
+
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
@@ -71,11 +71,8 @@
 </header>
 <div id="parallax-wrapper">
     <div class="container">
-        <div class="starter-template">
-            <h1>Bookmarks</h1>
-            <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-        </div>
 
+<br>
             <div class="row">
                 <div class="col-md-12">
                     <div id="breadcrumbs" data-spy="affix" data-offset-top="100">

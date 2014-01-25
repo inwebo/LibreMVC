@@ -101,7 +101,6 @@ class Loop extends Logic {
             $buffer = $template;
         }
 
-
         // Remplace les occurences de $key / $value
         $buffer = $this->populateLocalVars($this->loopInformations->key, $key, $buffer);
         $buffer = $this->populateLocalVars($this->loopInformations->value, $value, $buffer);

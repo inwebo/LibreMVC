@@ -29,7 +29,7 @@ class Rss extends Syndication {
         $attribut->value = $this->version;
         $rss->appendChild($attribut);
         $channel = new Channel();
-        $rss->appendChild($channel);
+        $rss->appendChild( $channel );
 
         // Rss
         $this->domDocument->appendChild($rss);

@@ -87,6 +87,7 @@ footer {
     display: block;
     vertical-align: middle;
     margin-bottom: 2em;
+    text-align: left;
 }
 
 /*Bookmarks-list*/

@@ -5,5 +5,6 @@ use LibreMVC\Views\Template\ViewBag;
     foreach(ViewBag::get()->bookmarks->categories as $name => $categorie ) {
         ViewBag::get()->bookmarks->categories->current = $categorie;
         include(TPL_BOOKMARK_CATEGORY);
+        echo '<br>';
     }
 ?>
