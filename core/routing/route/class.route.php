@@ -34,7 +34,7 @@ class Route {
         $this->name         = $name;
         $this->controller   = $controller;
         $this->action       = $action;
-        $this->params       = $params;
+        $this->params       = (is_null($params))? array() : $params;
     }
 
     public function getMandatorySegments() {
