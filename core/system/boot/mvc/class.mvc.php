@@ -15,6 +15,7 @@ use LibreMVC\Html\JavascriptConfig;
 use LibreMVC\Helpers\BreadCrumbs;
 use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Http\Header;
+use LibreMVC\Http\Request;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Instance;
@@ -40,6 +41,10 @@ class Mvc {
 
     protected static $config;
 
+    protected static $_request;
+
+
+
     static public function registerEnvironnement() {
         Environnement::this()->server = Context::getServer(true,true);
     }
@@ -49,11 +54,16 @@ class Mvc {
 
     }
 
+    static public function setRequest() {
+        self::$_request = Request::current();
+    }
+
     static public function loadConfig() {
     }
 
     static public function initInstance() {
         Environnement::this()->instance = new Instance( Context::getUrl() );
+        var_dump(Environnement::this()->instance);
     }
 
     static public function autoloadInstance() {
@@ -183,6 +193,7 @@ class Mvc {
     static public function frontController() {
         // Lock du singleton en lecture seule
         Environnement::this()->readOnly = true;
+
         $router = new Router( Uri::current(), RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
 
         $routedRoute = $router->dispatch();
@@ -199,6 +210,7 @@ class Mvc {
                 $routedRoute->action,
                 $routedRoute->params
             );
+
         }
         // Erreur 404
         else {
