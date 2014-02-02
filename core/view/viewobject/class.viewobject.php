@@ -22,7 +22,7 @@ class ViewObject extends StdClass{
     }
 
     public function isIterableMember($property) {
-        return is_array($property) || $property instanceof \Traversable;
+        return (bool)is_array($property) || $property instanceof \Traversable;
     }
 
     public function isMember( $property ) {
