@@ -54,27 +54,56 @@ class Instance {
         $this->_dir = $this->findCurrentDir();
         $this->_realPath = $this->getRealPath();
         $this->_includeUrl = $this->_baseUrl . $this->_baseDir . $this->_dir . '/';
-        $this->_uri = $this->getUri();
         $this->_baseUri = $this->getBaseUri();
+        $this->_uri = $this->getUri();
     }
 
     public function getUri() {
-        $arrayName = explode( '.', $this->_dir );
-        $arrayUri = explode( '/', self::getBaseUri() );
-        /**
-         * @todo instance local uri
-         */
-        $url = array_diff( $arrayUri, $arrayName );
-        return trim( implode( '/', $url ), '/' ). '/';
+        // Url sans la query string
+        $_url = $this->urlToInstanceSyntax( strtok($this->_url,'?') );
+        $_baseUri = ltrim(str_replace('/','.',$this->_baseUri),'.');
+        if( $this->_dir !==  DEFAULT_INSTANCE) {
+            // Instance syntax dir
+            // To array
+            $getUri = explode($_baseUri, $_url);
+            // Ne garde que ce qui se trouve à droite de l'url
+            array_shift($getUri);
+            // To uri
+            $getUri = str_replace( '.','/',ltrim($getUri[0],'.') ) . '/';
+            return $getUri;
+        }
+        else {
+            $getUri = explode($_baseUri, $_url);
+            if( isset($getUri[1]) ) {
+                $getUri = str_replace('.','/',$getUri[1]) . "/";
+            }
+            else {
+                $getUri = "/";
+            }
+
+            return $getUri;
+        }
+    }
+
+    static public function uriToArray( $uri ) {
+        return explode('/',trim( $uri,'/'));
     }
 
     /**
-     * Uri courante.
+     * Dossier courant du script d'execution.
      * @return string
      */
     public function getBaseUri() {
-        $pathInfo = pathinfo( $_SERVER['PHP_SELF'] );
-        return ltrim($pathInfo['dirname'],'/')."/";
+        if( $this->_dir !==  DEFAULT_INSTANCE) {
+            $server = $this->urlToInstanceSyntax(Context::getServer());
+            $serverArray = explode('.', $server);
+            $currentDir = explode('.', $this->_dir);
+            return implode('/',array_diff($currentDir,$serverArray))."/";
+        }
+        else {
+            $pathInfo = pathinfo( $_SERVER['PHP_SELF'] );
+            return ltrim($pathInfo['dirname'],'/')."/";
+        }
     }
 
     /**
@@ -104,7 +133,7 @@ class Instance {
      * @return string
      */
     public function findCurrentDir() {
-        $url  = $url2 = explode('.', self::toInstanceSyntax( $this->_url ) );
+        $url  = $url2 = explode('.', self::urlToInstanceSyntax( $this->_url ) );
         $loop = count($url);
         $name = null;
         for($i=1; $i <= $loop; $i++) {
@@ -131,12 +160,12 @@ class Instance {
     /**
      * Retourne une url avec la syntaxe des instances attendues dans le DEFAULT_BASE_DIR
      *
-     * http://www.inwebo.dev/admin/ ->www.inwebo.dev.admin
+     * http://www.inwebo.dev/www.inwebo.dev.mvc.admin/ ->www.inwebo.dev.www.inwebo.dev.mvc.admin
      *
      * @param $url
      * @return string
      */
-    static public function toInstanceSyntax($url) {
+    static public function urlToInstanceSyntax($url) {
         $url = parse_url($url) ;
         array_shift($url);
         return strtolower(trim(str_ireplace('/', '.', implode('',$url)), '.'));
