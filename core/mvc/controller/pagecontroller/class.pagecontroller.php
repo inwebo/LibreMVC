@@ -9,7 +9,14 @@
 
 namespace LibreMVC\Mvc\Controller;
 
+use LibreMVC\Mvc\Controller;
 
-class PageController extends BaseController {
+class PageController extends Controller {
+
+    protected $_head;
+
+    public function init(){
+
+    }
 
 }
