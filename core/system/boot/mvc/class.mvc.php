@@ -39,31 +39,29 @@ class Mvc {
 
     const LIBREMVC_CONFIG_INI = "config/paths.ini";
 
-    protected static $config;
+    public static $config;
+    public static $request;
+    public static $instance;
 
-    protected static $_request;
-
-
+    static public function setErrorHandler() {
+        set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
+    }
 
     static public function registerEnvironnement() {
         Environnement::this()->server = Context::getServer(true,true);
     }
 
-    static public function registerErrorHandler() {
-        set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
-
+    static public function loadConfig() {
+        self::$config = Config::load(self::LIBREMVC_CONFIG_INI, true);
     }
 
     static public function setRequest() {
-        self::$_request = Request::current();
-    }
-
-    static public function loadConfig() {
+        self::$request = Request::current();
     }
 
     static public function initInstance() {
+        self::$instance = new Instance( Context::getUrl() );
         Environnement::this()->instance = new Instance( Context::getUrl() );
-        var_dump(Environnement::this()->instance);
     }
 
     static public function autoloadInstance() {
@@ -99,7 +97,7 @@ class Mvc {
             if(is_file($dir->folders->current()->realPath . '/module.ini')) {
                 $currentValue = $dir->folders->current()->realPath . '/module.ini';
                 $currentKey = ucfirst($dir->folders->current()->name);
-                // @todo new stdclass puis push ds env
+
                 Environnement::this()->Modules = new \StdClass;
                 Environnement::this()->Modules->$currentKey = new \StdClass;
                 Environnement::this()->Modules->$currentKey->config = $dir->folders->current() . "/module.ini";
