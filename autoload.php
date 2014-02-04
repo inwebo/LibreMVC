@@ -62,7 +62,7 @@ try {
 } catch (\Exception $e) {
     $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
     \LibreMVC\Http\Header::serverError();
-    \LibreMVC\Views\Template\ViewBag::get()->exception = $e;
+    \LibreMVC\View\ViewBag::get()->exception = $e;
     include('error500.php');
 }
 
