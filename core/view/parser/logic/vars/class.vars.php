@@ -51,7 +51,7 @@ class Vars extends Logic {
                 return $buffer;
             }
             else {
-                return $match[0];
+                //return $match[0];
             }
         }
         else {

@@ -116,7 +116,7 @@ class BookmarksController extends ProtectedController{
         $pagination = Pagination::dummyPagination($total['total'], $page, 25);
         $sqlLimit = $pagination->sqlLimit($total['total'], 25, $page);
         $this->_db->toAssoc();
-        $bookmarks = $this->_db->query(' SELECT *
+        $bookmarks = $this->_db->query('SELECT *
                                         FROM `'.$this->_prefixTables.'bookmarks` AS t1, (
                                         SELECT count( * ) as "total"
                                         FROM '.$this->_prefixTables.'bookmarks

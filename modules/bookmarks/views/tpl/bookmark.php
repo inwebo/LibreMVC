@@ -9,8 +9,10 @@ use LibreMVC\Views\Template\ViewBag;
 
         <?php if($_SESSION['User']->login !== 'guest') { ?>
             <span class="bookmark-panel">
-                                    <span class="label label-danger pull-right"><a href="">X</a></span>
-                                    <span class="label label-info pull-right"><a href="">E</a></span>
+                                    <span class="label label-danger pull-right"><a class="bookmark-delete" href="#">X</a></span>
+                                    <span class="label label-info pull-right"><a href="/form?verb=UPDATE&user=<?php echo $_SESSION['User']->login ?>&publicKey=<?php
+                                        echo $_SESSION['User']->publicKey
+                                        ?>" class="bookmark-edit">E</a></span>
                                 </span>
         <?php } ?>
 
