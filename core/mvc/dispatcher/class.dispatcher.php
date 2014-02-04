@@ -1,72 +1,112 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: inwebo
- * Date: 29/04/13
- * Time: 04:53
- * To change this template use File | Settings | File Templates.
- */
-
 namespace LibreMVC\Mvc;
 
 use LibreMVC\ClassNamespace;
+use LibreMVC\Http\Request;
+use LibreMVC\Mvc\Controller;
 use LibreMVC\Mvc\Environnement;
+use LibreMVC\Routing\Route;
+use LibreMVC\View;
 
 class DispatcherUnknownController extends \Exception {};
 class DispatcherUnknownActionController extends \Exception {};
 
+/**
+ * Class Dispatcher (Distributeur)
+ *
+ * Recoit un objet Http\Request, une routes déjà routée ainsi qu'une vue, le dispatcher doit permettre
+ * l'instaciation de l'ActionController, appel de la methode d'action correspondante avec les bon paramètres.
+ *
+ * @package LibreMVC\Mvc
+ */
 class Dispatcher {
+    const ACTION_SUFFIX = "Action";
+    /**
+     * @var \LibreMVC\Http\Request
+     */
+    protected $_request;
+    /**
+     * @var \LibreMVC\Routing\Route
+     */
+    protected $_route;
+    /**
+     * @var \LibreMVC\View
+     */
+    protected $_view;
+    /**
+     * @var mixed
+     */
+    protected $_actionController;
 
-    public $class;
-    public $method;
-    public $parameters;
-
-    public function __construct( $class, $method, $parameters ) {
-        $this->class      = $class;
-        $this->method     = $method . 'Action';
-        $this->parameters = $parameters;
-    }
-
-    protected function isRegistered() {
-        return class_exists( $this->class, true );
+    /**
+     * @param Request $request Une requête cliente.
+     * @param Route $route Une route déjà routée
+     * @param View $view Une vue a passer à l'action controller
+     */
+    public function __construct( Request $request, Route $route, View $view ) {
+        $this->_request             = $request;
+        $this->_route               = $route;
+        $this->_view                = $view;
+        $this->_actionController    = $this->actionControllerFactory();
     }
 
     /**
+     * Doit instancier le controller requis depuis la route courante.
+     * @return mixed une instance du controller si il existe sinon null
+     * @throws DispatcherUnknownController
+     */
+    protected function actionControllerFactory() {
+        if( $this->isRegistered() ) {
+            return new $this->_route->controller( $this->_request, $this->_view );
+        }
+        else {
+            throw new DispatcherUnknownController();
+        }
+    }
+
+    /**
+     * La classe est elle accessible ?
+     * @return bool
+     */
+    protected function isRegistered() {
+        return class_exists( $this->_route->controller, true );
+    }
+
+    /**
+     * Distribution
+     *
+     * La distribution doit permettre l'instanciation du controller avec la méthode souhaitée ainsi que les bons arguments.
+     *
      * @return mixed
-     * @throws mixed
+     * @throws DispatcherUnknownActionController Si l'action demandée n'existe pas.
+     * @throws DispatcherUnknownController Si le controller n'existe pas
+     * @todo : Un controller par default ?
+     * @todo : Destruction de l'instance de référence ?
      */
     public function dispatch() {
+        // Action souhaitée
+        $action =  $this->_route->action . Dispatcher::ACTION_SUFFIX;
+
         // Le controller est-il une classe déjà connues.
         if( $this->isRegistered() ) {
-
-            $this->parameters = ( is_null( $this->parameters)) ? array() : $this->parameters;
             // Le controller possede t il la method demandée
-            if( method_exists( $this->class, $this->method ) ) {
-
-                $reflectionMethod = new  \ReflectionMethod( $this->class, $this->method );
-                return $reflectionMethod->invokeArgs(
-                    new $this->class,
-                    $this->parameters
+            if( method_exists( $this->_actionController, $action ) ) {
+                $actionController = new \ReflectionMethod( $this->_actionController, $action );
+                return $actionController->invokeArgs(
+                    $this->_actionController,
+                    $this->_route->params
                 );
             }
             // Sinon
             else {
-                // @todo Error controller
-                //ErrorsController::throwHttpError('404');
-                throw new DispatcherUnknownActionController( $this->class .'->'. $this->method.'() : ' .  ' is not a method !' );
+                throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists !' );
             }
 
         }
-        // Class inconnue.
+        // Controller inconnu.
         else {
-            //ErrorsController::throwHttpError('404');
-            throw new DispatcherUnknownController( $this->class .  ' is not registered, register it !' );
+            throw new DispatcherUnknownController( $this->controller .  ' is not registered, register it !' );
         }
-    }
-
-    static public function invoker( $class, $method, $parameters ) {
-        $handler = new self( $class, $method, $parameters );
-        $handler->dispatch();
     }
 
 }
