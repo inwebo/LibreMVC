@@ -58,6 +58,10 @@ class Instance {
         $this->_uri = $this->getUri();
     }
 
+    public function getDir() {
+        return $this->_dir;
+    }
+
     public function getUri() {
         // Url sans la query string
         $_url = $this->urlToInstanceSyntax( strtok($this->_url,'?') );
