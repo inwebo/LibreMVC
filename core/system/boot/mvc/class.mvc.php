@@ -10,15 +10,11 @@
 namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
-use LibreMVC\Files\Directory;
-use LibreMVC\Html\JavascriptConfig;
-use LibreMVC\Helpers\BreadCrumbs;
-use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Http\Header;
 use LibreMVC\Http\Request;
+use LibreMVC\Web\Instance\Paths;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
-use LibreMVC\Instance;
 use LibreMVC\Files\Config;
 use LibreMVC\Routing\Router;
 use LibreMVC\Http\Uri;
@@ -27,13 +23,16 @@ use LibreMVC\Routing\UriParser\Asserts;
 use LibreMVC\Http\Context;
 use LibreMVC\Sessions;
 use LibreMVC\System\Hooks;
-use LibreMVC\Views\Template\ViewBag;
+use LibreMVC\View\ViewBag;
 use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
 use LibreMVC\Errors\ErrorsHandler;
 use LibreMVC\Mvc\Controllers;
 use LibreMVC\Mvc\Dispatcher;
+use LibreMVC\Files\Directory;
+
+use LibreMVC\Web\Instance;
 
 class Mvc {
 
@@ -42,51 +41,89 @@ class Mvc {
     public static $config;
     public static $request;
     public static $instance;
+    public static $environnement;
+    public static $paths = array();
 
     static public function setErrorHandler() {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
     }
 
-    static public function registerEnvironnement() {
-        Environnement::this()->server = Context::getServer(true,true);
-    }
-
-    static public function loadConfig() {
-        self::$config = Config::load(self::LIBREMVC_CONFIG_INI, true);
-    }
-
+    /**
+     * Requête Http courante.
+     */
     static public function setRequest() {
         self::$request = Request::current();
     }
 
-    static public function initInstance() {
-        self::$instance = new Instance( Context::getUrl() );
-        Environnement::this()->instance = new Instance( Context::getUrl() );
+    /**
+     * Charge le fichier de configuration des chemins de l'application courante.
+     */
+    static public function setConfig() {
+        self::$config = Config::load( self::LIBREMVC_CONFIG_INI, true );
+    }
+
+    static public function setEnvironnement() {
+        self::$environnement = Environnement::this();
+    }
+
+    static public function setInstance() {
+        self::$instance = new Instance( Context::getBaseUrl() );
+    }
+
+    static public function setLocalisation() {
+        Localisation::setup('','','');
+    }
+
+    static public function startSession() {
+        $sessions_vars = array('lg'=>'fr');
+        Hooks::get()->callHooks('addDefaultSessionsVars', $sessions_vars);
+        new Sessions();
+    }
+
+    static public function sanitizeSuperGlobal() {
+        $filterGet = new \LibreMvc\Helpers\Sanitize\SuperGlobal( $_GET );
+        $_GET = $filterGet->get();
+    }
+
+    static public function processBasePaths() {
+        $paths = new Paths(self::$config);
+
+        // Chemins Application
+        $basePlaceholders =  array_merge((array)self::$config->Dirs, (array)self::$config->Files, (array)self::$config->DefaultMVC);
+        $basePattern = (array)self::$config->Pattern_Global;
+        self::$paths['base'] = $paths->processBasePath($basePlaceholders,$basePattern);
+
+        // Chemins Instance
+        $instancePlaceholders = array_merge($basePlaceholders, array("%instance%"=>self::$instance->getDir()."/"));
+        $instacePattern = (array)self::$config->Pattern_Instance;
+        self::$paths['instance'] = $paths->processBasePath($instancePlaceholders,$instacePattern);
+
+        // Chemins Theme
+        $dir = new Directory( self::$paths['instance']->instance_themes );
+        $dir->folders->rewind();
+        $themeName = $dir->folders->current()->name;
+        $themePlaceholders =  array_merge(
+            (array)self::$config->Dirs,
+            (array)self::$config->Files,
+            (array)self::$config->Themes,
+            array(
+                "%theme_current%"   => $themeName . "/",
+                "%realPath%"        => self::$instance->getRealPath() . '/'
+            )
+        );
+        $themePattern = (array)self::$config->Themes;
+        self::$paths['theme'] = $paths->processBasePath($themePlaceholders,$themePattern);
+        //var_dump(self::$paths);
     }
 
     static public function autoloadInstance() {
-        Environnement::this()->paths = Instance::current()->processPattern(Config::load( self::LIBREMVC_CONFIG_INI ), "", "" );
-        Environnement::this()->baseUrls = Environnement::this()->instance->processBaseIncludePattern( Environnement::this()->instance->baseUrl, Environnement::this()->paths );
-
-        if(is_file( Environnement::this()->paths->base_autoload )) {
-            include(Environnement::this()->paths->base_autoload );
+        if( is_file( self::$paths['instance']->instance_autoload ) ) {
+            include( self::$paths['instance']->instance_autoload );
         }
     }
 
-    static public function selectThemes() {
-        $config = Config::load( self::LIBREMVC_CONFIG_INI, true);
-        $themeConf =  $config->Theme;
-        Hooks::get()->callHooks('loadTheme', $themeConf );
-
-        $theme = new Theme( Environnement::this()->paths->base_theme, Environnement::this()->instance->baseUrl ,$themeConf[1]->current );
-
-        Environnement::this()->Theme = $themeConf[1];
-        Environnement::this()->Theme->assets = $theme;
-
-    }
-
-    static public function autoloadPlugins() {
-        $dir = new Directory( Environnement::this()->paths->base_modules );
+    static public function autoloadInstanceModules() {
+        $dir = new Directory( self::$paths['instance']->instance_modules );
         $dir->folders->rewind();
         while( $dir->folders->valid() ) {
 
@@ -106,91 +143,41 @@ class Mvc {
         }
     }
 
-    static public function defaultRoute() {
-        Hooks::get()->callHooks('prependRoutes');
-        /*
-        $baseUri = trim(Environnement::this()->instance->baseUri,'/');
-        $routePattern = "";
-        if( $baseUri !== '') {
-            $routePattern = '/'.$baseUri.'[/][:action][/][:id][/]';
-            $defaultRoute = new Route( $routePattern,
-                '\LibreMVC\Controllers\HomeController',
-                'index'
-            );
-            RoutesCollection::get('default')->addRoute($defaultRoute);
-        }
-        */
-        Hooks::get()->callHooks('appendRoutes');
+    static public function initDatabaseEngine() {
+        Database\Provider::add('system', new SQlite( self::$paths['instance']->instance_db ) );
     }
 
-    static public function loadSystemDb() {
-        Database\Provider::add('system', new SQlite(Environnement::this()->paths->base_routes));
-        Environnement::this()->_dbSystem = Database\Provider::get('system');
-    }
+    static public function initAuthSystem(){
 
-    static public function localisation() {
-        Localisation::setup('','','');
-    }
-
-    static public function startSession() {
-        $sessions_vars = array('lg'=>'fr');
-        Hooks::get()->callHooks('addDefaultSessionsVars', $sessions_vars);
-        new Sessions();
-    }
-
-    static public function registerUser(){
-        \LibreMVC\Models\Role::binder( Database\Provider::get( 'system' ), 'Roles', 'id' );
-        \LibreMVC\Models\User::binder( Database\Provider::get( 'system' ), 'Users', 'id' );
-
-        //var_dump(is_null(Sessions::get('User')));
-        //var_dump(Sessions::get('User'));
-
-
+        Role::binder( Database\Provider::get( 'system' ), 'Roles', 'id' );
+        User::binder( Database\Provider::get( 'system' ), 'Users', 'id' );
 
         if( is_null(Sessions::get('User')) ) {
             $user = \LibreMVC\Models\User::load(0);
             Sessions::set('User', $user);
         }
-
-        //var_dump(Sessions::this());
     }
 
-    static public function sandBox() {
-
-        //$user = User::loadByPublicKey('inwebo','d46a1e7d07cb1bca68b501f85c803abc');
-        //var_dump($user);
-
-        /*
-                $newUser = new User("James","Password","passPhrase", "test@test.fr++");
-                $newUser->save();
-                var_dump($newUser);*/
-    }
-
-    static public function loadJavascriptConfig() {
-        $profilPublic = Sessions::this()['User'];
-        unset($profilPublic->privateKey, $profilPublic->password);
-        $jsc = new JavascriptConfig("LibreMVC",Sessions::this()['User'] );
-        ViewBag::get()->JsConfig = $jsc;
-    }
-
-    static public function loadBreadCrumbs() {
-        //var_dump(BreadCrumbs::this());
-        Environnement::this()->BreadCrumbs = BreadCrumbs::this();
-        //var_dump(Environnement::this()->BreadCrumbs = BreadCrumbs::this());
-        Hooks::get()->callHooks('addItemsToBreadCrumbs', Environnement::this()->BreadCrumbs);
-    }
-
-    static public function sanitizeSuperGlobal() {
-        //var_dump( $_GET );
-        $filterGet = new \LibreMvc\Helpers\Sanitize\SuperGlobal( $_GET );
-        $_GET = $filterGet->get();
-        //var_dump( $filterGet->get() );
-        ViewBag::get()->errors = ErrorsHandler::$stack;
+    static public function lockEnvironnement() {
+        self::$environnement->readOnly = true;
     }
 
     static public function frontController() {
-        // Lock du singleton en lecture seule
-        Environnement::this()->readOnly = true;
+        $router = new Router( self::$instance->getUri(),RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
+        $routedRoute = $router->dispatch();
+        self::$paths['mvc'] = array($routedRoute->controller, $routedRoute->action);
+
+        // Vue
+
+        // Dispatcher qui invoke le bon controller
+
+    }
+
+/*
+
+
+
+    static public function frontController() {
 
         $router = new Router( Uri::current(), RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
 
@@ -215,7 +202,7 @@ class Mvc {
             $ex = __FILE__ . ' line : ' . __LINE__ . ' : ';
             //Controllers\ErrorsController::throwHttpError('404');
             Header::error(503);
-            throw new \Exception($ex . 'Unknow route !');
+            throw new \Exception($ex . 'nknow route !');
         }
 
     }
@@ -224,5 +211,5 @@ class Mvc {
 
     }
 
-
+*/
 }
