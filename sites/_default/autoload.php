@@ -1,6 +1,7 @@
 <?php
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Routing\RoutesCollection;
+
 try {
     LibreMVC\AutoLoader::instance()->addPool( './' );
 
@@ -15,7 +16,7 @@ try {
     });
 
     $baseUri = trim(Environnement::this()->instance->baseUri,'/');
-
+    echo $base_uri;
     if( $baseUri !== '') {
         $base_uri = '/'.$baseUri.'/';
     }
