@@ -19,7 +19,7 @@ namespace LibreMVC\View;
  */
 
 use LibreMVC\View\Template;
-use LibreMVC\View\Task\TaskCollection\BaseTags;
+use LibreMVC\View\Task\TasksCollection\BaseTags;
 
 class Parser {
 
