@@ -11,17 +11,12 @@ function js() {
     }
 }
 
-
-
 function getBreadCrumbs() {
 
 }
 
-/**
- * @return \LibreMVC\Views\Template\ViewBag
- */
 function vb() {
-    return \LibreMVC\Views\Template\ViewBag::get();
+    return \LibreMVC\View\Template\ViewBag::get();
 }
 
 /**
