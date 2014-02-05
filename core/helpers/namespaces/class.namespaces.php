@@ -16,6 +16,19 @@ class NameSpaces {
         return ( strpos($class , '\\' ) !== false ) ? true : false ;
     }
 
+    static public function getControllerName( $controller ) {
+        if( strpos($controller, '\\'  ) !== false) {
+            $controllerArray = explode( '\\', strtolower( $controller ) );
+            $controller = $controllerArray[count($controllerArray)-1];
+            return explode('controller', $controller)[0];
+        }
+    }
 
+    static public function getControllerSuffixedName( $controller ) {
+        if( strpos($controller, '\\'  ) !== false) {
+            $controllerArray = explode( '\\', strtolower( $controller ) );
+            return $controllerArray[count($controllerArray)-1];
+        }
+    }
 
 }
