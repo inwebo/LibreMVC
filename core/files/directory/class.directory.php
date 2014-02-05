@@ -74,4 +74,13 @@ Class Directory extends \DirectoryIterator {
         $this->count->folders = $this->folders->count();
     }
 
+    public function __get($key) {
+        if( $key === $this->files ) {
+            return $this->files->rewind();
+        }
+        if( $key === $this->folders) {
+            return $this->folders->rewind();
+        }
+    }
+
 }
