@@ -2,6 +2,7 @@
 namespace LibreMVC\Controllers;
 
 use LibreMVC\Form;
+use LibreMVC\Mvc\Controller;
 use LibreMVC\Views\Template\ViewBag;
 use LibreMVC\Http\Request;
 use LibreMVC\Database;
@@ -10,26 +11,18 @@ use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Views;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Errors;
-class HomeController extends PageController {
-
-    protected $_cachable = false;
-
-    public function __construct() {
-        parent::__construct();
-        $this->_viewbag->baseHref = Environnement::this()->instance->baseUrl;
-        $this->_viewbag->menus = $this->toMenuEntries();
-    }
+class HomeController extends Controller {
 
     public function indexAction() {
         $this->_meta->title ="Welcome home visitors from futur!";
-        Views::renderAction();
+        $this->_view->render();
     }
 
     public function debugAction() {
         $this->_breadCrumbs->items->debug="";
         ViewBag::get()->env = Environnement::this();
         $this->_meta->title ="Var_Dump!";
-        Views::renderAction();
+        $this->_view->render();
     }
 
     public function loginAction() {
