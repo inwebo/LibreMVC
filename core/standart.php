@@ -34,3 +34,9 @@ define('PARAMS','string');
 
 define('LIBREMVC_MINIMUM_PHP', '5.4');
 define('CSV', ';');
+
+/**
+ * Ajoute un item au bread crumb.
+ */
+function addToBreadCrumbs() {}
+
