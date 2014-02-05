@@ -10,6 +10,8 @@
 namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
+use LibreMVC\Helpers\NameSpaces;
+use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Http\Header;
 use LibreMVC\Http\Request;
 use LibreMVC\Web\Instance\Paths;
@@ -24,6 +26,7 @@ use LibreMVC\Http\Context;
 use LibreMVC\Sessions;
 use LibreMVC\System\Hooks;
 use LibreMVC\View\ViewBag;
+use LibreMVC\View;
 use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
@@ -43,6 +46,8 @@ class Mvc {
     public static $instance;
     public static $environnement;
     public static $paths = array();
+    public static $pathsProcessor;
+    public static $routedRoute;
 
     static public function setErrorHandler() {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
@@ -86,33 +91,41 @@ class Mvc {
     }
 
     static public function processBasePaths() {
-        $paths = new Paths(self::$config);
+        self::$pathsProcessor = new Paths(self::$config);
 
         // Chemins Application
         $basePlaceholders =  array_merge((array)self::$config->Dirs, (array)self::$config->Files, (array)self::$config->DefaultMVC);
         $basePattern = (array)self::$config->Pattern_Global;
-        self::$paths['base'] = $paths->processBasePath($basePlaceholders,$basePattern);
+        self::$paths['base'] = self::$pathsProcessor->processBasePath($basePlaceholders,$basePattern);
 
         // Chemins Instance
         $instancePlaceholders = array_merge($basePlaceholders, array("%instance%"=>self::$instance->getDir()."/"));
-        $instacePattern = (array)self::$config->Pattern_Instance;
-        self::$paths['instance'] = $paths->processBasePath($instancePlaceholders,$instacePattern);
+        $instancePattern = (array)self::$config->Pattern_Instance;
+        self::$paths['instance'] = self::$pathsProcessor->processBasePath($instancePlaceholders,$instancePattern);
 
         // Chemins Theme
         $dir = new Directory( self::$paths['instance']->instance_themes );
-        $dir->folders->rewind();
-        $themeName = $dir->folders->current()->name;
-        $themePlaceholders =  array_merge(
-            (array)self::$config->Dirs,
-            (array)self::$config->Files,
-            (array)self::$config->Themes,
-            array(
-                "%theme_current%"   => $themeName . "/",
-                "%realPath%"        => self::$instance->getRealPath() . '/'
-            )
-        );
+
         $themePattern = (array)self::$config->Themes;
-        self::$paths['theme'] = $paths->processBasePath($themePlaceholders,$themePattern);
+        self::$paths['themes'] = array();
+
+        // Parcours tous les themes
+        foreach($dir->folders as $inode) {
+            $themePlaceholders =  array_merge(
+                (array)self::$config->Dirs,
+                (array)self::$config->Files,
+                (array)self::$config->Themes,
+                array(
+                    "%theme_current%"   => $inode->name .'/' ,
+                    "%realPath%"        => self::$instance->getRealPath() . '/',
+                    "%baseUrl%"         => Context::getBaseUrl()
+                )
+            );
+
+            self::$paths['themes'][$inode->name] = self::$pathsProcessor->processBasePath($themePlaceholders,$themePattern);
+
+        }
+
         //var_dump(self::$paths);
     }
 
@@ -162,54 +175,53 @@ class Mvc {
         self::$environnement->readOnly = true;
     }
 
-    static public function frontController() {
+    static public function router() {
+        // Get Route
         $router = new Router( self::$instance->getUri(),RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
-        $routedRoute = $router->dispatch();
-        self::$paths['mvc'] = array($routedRoute->controller, $routedRoute->action);
+        self::$routedRoute = $routedRoute = $router->dispatch();
 
-        // Vue
+        // Prepare mvc config
+        $mvcPlaceHolders =  array_merge(
+            (array)self::$config->Dirs,
+            (array)self::$config->Files,
+            (array)self::$config->Themes,
+            (array)self::$config->DefaultMVC,
+            array(
+                "%controller%"  => NameSpaces::getControllerSuffixedName($routedRoute->controller),
+                "%action%"      => $routedRoute->action,
+                "%instance%"    => self::$instance->getDir()."/"
+            )
+        );
+        // Process paths
+        self::$paths['mvc'] = self::$pathsProcessor->processBasePath(
+            $mvcPlaceHolders,
+            self::$config->MVC
+        );
 
-        // Dispatcher qui invoke le bon controller
-
+        //var_dump(self::$paths);
     }
 
-/*
+    static public function processHttpPaths() {
+        $httpPaths = (array)self::$paths['instance'];
+        array_walk($httpPaths,function(&$item){
+            $item = Context::getBaseUrl() . $item;
+        });
+        self::$paths['http']=$httpPaths;
+        var_dump(self::$paths);
+    }
 
+    static public function autoloadThemes() {
+        // Pour chaques themes un nouvel objet theme.
 
+    }
 
     static public function frontController() {
-
-        $router = new Router( Uri::current(), RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
-
-        $routedRoute = $router->dispatch();
-
-        // Est ce une route valide ?
-        if( $routedRoute !== false ) {
-            Environnement::this()->controller  = $routedRoute->controller;
-            Environnement::this()->action      = $routedRoute->action;
-            Environnement::this()->params      = $routedRoute->params;
-            Environnement::this()->routedRoute = $routedRoute;
-
-            Dispatcher::invoker(
-                $routedRoute->controller,
-                $routedRoute->action,
-                $routedRoute->params
-            );
-
-        }
-        // Erreur 404
-        else {
-            $ex = __FILE__ . ' line : ' . __LINE__ . ' : ';
-            //Controllers\ErrorsController::throwHttpError('404');
-            Header::error(503);
-            throw new \Exception($ex . 'nknow route !');
-        }
-
+        // Vue
+        $view = new View(self::$paths['mvc']->mvc_view);
+        // Dispatcher qui invoke le bon controller
+        $dispatcher = new Dispatcher( self::$request, self::$routedRoute, $view );
+        // Auto render de la vue.
+        $dispatcher->dispatch();
     }
 
-    static public function postRender() {
-
-    }
-
-*/
 }
