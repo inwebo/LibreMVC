@@ -1,5 +1,5 @@
 <?php
-namespace LibreMVC\View\Task\TaskCollection;
+namespace LibreMVC\View\Task\TasksCollection;
 
 /**
  * Collection de tâches.
