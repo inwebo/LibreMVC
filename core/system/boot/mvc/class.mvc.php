@@ -212,6 +212,11 @@ class Mvc {
 
     static public function autoloadThemes() {
         // Pour chaques themes un nouvel objet theme.
+        $themes = new \StdClass();
+        foreach(self::$paths['themes'] as $k => $v) {
+            $themes->$k = new Theme(Config::load($v->theme_realPath_ini,true), $v);
+        }
+        var_dump($themes);
 
     }
 
