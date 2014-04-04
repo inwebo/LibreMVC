@@ -17,18 +17,25 @@ class View {
     protected $_parser;
     protected $_autoRender = true;
 
-    public function __construct( $pathToTemplate ) {
+    public function __construct( Template $template, ViewObject $viewObject ) {
         try {
-            $this->_template = new Template($pathToTemplate);
-            $this->viewObject = new ViewObject();
+            $this->_template = $template;
+            $this->viewObject = $viewObject;
         }
         catch(\Exception $e) {
             var_dump($e);
         }
     }
 
-    public function setAutoRender( $bool ) {
-        $this->_autoRender = $bool;
+    public function isAutoRender( $bool = null ) {
+        if(is_null($bool)){
+            return $this->_autoRender;
+        }
+        else {
+            if(is_bool($bool)) {
+                $this->_autoRender = $bool;
+            }
+        }
     }
 
     public function render() {
@@ -41,8 +48,13 @@ class View {
         }
     }
 
-    public function partial( $path ) {
-        return new self( $path );
+    static public function partial( $path, ViewObject $viewObject = null ) {
+        if(is_null($viewObject)) {
+            return new self( new Template($path), new  ViewObject());
+        }
+        else {
+            return new self( new Template($path), $viewObject );
+        }
     }
 
 }
