@@ -41,6 +41,8 @@ class Mvc {
 
     const LIBREMVC_CONFIG_INI = "config/paths.ini";
 
+    const LIBREMVC_MVC_DEBUD = false;
+
     public static $config;
     public static $request;
     public static $instance;
@@ -48,6 +50,13 @@ class Mvc {
     public static $paths = array();
     public static $pathsProcessor;
     public static $routedRoute;
+    public static $viewObject;
+
+    static private function debug($var) {
+        if(Mvc::LIBREMVC_MVC_DEBUD) {
+            var_dump($var);
+        }
+    }
 
     static public function setErrorHandler() {
         set_error_handler( '\LibreMVC\Errors\ErrorsHandler::add' );
@@ -58,6 +67,7 @@ class Mvc {
      */
     static public function setRequest() {
         self::$request = Request::current();
+        MVC::debug(self::$request);
     }
 
     /**
@@ -65,14 +75,17 @@ class Mvc {
      */
     static public function setConfig() {
         self::$config = Config::load( self::LIBREMVC_CONFIG_INI, true );
+        MVC::debug(self::$config);
     }
 
     static public function setEnvironnement() {
         self::$environnement = Environnement::this();
+        MVC::debug(self::$environnement);
     }
 
     static public function setInstance() {
         self::$instance = new Instance( Context::getBaseUrl() );
+        MVC::debug(self::$instance);
     }
 
     static public function setLocalisation() {
@@ -125,7 +138,7 @@ class Mvc {
             self::$paths['themes'][$inode->name] = self::$pathsProcessor->processBasePath($themePlaceholders,$themePattern);
 
         }
-
+        Mvc::debug(self::$paths);
         //var_dump(self::$paths);
     }
 
@@ -171,10 +184,6 @@ class Mvc {
         }
     }
 
-    static public function lockEnvironnement() {
-        self::$environnement->readOnly = true;
-    }
-
     static public function router() {
         // Get Route
         $router = new Router( self::$instance->getUri(),RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
@@ -197,7 +206,7 @@ class Mvc {
             $mvcPlaceHolders,
             self::$config->MVC
         );
-
+        Mvc::debug(self::$paths);
         //var_dump(self::$paths);
     }
 
@@ -207,7 +216,7 @@ class Mvc {
             $item = Context::getBaseUrl() . $item;
         });
         self::$paths['http']=$httpPaths;
-        var_dump(self::$paths);
+        Mvc::debug(self::$paths);
     }
 
     static public function autoloadThemes() {
@@ -216,13 +225,32 @@ class Mvc {
         foreach(self::$paths['themes'] as $k => $v) {
             $themes->$k = new Theme(Config::load($v->theme_realPath_ini,true), $v);
         }
-        var_dump($themes);
+        //var_dump($themes);
+        Mvc::debug($themes);
+    }
 
+    static public function viewObjectFactory() {
+        $vo = new View\ViewObject();
+
+        // Rendu de la vue partielle
+        $vo->mvc = self::$paths['mvc'];
+        $v = new View( new View\Template(self::$paths['mvc']->mvc_view), new View\ViewObject() );
+        $v->isAutoRender(false);
+        $vo->renderBody = $v->render();
+
+        self::$viewObject = $vo;
+
+        Mvc::debug(self::$viewObject);
+        Mvc::debug(self::$environnement);
+    }
+
+    static public function lockEnvironnement() {
+        self::$environnement->readOnly = true;
     }
 
     static public function frontController() {
         // Vue
-        $view = new View(self::$paths['mvc']->mvc_view);
+        $view = new View(new View\Template(self::$paths['mvc']->mvc_layout), self::$viewObject);
         // Dispatcher qui invoke le bon controller
         $dispatcher = new Dispatcher( self::$request, self::$routedRoute, $view );
         // Auto render de la vue.
