@@ -17,8 +17,14 @@ use \StdClass;
  */
 class ViewObject extends StdClass{
 
-    public function propertyExists($property) {
+    public function map($object) {
+        foreach($object as $k => $v) {
+            $this->$k = $v;
+        }
+    }
 
+    public function propertyExists($property) {
+        return isset($this->$property);
     }
 
     public function isIterableMember($property) {
@@ -28,7 +34,5 @@ class ViewObject extends StdClass{
     public function isMember( $property ) {
         return isset($this->$property);
     }
-
-
 
 }
