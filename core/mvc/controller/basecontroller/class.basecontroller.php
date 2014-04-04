@@ -24,7 +24,8 @@ abstract class BaseController implements IController {
     protected $_request;
     protected $_view;
 
-    public function __construct( Request $request, View $view ){
+    public function __construct( Request $request, View $view ) {
+
         $this->_request = $request;
         $this->_view    = $view;
         $this->init();
