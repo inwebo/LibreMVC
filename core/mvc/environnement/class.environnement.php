@@ -22,7 +22,7 @@ class Environnement {
     public $instance;
     public $paths;
     public $baseUrls;
-
+    public $vo;
 
     /**
      * Instance unique du ViewBag
