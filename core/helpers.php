@@ -26,3 +26,13 @@ function vb() {
 function ev() {
     return \LibreMVC\Mvc\Environnement::this();
 }
+
+function renderBody($path, $vo) {
+
+    $v = LibreMVC\View::partial($path, $vo);
+    $v->render();
+}
+
+function view() {
+
+}
