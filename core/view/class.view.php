@@ -2,6 +2,7 @@
 
 namespace LibreMVC;
 
+use LibreMVC\View\Interfaces\IDataProvider;
 use LibreMVC\View\Template;
 use LibreMVC\View\ViewObject;
 use LibreMVC\View\Parser;
@@ -12,7 +13,7 @@ use LibreMVC\View\Parser;
  */
 class View {
 
-    public $viewObject;
+    public $vo;
     protected $_template;
     protected $_parser;
     protected $_autoRender = true;
@@ -20,11 +21,19 @@ class View {
     public function __construct( Template $template, ViewObject $viewObject ) {
         try {
             $this->_template = $template;
-            $this->viewObject = $viewObject;
+            $this->vo = $viewObject;
         }
         catch(\Exception $e) {
             var_dump($e);
         }
+    }
+
+    /**
+     * Est nécessaire pour avoir le contexte $this d'une vue dans un fichier parsé.
+     */
+    protected function setViewContext() {
+        $content = $this->vo->strongTypedView($this->_template->getFile());
+        $this->_template->set($content);
     }
 
     public function isAutoRender( $bool = null ) {
@@ -39,7 +48,8 @@ class View {
     }
 
     public function render() {
-        $this->_parser = new Parser($this->_template, $this->viewObject);
+        $this->setViewContext();
+        $this->_parser = new Parser($this->_template, $this->vo);
         if( $this->_autoRender ) {
             echo $this->_parser;
         }
@@ -48,7 +58,7 @@ class View {
         }
     }
 
-    static public function partial( $path, ViewObject $viewObject = null ) {
+    static public function partial( $path, IDataProvider &$viewObject = null ) {
         if(is_null($viewObject)) {
             return new self( new Template($path), new  ViewObject());
         }
