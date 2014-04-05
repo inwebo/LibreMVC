@@ -69,7 +69,7 @@ class User extends Entity {
             $result = $class::$_statement->query('SELECT * FROM Users WHERE login = ? AND password = ? ', array($user, md5($mdp)))->first();
         }
         catch(\Exception $e) {
-            // var_dump($e);
+            var_dump($e);
         }
         $isValid = isset($result) && !is_null($result) && !empty($result);
         if($get && $isValid) {
