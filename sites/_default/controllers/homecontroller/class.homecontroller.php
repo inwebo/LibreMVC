@@ -3,18 +3,16 @@ namespace LibreMVC\Controllers;
 
 use LibreMVC\Form;
 use LibreMVC\Mvc\Controller;
-use LibreMVC\Views\Template\ViewBag;
-use LibreMVC\Http\Request;
 use LibreMVC\Database;
 use LibreMVC\Instance;
-use LibreMVC\Mvc\Controllers\PageController;
 use LibreMVC\Views;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Errors;
-class HomeController extends Controller {
+
+class HomeController extends \LibreMVC\Mvc\Controller\PageController {
 
     public function indexAction() {
-        $this->_meta->title ="Welcome home visitors from futur!";
+        $this->_view->vo->title ="Welcome home visitors from futur!";
         $this->_view->render();
     }
 

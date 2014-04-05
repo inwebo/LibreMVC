@@ -4,7 +4,7 @@
         <div class="col-container">
             <h3>Bien bien bien</h3>
             <p>
-                Yeah
+                <?php var_dump($this) ?>
             </p>
         </div>
     </div>

@@ -1,5 +1,7 @@
 <?php
 namespace LibreMVC\View;
+use LibreMVC\View\Interfaces\IDataProvider;
+
 /**
  * Conteneur global des variables nécessaire aux templates.
  *
@@ -17,7 +19,7 @@ namespace LibreMVC\View;
  * @since      File available since Beta
  * @static
  */
-class ViewBag {
+class ViewBag implements IDataProvider{
 
     /**
      * Instance unique du ViewBag

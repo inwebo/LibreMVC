@@ -12,8 +12,5 @@ namespace LibreMVC\Mvc;
 use LibreMVC\Mvc\Controller\BaseController;
 
 class Controller extends BaseController {
-    public function indexAction() {
-        $this->_view->viewObject->bar = "From controller";
-        echo $this->_view->render();
-    }
+    public function indexAction() {}
 }

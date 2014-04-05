@@ -28,6 +28,7 @@ abstract class BaseController implements IController {
 
         $this->_request = $request;
         $this->_view    = $view;
+
         $this->init();
     }
 

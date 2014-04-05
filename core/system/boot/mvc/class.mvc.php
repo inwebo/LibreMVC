@@ -1,50 +1,62 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: inwebo
- * Date: 30/04/13
- * Time: 23:07
- * To change this template use File | Settings | File Templates.
- */
 
 namespace LibreMVC\System\Boot;
 
 use LibreMVC\Database;
 use LibreMVC\Helpers\NameSpaces;
 use LibreMVC\Html\Helpers\Theme;
-use LibreMVC\Http\Header;
 use LibreMVC\Http\Request;
 use LibreMVC\Web\Instance\Paths;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Files\Config;
 use LibreMVC\Routing\Router;
-use LibreMVC\Http\Uri;
 use LibreMVC\Routing\RoutesCollection;
 use LibreMVC\Routing\UriParser\Asserts;
 use LibreMVC\Http\Context;
 use LibreMVC\Sessions;
 use LibreMVC\System\Hooks;
-use LibreMVC\View\ViewBag;
 use LibreMVC\View;
 use LibreMVC\Models\User;
 use LibreMVC\Models\Role;
 use LibreMVC\Database\Driver\SqLite;
-use LibreMVC\Errors\ErrorsHandler;
 use LibreMVC\Mvc\Controllers;
 use LibreMVC\Mvc\Dispatcher;
 use LibreMVC\Files\Directory;
-
 use LibreMVC\Web\Instance;
 
+/**
+ * Class Mvc
+ *
+ * Application boot strap, each static public methods will be call.
+ *
+ * @package LibreMVC\System\Boot
+ */
 class Mvc {
 
+    /**
+     * System ini file's path.
+     */
     const LIBREMVC_CONFIG_INI = "config/paths.ini";
 
-    const LIBREMVC_MVC_DEBUD = false;
+    /**
+     * Will the application display a var_dump of each steps.
+     */
+    const LIBREMVC_MVC_DEBUG = false;
 
+    /**
+     * @var Config object from LIBREMVC_CONFIG_INI.
+     */
     public static $config;
+
+    /**
+     * @var Current HTTP request.
+     */
     public static $request;
+
+    /**
+     * @var Current instance paths.
+     */
     public static $instance;
     public static $environnement;
     public static $paths = array();
@@ -53,7 +65,7 @@ class Mvc {
     public static $viewObject;
 
     static private function debug($var) {
-        if(Mvc::LIBREMVC_MVC_DEBUD) {
+        if(Mvc::LIBREMVC_MVC_DEBUG) {
             var_dump($var);
         }
     }
@@ -231,24 +243,19 @@ class Mvc {
 
     static public function viewObjectFactory() {
         $vo = new View\ViewObject();
-
-        // Rendu de la vue partielle
-        $vo->mvc = self::$paths['mvc'];
-        $v = new View( new View\Template(self::$paths['mvc']->mvc_view), new View\ViewObject() );
-        $v->isAutoRender(false);
-        $vo->renderBody = $v->render();
-
+        Environnement::this()->templateAction = self::$paths['mvc']->mvc_view;
+        //$vo->body = self::$paths['mvc']->mvc_view;
         self::$viewObject = $vo;
-
         Mvc::debug(self::$viewObject);
-        Mvc::debug(self::$environnement);
     }
 
     static public function lockEnvironnement() {
-        self::$environnement->readOnly = true;
+        self::$environnement->readOnly(true);
+        Mvc::debug(self::$environnement);
     }
 
     static public function frontController() {
+
         // Vue
         $view = new View(new View\Template(self::$paths['mvc']->mvc_layout), self::$viewObject);
         // Dispatcher qui invoke le bon controller

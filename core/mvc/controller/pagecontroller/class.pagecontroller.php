@@ -9,6 +9,7 @@
 
 namespace LibreMVC\Mvc\Controller;
 
+use LibreMVC\Html\Document\Head;
 use LibreMVC\Mvc\Controller;
 
 class PageController extends Controller {
@@ -16,7 +17,7 @@ class PageController extends Controller {
     protected $_head;
 
     public function init(){
-
+        $this->_view->vo->_head = new Head();
     }
 
 }

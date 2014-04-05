@@ -1,9 +1,18 @@
 <?php
 namespace LibreMVC\View;
 
+use LibreMVC\View\Interfaces\IDataProvider;
+
 class InvalidTemplateFileException extends \Exception{}
 class NotReadableTemplateFileException extends \Exception{}
 
+/**
+ * Class Template
+ *
+ * Represente le contenus brut d'un fichier.
+ *
+ * @package LibreMVC\View
+ */
 class Template {
 
     /**
@@ -30,7 +39,7 @@ class Template {
         } elseif (!is_readable($this->file)) {
             throw new NotReadableTemplateFileException("Template file : $this->file is not readable.");
         } else {
-            $this->read();
+            //$this->read();
         }
     }
 
@@ -39,10 +48,10 @@ class Template {
      * 
      * Démarre la temporisation de sortie du buffer, inclus le fichier, récupère
      * et place dans content le contenu du buffer
-     * 
+     * @todo : bug $this->content n'est jamais peuplé
      * @return void
      */
-    private function read() {
+    public function read() {
         ob_start();
         include($this->file);
         $this->content = ob_get_contents();
@@ -52,7 +61,9 @@ class Template {
     public function get() {
         return $this->content;
     }
-
+    public function getFile() {
+        return $this->file;
+    }
     public function set( $content ) {
         $this->content = $content;
     }
