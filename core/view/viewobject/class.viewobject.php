@@ -1,6 +1,7 @@
 <?php
 namespace LibreMVC\View;
 
+use LibreMVC\View\Interfaces\IDataProvider;
 use \StdClass;
 /**
  * Peut être un dataProvider
@@ -15,12 +16,20 @@ use \StdClass;
  * @since      File available since Beta
  * @static
  */
-class ViewObject extends StdClass{
+class ViewObject extends StdClass implements IDataProvider {
 
     public function map($object) {
         foreach($object as $k => $v) {
             $this->$k = $v;
         }
+    }
+
+    public function strongTypedView($viewFile) {
+        ob_start();
+        include($viewFile);
+        $content = ob_get_contents();
+        ob_end_clean();
+        return $content;
     }
 
     public function propertyExists($property) {
@@ -33,6 +42,10 @@ class ViewObject extends StdClass{
 
     public function isMember( $property ) {
         return isset($this->$property);
+    }
+
+    static public function toViewObject() {
+
     }
 
 }
