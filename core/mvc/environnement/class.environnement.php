@@ -12,7 +12,7 @@ namespace LibreMVC\Mvc;
 
 class Environnement {
 
-    public $readOnly = false;
+    protected $readOnly = false;
     public $controller;
     public $action;
     public $params;
@@ -38,7 +38,14 @@ class Environnement {
      */
     private function __construct() {}
 
-
+    /**
+     * @param $bool
+     */
+    public function readOnly($bool) {
+        if(is_bool($bool)) {
+            $this->readOnly = $bool;
+        }
+    }
 
     /**
      * Retourne l'instance courante d'un objet singleton ViewBag
@@ -50,9 +57,9 @@ class Environnement {
         if ( !isset( self::$_instance ) ) {
             self::$_instance = new self();
         }
-
         return self::$_instance;
     }
+
     /**
      * Setter
      */
