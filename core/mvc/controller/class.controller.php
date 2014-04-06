@@ -12,5 +12,12 @@ namespace LibreMVC\Mvc;
 use LibreMVC\Mvc\Controller\BaseController;
 
 class Controller extends BaseController {
-    public function indexAction() {}
+
+    public function indexAction() {
+        $this->_view->render();
+    }
+
+    public function toView($key, $value) {
+        $this->_view->vo->$key = $value;
+    }
 }
