@@ -1,10 +1,11 @@
 <?php
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Routing\RoutesCollection;
+use LibreMVC\Routing\Route;
 
 try {
     LibreMVC\AutoLoader::instance()->addPool( './' );
-
+/*
     //@todo hooks devraient être une fonction globale
     \LibreMVC\System\Hooks::get()->addHook('loadTheme', function( &$args ){
         $args[1]->current = "default";
@@ -14,9 +15,8 @@ try {
         $array[1]->items->home = Environnement::this()->instance->baseUrl;
         $array = $array[1];
     });
-
+*/
     $baseUri = trim(Environnement::this()->instance->baseUri,'/');
-    echo $base_uri;
     if( $baseUri !== '') {
         $base_uri = '/'.$baseUri.'/';
     }
@@ -24,10 +24,14 @@ try {
 		$base_uri = '/';
 	}
 
-    $defaultRoute = new \LibreMVC\Routing\Route( $base_uri.'[:action][/]',
-    	'\LibreMVC\Controllers\HomeController',
+    $base_uri = "/libremvc/";
+    $defaultRoute = new Route( $base_uri.'[:action][/]',
+    	'\LibreMVC\Mvc\Controller\AuthPageController',
         'index'
     );
+
+    //var_dump( $defaultRoute );
+
     RoutesCollection::get('default')->addRoute($defaultRoute);
 
 
