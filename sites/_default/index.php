@@ -1,11 +1,12 @@
+<?php //var_dump($this) ?>
 <html>
 <head>
-    <title><?php echo $this->title ?></title>
-    <meta name="description" content="">
+    <title><?php echo $this->_meta->title ?></title>
+    <meta name="description" content="<?php echo $this->_meta->description ?>">
     <meta name="keywords" content="">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <base href="">
+    <base href="http://www.inwebo.dev/libremvc/">
 </head>
 <body>
 <header>
@@ -23,6 +24,7 @@
                 <ul class="nav navbar-nav pull-right">
                     <li> <a href="debug/">Debug</a></li>
                     <li> <a href="login/">Login</a></li>
+                    <li> <a href="admin/">Admin</a></li>
                 </ul>
             </div>
         </div>
@@ -46,6 +48,7 @@
         </div>
         <?php
         //var_dump($this->vo);
+        echo $this->description;
         ?>
         <?php renderBody(ev()->templateAction, $this); ?>
     </div>
