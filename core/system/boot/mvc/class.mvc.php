@@ -6,6 +6,8 @@ use LibreMVC\Database;
 use LibreMVC\Helpers\NameSpaces;
 use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Http\Request;
+use LibreMVC\Http\Uri;
+use LibreMVC\Routing\Route;
 use LibreMVC\Web\Instance\Paths;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
@@ -43,6 +45,9 @@ class Mvc {
      * Will the application display a var_dump of each steps.
      */
     const LIBREMVC_MVC_DEBUG = false;
+
+    const LIBREMVC_AUTOLOAD_FILE_PATH = "/autoload.php";
+    const LIBREMVC_MODULE_FILE_PATH = "/module.ini";
 
     /**
      * @var Config object from LIBREMVC_CONFIG_INI.
@@ -166,11 +171,11 @@ class Mvc {
         while( $dir->folders->valid() ) {
 
             // @warning : Le dossier contenant les plugins doit avoir +x !
-            if(is_file($dir->folders->current()->realPath . '/autoload.php')) {
-                include($dir->folders->current()->realPath . '/autoload.php');
+            if(is_file($dir->folders->current()->realPath .  Mvc::LIBREMVC_AUTOLOAD_FILE_PATH)) {
+                include($dir->folders->current()->realPath . Mvc::LIBREMVC_AUTOLOAD_FILE_PATH);
             }
-            if(is_file($dir->folders->current()->realPath . '/module.ini')) {
-                $currentValue = $dir->folders->current()->realPath . '/module.ini';
+            if(is_file($dir->folders->current()->realPath . Mvc::LIBREMVC_MODULE_FILE_PATH)) {
+                $currentValue = $dir->folders->current()->realPath . Mvc::LIBREMVC_MODULE_FILE_PATH;
                 $currentKey = ucfirst($dir->folders->current()->name);
 
                 Environnement::this()->Modules = new \StdClass;
@@ -194,11 +199,22 @@ class Mvc {
             $user = \LibreMVC\Models\User::load(0);
             Sessions::set('User', $user);
         }
+        var_dump($_SESSION);
+    }
+
+    static public function setAdminRoute() {
+        $adminRoute = new Route(
+           '/' . self::$instance->getBaseUri().'admin[/]',
+            '\LibreMVC\Controllers\HomeController',
+            'login'
+        );
+        RoutesCollection::get('default')->addRoute($adminRoute);
+        //var_dump($adminRoute);
     }
 
     static public function router() {
         // Get Route
-        $router = new Router( self::$instance->getUri(),RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
+        $router = new Router( Uri::current() ,RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
         self::$routedRoute = $routedRoute = $router->dispatch();
 
         // Prepare mvc config
@@ -255,7 +271,6 @@ class Mvc {
     }
 
     static public function frontController() {
-
         // Vue
         $view = new View(new View\Template(self::$paths['mvc']->mvc_layout), self::$viewObject);
         // Dispatcher qui invoke le bon controller
