@@ -9,6 +9,8 @@
 
 namespace LibreMVC\Routing;
 
+class RouterExceptionError404 extends \Exception {};
+
 use LibreMVC\Http\Context;
 use LibreMVC\Http\Header;
 use LibreMVC\Mvc\Environnement;
@@ -65,6 +67,10 @@ class Router {
                 if( $routeConstraint->isUriSegmentsGreaterThanRouteSegments() === false ) {
                     $parser = new UriParser( $this->uri,$this->routesCollection->routes->current());
                     return $parser->processPattern();
+                }
+                // Uri invalide 404
+                else {
+                    throw new RouterExceptionError404('Router : 404 Not found');
                 }
             }
             $this->routesCollection->routes->next();
