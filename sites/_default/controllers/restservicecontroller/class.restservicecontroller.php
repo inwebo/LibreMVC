@@ -11,7 +11,7 @@ namespace LibreMVC\Controllers;
 
 
 use LibreMVC\Models\User;
-use LibreMVC\Mvc\Controllers\RestController;
+use LibreMVC\Mvc\Controller\RestController;
 
 class RestServiceController extends RestController {
 
