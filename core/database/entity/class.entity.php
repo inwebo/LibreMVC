@@ -58,14 +58,31 @@ class Entity {
         return !is_null($class::$_statement) && !is_null($class::$_table) && !is_null($class::$_tableDescription) && !is_null($class::$_primaryKey);
     }
 
-    static public function load( $primaryKeyValue, $primaryKey = null ) {
+    static public function load( $primaryKeyValue, $primaryKey = null, $enableAutoload = false ) {
         $class = get_called_class();
         $pk = ( is_null( $primaryKey ) ) ? $class::$_primaryKey : $primaryKey;
         if( !is_object($class::$_statement) ) {
-            throw new \Exception("From object" . $class . ' please bind your entity to a table please' );
+            throw new \Exception("From object" . $class . ' please bind your entity to a table.' );
         }
         $class::$_statement->toObject($class);
-        return $class::$_statement->query('select * from ' . $class::$_table . ' WHERE ' . $pk . "=? LIMIT 1",array($primaryKeyValue))->first();
+        $result = $class::$_statement->query('select * from ' . $class::$_table . ' WHERE ' . $pk . "=? LIMIT 1",array($primaryKeyValue))->first();
+        if( $enableAutoload && is_null($result)) {
+            $instance = new $class;
+            $instance->$pk = $primaryKeyValue;
+            return $instance;
+        }
+        else {
+            return $result;
+        }
+    }
+
+    static public function loadAll(  ) {
+        $class = get_called_class();
+        if( !is_object($class::$_statement) ) {
+            throw new \Exception("From object" . $class . ' please bind your entity to a table.' );
+        }
+        $class::$_statement->toObject($class);
+        return $class::$_statement->query('select * from ' . $class::$_table);
     }
 
     public function save( $forceInsert = false ) {
@@ -82,9 +99,11 @@ class Entity {
             $query = "INSERT INTO " . $class::$_table . " ( " . implode(',', $arrayKeys ) . ' ) VALUES ( ' . implode(',', $tokens ) . ' )';
             $statement = $class::$_statement->query($query,$arrayValues );
             if($statement instanceof \Exception) {
+                var_dump($statement);
                 return false;
             }
             //@todo : Test si statement est valid : ex: insert multiple avec la meme clef primaire unique fait renvoit une erreur pas un booléan
+
             return (!$statement) ? false : true;
         } else {
             try {
