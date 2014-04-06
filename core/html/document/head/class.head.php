@@ -5,7 +5,11 @@ namespace LibreMVC\Html\Document;
 use LibreMVC\Database\Entity;
 
 class Head extends Entity{
-
+    static public $_primaryKey;
+    static public $_table;
+    static public $_tableDescription;
+    static public $_statement;
+    private $_updated;
     protected  $id;
     public $uri;
     public $md5;
@@ -14,5 +18,14 @@ class Head extends Entity{
     public $description;
     public $keywords;
     public $baseUrl;
+
+    public function __set($k,$v) {
+            $this->_updated = true;
+            $this->k = $v;
+    }
+
+    public function isEqual(Head $head) {
+        return ( ( $this == $head ) === false );
+    }
 
 }
