@@ -167,7 +167,12 @@ class Pagination {
         }
 
     }
-    
+
+    public function current() {
+        var_dump($this);
+        return $this->page((int)$this->index, true);
+    }
+
     /**
      * @see array_chunk()
      * @return array
@@ -183,7 +188,7 @@ class Pagination {
         }
         return $return;
     }
-    
+
     /**
      * Calcul les limites de la requête sql
      * 
