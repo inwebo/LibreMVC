@@ -8,6 +8,7 @@
 
 namespace LibreMVC\Mvc\Controller;
 
+use LibreMVC\Http\Header;
 use LibreMVC\Mvc\Controller;
 use LibreMVC\Sessions;
 
@@ -16,34 +17,47 @@ class AuthPageController extends Controller{
     /**
      * @var bool Test l'authentification sur toutes les actions AVANT leurs execution. Pratique pour les admins
      */
-    protected $_protectThis = true;
+    protected $_public = true;
 
+    /**
+     * @var
+     */
     protected $_user;
+
     /**
      * @var array Si vide tous les roles
      */
+    //protected $_allowedRoles = array(4);
     protected $_allowedRoles = array();
+
     /**
      * @var array Si vide tous les droits
      */
+    //protected $_allowedPerms = array(0);
     protected $_allowedPerms = array();
 
     public function init() {
         $this->_user = Sessions::get('User');
-        if( $this->_protectThis ) {
-            // Test automatique de l'auth par Role / Perms
-            // Renvoit 404 si echec.
-            
+        if( !$this->_public ) {
+            if( !$this->userHasRoles( $this->_allowedRoles ) ) {
+                Header::forbidden();
+                exit;
+            }
+            if( !$this->userHasPerms( $this->_allowedPerms ) ) {
+                Header::forbidden();
+                exit;
+            }
         }
     }
 
     public function userHasRoles($idRoles) {
         if( !empty( $idRoles ) ) {
-            $allowed = true;
-            foreach($idRoles as $v) {
-                $allowed &= $this->_user->hasRole($v);
+            foreach( $idRoles as $v ) {
+                if( $this->_user->hasRole( $v ) ) {
+                    return true;
+                }
             }
-            return $allowed;
+            return false;
         }
         else {
             return true;
