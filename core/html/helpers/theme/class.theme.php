@@ -67,7 +67,23 @@ class Theme {
         return $buffer;
     }
 
+    public function getThemesJsSrc() {
+        $buffer = array();
+        foreach($this->_js as $v) {
+            $buffer[] = $this->_paths->theme_baseUrl_js . $v ;
+        }
+        return $buffer;
+    }
+
     public function getHref() {
+        $buffer = array();
+        foreach($this->_css as $v) {
+            $buffer[] = $this->_paths->theme_baseUrl_css . $v ;
+        }
+        return $buffer;
+    }
+
+    public function getThemesCssHref() {
         $buffer = array();
         foreach($this->_css as $v) {
             $buffer[] = $this->_paths->theme_baseUrl_css . $v ;
