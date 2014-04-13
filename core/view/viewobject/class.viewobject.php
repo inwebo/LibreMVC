@@ -18,10 +18,12 @@ use \StdClass;
  */
 class ViewObject extends StdClass implements IDataProvider {
 
-    public function map($object) {
+    static public function map($object) {
+        $_this = new self;
         foreach($object as $k => $v) {
-            $this->$k = $v;
+            $_this->$k = $v;
         }
+        return $_this;
     }
 
     public function strongTypedView($viewFile) {
@@ -42,10 +44,6 @@ class ViewObject extends StdClass implements IDataProvider {
 
     public function isMember( $property ) {
         return isset($this->$property);
-    }
-
-    static public function toViewObject() {
-
     }
 
 }
