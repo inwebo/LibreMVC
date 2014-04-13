@@ -19,13 +19,16 @@ class PageController extends Controller {
         $this->_view->vo->head = $this->_head;
         $this->_headClone = clone $this->_head;
         $this->toView('_head', $this->_head );
+        $this->toView('_user', $_SESSION['User'] );
 
     }
 
     public function __destruct() {
+        /*
         if( $this->_view->vo->head->isEqual($this->_headClone) ) {
             $this->_view->vo->head->save();
         }
+        */
     }
 
 
