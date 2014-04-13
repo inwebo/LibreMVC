@@ -1,26 +1,28 @@
 <?php
 namespace LibreMVC\Modules\Bookmarks\Models\Bookmark;
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 class Tags {
 
-    public $rawData;
-    public $data;
-    public $buffer;
-    public $count;
+    protected $_rawInput;
+    protected $_input;
+    protected $_tags;
+    protected $_count;
 
-    public function __construct( $_data ) {
-        $this->rawData = $_data;
-        $this->data = $this->cleanInput();
-        $this->buffer = explode( ' ', trim( $this->data ) );
-        $this->count = count( $this->buffer );
+    /**
+     * @param $inputString
+     */
+    public function __construct( $inputString ) {
+        $this->_rawInput    = $inputString;
+        $this->_input       = $this->cleanInput();
+        $this->_tags        = explode( ' ', trim( $this->_input ) );
+        $this->_count       = count( $this->_tags );
     }
 
-    public function cleanInput() {
-        $cleaned= preg_replace("#(,)+#",' ',$this->rawData);
+    /**
+     * @return mixed
+     */
+    protected function cleanInput() {
+        $cleaned= preg_replace("#(,)+#",' ',$this->_rawInput);
         $cleaned= preg_replace("#-+#",' ',$cleaned);
         $cleaned= preg_replace("#'+#",' ',$cleaned);
         $cleaned= preg_replace("#\+#",' ',$cleaned);
@@ -29,19 +31,21 @@ class Tags {
         return preg_replace("#( )+#",' ',$cleaned);
     }
 
-    public function toArray() {
-		return $this->buffer;
-    }
-    public function toNormalizedArray(){
-        $t = $this->buffer;
+    public function toArray(){
+        $t = $this->_tags;
         $t = array_map('strtolower', $t);
         $t = array_flip($t);
         $t = array_flip($t);
         asort($t);
         return $t;
     }
+
+    public function count() {
+        return $this->$_count;
+    }
+
 	public function toString( $glue = " "){
-		return implode( $glue, $this->buffer );
+		return implode( $glue, $this->_tags );
 	}
 
 }
