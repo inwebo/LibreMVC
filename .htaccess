@@ -10,7 +10,7 @@
 #X-domain
 
 RewriteEngine On
-#RewriteBase /LibreMVC
+#RewriteBase /libremvc
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [L,QSA]
