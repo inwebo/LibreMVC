@@ -28,6 +28,10 @@ class View {
         }
     }
 
+    public function setTemplate(Template $template) {
+        $this->_template = $template;
+    }
+
     /**
      * Est nécessaire pour avoir le contexte $this d'une vue dans un fichier parsé.
      */
