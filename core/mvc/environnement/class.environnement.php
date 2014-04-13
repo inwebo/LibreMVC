@@ -13,23 +13,14 @@ namespace LibreMVC\Mvc;
 class Environnement {
 
     protected $readOnly = false;
-    public $controller;
-    public $action;
-    public $params;
-    public $routedRoute;
-    public $log;
-    public $viewPath;
-    public $instance;
+
     public $paths;
     public $baseUrls;
-    public $vo;
 
-    /**
-     * Instance unique du ViewBag
-     *
-     * @param object $instance contient l'instance courante.
-     * @static
-     */
+
+    public $instance;
+    public $route;
+
     protected static $_instance;
 
     /**
