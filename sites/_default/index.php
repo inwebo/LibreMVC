@@ -6,7 +6,10 @@
     <meta name="keywords" content="">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <base href="http://www.inwebo.dev/libremvc/">
+    <base href="<?php getBaseHref(); ?>">
+    <link type="text/css" rel="stylesheet" href="<?php baseCss(); ?>bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="<?php instanceCss(); ?>style.css">
+    <script src="<?php baseJs(); ?>jquery.min.js"></script>
 </head>
 <body>
 <header>
@@ -25,6 +28,8 @@
                     <li> <a href="debug/">Debug</a></li>
                     <li> <a href="login/">Login</a></li>
                     <li> <a href="admin/">Admin</a></li>
+                    <li> <a href="auth/">Auth</a></li>
+                    <li> <a href="rest/test">Rest</a></li>
                 </ul>
             </div>
         </div>
@@ -33,24 +38,21 @@
 </header>
 <div id="parallax-wrapper">
     <div class="container">
+
         <div class="starter-template">
-            <h1>Welcome <?php echo \LibreMVC\Sessions::get('User')->login ?></h1>
+            <h1>Welcome <?php echo $_SESSION['User']->login ?></h1>
             <p class="lead">Default index page.</p>
         </div>
-            <div class="row">
+        <div class="row">
                 <div class="col-md-12">
                     <div id="breadcrumbs" data-spy="affix" data-offset-top="100">
                         <ol class="breadcrumb">
-                            <li>*</li>
+                            <li>Index</li>
                         </ol>
                     </div>
                 </div>
         </div>
-        <?php
-        //var_dump($this->vo);
-        echo $this->description;
-        ?>
-        <?php renderBody(ev()->templateAction, $this); ?>
+        <?php renderBody( viewAction(), $this ); ?>
     </div>
 </div>
 
@@ -58,7 +60,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-10"><div class="col-container"><p>Footer</p></div></div>
-            <div class="col-md-2"><div class="col-container text-center"><a class="footer-backtotop" href="">TOP</a> </div></div>
+            <div class="col-md-2"><div class="col-container text-center"><a class="footer-backtotop" href="#">TOP</a> </div></div>
         </div>
     </div>
 </footer>

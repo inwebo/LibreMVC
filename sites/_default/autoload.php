@@ -5,35 +5,67 @@ use LibreMVC\Routing\Route;
 
 try {
     LibreMVC\AutoLoader::instance()->addPool( './' );
-/*
-    //@todo hooks devraient être une fonction globale
-    \LibreMVC\System\Hooks::get()->addHook('loadTheme', function( &$args ){
-        $args[1]->current = "default";
-    });
 
-    \LibreMVC\System\Hooks::get()->addHook( 'addItemsToBreadCrumbs', function (&$array) {
-        $array[1]->items->home = Environnement::this()->instance->baseUrl;
-        $array = $array[1];
-    });
-*/
-    $baseUri = trim(Environnement::this()->instance->baseUri,'/');
-    if( $baseUri !== '') {
-        $base_uri = '/'.$baseUri.'/';
-    }
-	else {
-		$base_uri = '/';
-	}
+    $base_uri = instanceBaseUri();
 
-    $base_uri = "/libremvc/";
+    // FILO routes
     $defaultRoute = new Route( $base_uri.'[:action][/]',
-    	'\LibreMVC\Mvc\Controller\AuthPageController',
+    	'\LibreMVC\Controllers\HomeController',
         'index'
     );
-
-    //var_dump( $defaultRoute );
-
     RoutesCollection::get('default')->addRoute($defaultRoute);
 
+    $testAjax = new Route( $base_uri.'rest[/]',
+        '\LibreMVC\Modules\Bookmarks\Controllers\BookmarkController',
+        'index'
+    );
+    RoutesCollection::get('default')->addRoute($testAjax);
+
+    $auth = new Route( $base_uri.'auth[/]',
+        '\LibreMVC\Mvc\Controller\AuthPageController',
+        'index'
+    );
+    RoutesCollection::get('default')->addRoute($auth);
+
+    $rest = new Route( $base_uri.'rest/[:id|((regex)idTest#^([0-9])+$#]',
+        '\LibreMVC\Mvc\Controller\RestController',
+        'index'
+    );
+    RoutesCollection::get('default')->addRoute($rest);
+
+    $login = new Route( $base_uri.'log-in',
+        '\LibreMVC\Controllers\LoginController',
+        'login'
+    );
+    RoutesCollection::get('default')->addRoute($login);
+
+    $logout = new Route( $base_uri.'log-out',
+        '\LibreMVC\Controllers\LoginController',
+        'logout'
+    );
+    RoutesCollection::get('default')->addRoute($logout);
+    $bookmarks = new Route($base_uri.'bookmarks[/][:id|(regex)page#^([0-9])+$#]');
+    $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarksController';
+    $bookmarks->action = 'index';
+
+    RoutesCollection::get('default')->addRoute($bookmarks);
+    $bookmarks = new Route($base_uri.'bookmarks/tags/');
+    $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarksController';
+    $bookmarks->action = 'tags';
+    RoutesCollection::get('default')->addRoute($bookmarks);
+
+    RoutesCollection::get('default')->addRoute($bookmarks);
+    $bookmarks = new Route($base_uri.'bookmarks/tag/[:id|tag][/]');
+    $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarksController';
+    $bookmarks->action = 'tag';
+    RoutesCollection::get('default')->addRoute($bookmarks);
+
+
+
+
+
+
+    //var_dump( $defaultRoute );
 
 } catch (\Exception $e) {
     $message = time() . ', ' . $e->getCode() . ', ' . $e->getFile() . ', ' . $e->getLine() . ', ' . $e->getMessage() . "\n";

@@ -1,40 +1,30 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: inwebo
- * Date: 11/11/13
- * Time: 00:56
- * To change this template use File | Settings | File Templates.
- */
 
 namespace LibreMVC\Controllers;
 
-use LibreMVC\Http\Context;
 use LibreMVC\Http\Header;
 use LibreMVC\Instance;
 use LibreMVC\Models\User;
-use LibreMVC\Mvc\Controllers\PageController;
-use LibreMVC\Mvc\Controllers\RestController;
+use LibreMVC\Mvc\Controller\AuthPageController;
 use LibreMVC\Database;
+use LibreMVC\Mvc\Environnement;
 use LibreMVC\Sessions;
 
-class LoginController extends PageController{
+class LoginController extends AuthPageController {
+    public $_public = true;
 
-    public function __construct(){
-        parent::__construct();
-    }
-
-    public function indexAction($args) {
+    public function loginAction() {
         $user = filter_var($_POST['user'], FILTER_SANITIZE_STRING);
         $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
-        $validUser = User::isValidUser($user, $password,true);
+        //$validUser = User::isValidUser($user, sha1($password));
 
-        if($validUser instanceof User) {
-            Sessions::this()['User'] = $validUser;
+        if(User::isValidUser($user, sha1($password))) {
+            $user =  User::load($user, 'login');
+            Sessions::this()['User'] = $user;
             //@todo Ne fonctionne pas
-            Sessions::set('User',$validUser);
-            $_SESSION['User'] = $validUser;
-            Header::redirect(Instance::current()->baseUrl);
+            Sessions::set('User',$user);
+            $_SESSION['User'] = $user;
+            Header::redirect(Environnement::this()->instance->baseUrl);
         }
         else {
             Header::redirect($_SERVER['HTTP_REFERER']);
