@@ -11,20 +11,20 @@ namespace LibreMVC\Modules\Bookmarks\Controllers;
 
 use LibreMVC\Errors;
 use LibreMVC\Form;
-use LibreMVC\Http\Header;
 use LibreMVC\Models\User;
 use LibreMVC\Modules\Bookmarks\Models\Bookmark;
-use LibreMVC\Mvc\Controllers\RestController;
 use LibreMVC\Views;
-use LibreMVC\Http\Context;
-use LibreMVC\Http\Rest\Client;
-use LibreMVC\Database\Provider;
-use LibreMVC\Files\Config;
-use LibreMVC\Mvc\Environnement;
-use LibreMVC\Database\Driver\MySQL;
+use LibreMVC\Mvc\Controller\RestController;
 
 class BookmarkController extends RestController{
 
+    protected $_public = false;
+
+    public function get($vars) {
+        $this->_reply->msg = "yeah";
+    }
+
+/*
     public function __construct() {
         parent::__construct();
         Header::allowXDomain();
@@ -104,9 +104,10 @@ class BookmarkController extends RestController{
         return ($this->token === Client::signature($this->user, md5("inwebo"), $this->timestamp));
     }
 */
+    /*
     public function formAction(){
         //$form = new Form();
         //$this->_viewbag->form = $form->toHtml(true);
         //Views::renderAction();
-    }
+    }*/
 }
