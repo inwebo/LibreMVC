@@ -7,7 +7,7 @@ use LibreMVC\Helpers\NameSpaces;
 use LibreMVC\Html\Helpers\Theme;
 use LibreMVC\Http\Request;
 use LibreMVC\Http\Uri;
-use LibreMVC\Routing\Route;
+use LibreMVC\Helpers\Sanitize\SuperGlobal;
 use LibreMVC\Web\Instance\Paths;
 use LibreMVC\Localisation;
 use LibreMVC\Mvc\Environnement;
@@ -37,17 +37,19 @@ use LibreMVC\Web\Instance;
 class Mvc {
 
     /**
-     * System ini file's path.
-     */
-    const LIBREMVC_CONFIG_INI = "config/paths.ini";
-
-    /**
      * Will the application display a var_dump of each steps.
      */
-    const LIBREMVC_MVC_DEBUG = false;
+    const DEBUG = false;
 
-    const LIBREMVC_AUTOLOAD_FILE_PATH = "/autoload.php";
-    const LIBREMVC_MODULE_FILE_PATH = "/module.ini";
+    /**
+     * System ini file's path.
+     */
+    const PATHS_CONFIG_FILE     = "config/paths.ini";
+    const DEFAULT_CONFIG_FILE   = "config/config.ini";
+
+    const AUTOLOAD_FILE_PATH = "/autoload.php";
+
+    const CONFIG_DEFAULT_FILE_PATH = "/config.ini";
 
     /**
      * @var Config object from LIBREMVC_CONFIG_INI.
@@ -70,7 +72,7 @@ class Mvc {
     public static $viewObject;
 
     static private function debug($var) {
-        if(Mvc::LIBREMVC_MVC_DEBUG) {
+        if(Mvc::DEBUG) {
             var_dump($var);
         }
     }
@@ -87,21 +89,40 @@ class Mvc {
         MVC::debug(self::$request);
     }
 
+    static public function initConfig() {
+        self::$config = new \StdClass();
+    }
+
     /**
-     * Charge le fichier de configuration des chemins de l'application courante.
+     * Configuration des chemins.
      */
-    static public function setConfig() {
-        self::$config = Config::load( self::LIBREMVC_CONFIG_INI, true );
+    static public function configPaths() {
+        if( is_file( self::PATHS_CONFIG_FILE ) ) {
+            self::$config->paths = Config::load( self::PATHS_CONFIG_FILE, true );
+        }
+        MVC::debug(self::$config);
+    }
+
+    /**
+     * Configuration des chemins.
+     */
+    static public function autoloadConfig() {
+        if( is_file( self::PATHS_CONFIG_FILE ) ) {
+            self::$config->paths = Config::load( self::PATHS_CONFIG_FILE, true );
+        }
         MVC::debug(self::$config);
     }
 
     static public function setEnvironnement() {
         self::$environnement = Environnement::this();
+        self::$environnement->urls = new \StdClass();
         MVC::debug(self::$environnement);
     }
 
     static public function setInstance() {
         self::$instance = new Instance( Context::getBaseUrl() );
+        self::$environnement->instance = self::$instance;
+        //var_dump(self::$instance);
         MVC::debug(self::$instance);
     }
 
@@ -116,7 +137,7 @@ class Mvc {
     }
 
     static public function sanitizeSuperGlobal() {
-        $filterGet = new \LibreMvc\Helpers\Sanitize\SuperGlobal( $_GET );
+        $filterGet = new SuperGlobal( $_GET );
         $_GET = $filterGet->get();
     }
 
@@ -124,27 +145,27 @@ class Mvc {
         self::$pathsProcessor = new Paths(self::$config);
 
         // Chemins Application
-        $basePlaceholders =  array_merge((array)self::$config->Dirs, (array)self::$config->Files, (array)self::$config->DefaultMVC);
-        $basePattern = (array)self::$config->Pattern_Global;
+        $basePlaceholders =  array_merge((array)self::$config->paths->Dirs, (array)self::$config->paths->Files, (array)self::$config->paths->DefaultMVC);
+        $basePattern = (array)self::$config->paths->Pattern_Global;
         self::$paths['base'] = self::$pathsProcessor->processBasePath($basePlaceholders,$basePattern);
 
         // Chemins Instance
         $instancePlaceholders = array_merge($basePlaceholders, array("%instance%"=>self::$instance->getDir()."/"));
-        $instancePattern = (array)self::$config->Pattern_Instance;
+        $instancePattern = (array)self::$config->paths->Pattern_Instance;
         self::$paths['instance'] = self::$pathsProcessor->processBasePath($instancePlaceholders,$instancePattern);
 
         // Chemins Theme
         $dir = new Directory( self::$paths['instance']->instance_themes );
 
-        $themePattern = (array)self::$config->Themes;
+        $themePattern = (array)self::$config->paths->Themes;
         self::$paths['themes'] = array();
 
         // Parcours tous les themes
         foreach($dir->folders as $inode) {
             $themePlaceholders =  array_merge(
-                (array)self::$config->Dirs,
-                (array)self::$config->Files,
-                (array)self::$config->Themes,
+                (array)self::$config->paths->Dirs,
+                (array)self::$config->paths->Files,
+                (array)self::$config->paths->Themes,
                 array(
                     "%theme_current%"   => $inode->name .'/' ,
                     "%realPath%"        => self::$instance->getRealPath() . '/',
@@ -155,8 +176,17 @@ class Mvc {
             self::$paths['themes'][$inode->name] = self::$pathsProcessor->processBasePath($themePlaceholders,$themePattern);
 
         }
+        self::$environnement->basePaths =self::$paths['base'];
+        self::$environnement->themes =self::$paths['themes'];
         Mvc::debug(self::$paths);
         //var_dump(self::$paths);
+    }
+
+    static public function autoloadInstanceConfig() {
+        $config = self::$paths['instance']->instance_config_file;
+        if( is_file( $config ) )  {
+            self::$config->instance = Config::load($config);
+        }
     }
 
     static public function autoloadInstance() {
@@ -165,22 +195,27 @@ class Mvc {
         }
     }
 
-    static public function autoloadInstanceModules() {
+    static public function initModulesConfig(){
+        self::$config->config->modules = new \StdClass();
+    }
+
+    /**
+     * Autoload module file & config.ini
+     */
+    static public function autoloadModulesConfig() {
         $dir = new Directory( self::$paths['instance']->instance_modules );
         $dir->folders->rewind();
         while( $dir->folders->valid() ) {
 
             // @warning : Le dossier contenant les plugins doit avoir +x !
-            if(is_file($dir->folders->current()->realPath .  Mvc::LIBREMVC_AUTOLOAD_FILE_PATH)) {
-                include($dir->folders->current()->realPath . Mvc::LIBREMVC_AUTOLOAD_FILE_PATH);
+            if(is_file($dir->folders->current()->realPath .  Mvc::AUTOLOAD_FILE_PATH)) {
+                include($dir->folders->current()->realPath . Mvc::AUTOLOAD_FILE_PATH);
             }
-            if(is_file($dir->folders->current()->realPath . Mvc::LIBREMVC_MODULE_FILE_PATH)) {
-                $currentValue = $dir->folders->current()->realPath . Mvc::LIBREMVC_MODULE_FILE_PATH;
-                $currentKey = ucfirst($dir->folders->current()->name);
 
-                Environnement::this()->Modules = new \StdClass;
-                Environnement::this()->Modules->$currentKey = new \StdClass;
-                Environnement::this()->Modules->$currentKey->config = $dir->folders->current() . "/module.ini";
+            if( is_file( $dir->folders->current()->realPath . Mvc::CONFIG_DEFAULT_FILE_PATH ) ) {
+                $configFile = $dir->folders->current()->realPath . Mvc::CONFIG_DEFAULT_FILE_PATH;
+                $currentKey = ucfirst($dir->folders->current()->name);
+                self::$config->modules->$currentKey = Config::load( $configFile );
             }
             $dir->folders->next();
         }
@@ -199,30 +234,20 @@ class Mvc {
             $user = \LibreMVC\Models\User::load(0);
             Sessions::set('User', $user);
         }
-        var_dump($_SESSION);
-    }
-
-    static public function setAdminRoute() {
-        $adminRoute = new Route(
-           '/' . self::$instance->getBaseUri().'admin[/]',
-            '\LibreMVC\Controllers\HomeController',
-            'login'
-        );
-        RoutesCollection::get('default')->addRoute($adminRoute);
-        //var_dump($adminRoute);
+         //var_dump($_SESSION);
     }
 
     static public function router() {
         // Get Route
         $router = new Router( Uri::current() ,RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
         self::$routedRoute = $routedRoute = $router->dispatch();
-
+        self::$environnement->route = $routedRoute;
         // Prepare mvc config
         $mvcPlaceHolders =  array_merge(
-            (array)self::$config->Dirs,
-            (array)self::$config->Files,
-            (array)self::$config->Themes,
-            (array)self::$config->DefaultMVC,
+            (array)self::$config->paths->Dirs,
+            (array)self::$config->paths->Files,
+            (array)self::$config->paths->Themes,
+            (array)self::$config->paths->DefaultMVC,
             array(
                 "%controller%"  => NameSpaces::getControllerSuffixedName($routedRoute->controller),
                 "%action%"      => $routedRoute->action,
@@ -232,7 +257,7 @@ class Mvc {
         // Process paths
         self::$paths['mvc'] = self::$pathsProcessor->processBasePath(
             $mvcPlaceHolders,
-            self::$config->MVC
+            self::$config->paths->MVC
         );
         Mvc::debug(self::$paths);
         //var_dump(self::$paths);
@@ -243,7 +268,8 @@ class Mvc {
         array_walk($httpPaths,function(&$item){
             $item = Context::getBaseUrl() . $item;
         });
-        self::$paths['http']=$httpPaths;
+        self::$paths['http'] = $httpPaths;
+        self::$environnement->urls->instance = $httpPaths;
         Mvc::debug(self::$paths);
     }
 
@@ -251,7 +277,7 @@ class Mvc {
         // Pour chaques themes un nouvel objet theme.
         $themes = new \StdClass();
         foreach(self::$paths['themes'] as $k => $v) {
-            $themes->$k = new Theme(Config::load($v->theme_realPath_ini,true), $v);
+            $themes->$k = new Theme(Config::load($v->theme_config_file,true), $v);
         }
         //var_dump($themes);
         Mvc::debug($themes);
@@ -265,14 +291,32 @@ class Mvc {
         Mvc::debug(self::$viewObject);
     }
 
+    static public function configToEnv() {
+        Environnement::this()->config = self::$config;
+    }
+
     static public function lockEnvironnement() {
         self::$environnement->readOnly(true);
         Mvc::debug(self::$environnement);
     }
 
     static public function frontController() {
-        // Vue
-        $view = new View(new View\Template(self::$paths['mvc']->mvc_layout), self::$viewObject);
+        //var_dump(self::$environnement);
+        try {
+            $template = new View\Template(self::$paths['mvc']->mvc_layout);
+            try {
+                $view = new View($template, self::$viewObject);
+            }
+            catch(\Exception $e) {
+                // Le template demandé n'existe pas.
+                var_dump($e);
+            }
+        }
+        catch(\Exception $e) {
+            // Le template demandé n'existe pas.
+            var_dump($e);
+        }
+
         // Dispatcher qui invoke le bon controller
         $dispatcher = new Dispatcher( self::$request, self::$routedRoute, $view );
         // Auto render de la vue.
