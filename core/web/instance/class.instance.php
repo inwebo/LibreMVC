@@ -140,11 +140,14 @@ class Instance {
         $url  = $url2 = explode('.', self::urlToInstanceSyntax( $this->_url ) );
         $loop = count($url);
         $name = null;
+
         if( Context::getUri() === "admin/" ) {
             return 'admin';
         }
+
         for($i=1; $i <= $loop; $i++) {
             $asDirName = implode('.', $url);
+
             if(is_dir( getcwd() . "/" .$this->_baseDir . $asDirName . "/")) {
                 return implode('.', $url);
             }
@@ -155,12 +158,17 @@ class Instance {
         for($i=1; $i <= $loop; $i++) {
             $asDirName =   implode('.', $url2);
             if(is_dir( getcwd() . "/" .$this->_baseDir . $asDirName . "/")) {
+
                 return implode('.', $url2);
             }
             array_shift($url2);
         }
 
         return DEFAULT_INSTANCE;
+    }
+
+    public function getInstanceBaseUri() {
+        return $this->_baseUri;
     }
 
     /**

@@ -52,11 +52,15 @@ class RouteConstraint {
         $valid         = true;
         $uriSegments   = $this->uri->toSegments();
         $routeSegments = $this->route->toSegments();
-
+/*
+        var_dump($uriSegments);
+        var_dump($routeSegments);
+*/
         $j = 0;
         foreach($routeSegments as $routeSegment) {
+
             if( $routeSegment->isMandatory() ) {
-                if(isset( $uriSegments[$j] ) ) {
+                if( isset( $uriSegments[$j] ) ) {
                     $uriSegment = $uriSegments[$j];
                     $constraint = new $segmentConstraint( $uriSegment, $routeSegment );
                     // Est il un segment obligatoire présent.
@@ -68,7 +72,7 @@ class RouteConstraint {
             }
             $j++;
         }
-
+        //var_dump((bool)$valid);
         return (bool)$valid;
     }
 

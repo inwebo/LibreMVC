@@ -57,11 +57,11 @@ class Cli {
             if(is_file($dir->folders->current()->realPath . '/autoload.php')) {
                 include($dir->folders->current()->realPath . '/autoload.php');
             }
-            if(is_file($dir->folders->current()->realPath . '/module.ini')) {
-                $currentValue = $dir->folders->current()->realPath . '/module.ini';
+            if(is_file($dir->folders->current()->realPath . '/config.ini')) {
+                $currentValue = $dir->folders->current()->realPath . '/config.ini';
                 $currentKey = ucfirst($dir->folders->current()->name);
                 Environnement::this()->Modules = null;
-                Environnement::this()->Modules->$currentKey->config = $dir->folders->current() . "/module.ini";
+                Environnement::this()->Modules->$currentKey->config = $dir->folders->current() . "/config.ini";
             }
             $dir->folders->next();
         }

@@ -67,7 +67,7 @@ class MySql extends Driver implements IDriver{
             return $this->resource;
 
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            var_dump($e);
         }
     }
 

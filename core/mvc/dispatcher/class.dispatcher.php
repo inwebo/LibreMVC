@@ -39,9 +39,9 @@ class Dispatcher {
     protected $_actionController;
 
     /**
-     * @param Request $request Une requête cliente.
-     * @param Route $route Une route déjà routée
-     * @param View $view Une vue a passer à l'action controller
+     * @param Request $request Une requête HTTP.
+     * @param Route $route Une route.
+     * @param View $view Une vue a passer à l'action du controller.
      */
     public function __construct( Request $request, Route $route, View $view ) {
         $this->_request             = $request;
@@ -60,7 +60,11 @@ class Dispatcher {
             return new $this->_route->controller( $this->_request, $this->_view );
         }
         else {
-            throw new DispatcherUnknownController();
+            ob_start();
+            var_dump($this);
+            $msg=ob_get_contents();
+            ob_get_clean();
+            throw new DispatcherUnknownController("Unknown controller " . $msg);
         }
     }
 
@@ -86,7 +90,6 @@ class Dispatcher {
     public function dispatch() {
         // Action souhaitée
         $action =  $this->_route->action . Dispatcher::ACTION_SUFFIX;
-
         // Le controller est-il une classe déjà connues.
         if( $this->isRegistered() ) {
             // Le controller possede t il la method demandée
@@ -101,7 +104,6 @@ class Dispatcher {
             else {
                 throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists !' );
             }
-
         }
         // Controller inconnu.
         else {

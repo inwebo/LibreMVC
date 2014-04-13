@@ -73,7 +73,7 @@ class UriParser {
         $params         = array();
 
         foreach( $routeSegments as $routeSegment ) {
-
+            //var_dump($routeSegment);
             if(isset($uriSegments[$j])) {
                 // Alias segment courant
                 $uriSegment = $uriSegments[$j];
@@ -84,6 +84,7 @@ class UriParser {
                     $this->route->controller = $constraint->getController();
                 }
                 if( $constraint->isAction() ) {
+
                     $this->route->action = $constraint->getAction();
                 }
                 // Est un parametre

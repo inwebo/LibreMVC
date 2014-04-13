@@ -14,28 +14,13 @@ class Header {
         header('Access-Control-Allow-Methods: ' . implode(', ', $allowedVerbs));
     }
 
-    public static function forbidden( $content='' ) {
-        header('HTTP/1.1 403 Forbidden');
-        echo ($content === '') ? '403 Forbidden' : $content;
-        die();
-    }
-
-    public static function notFound( $content='' ) {
-        header('HTTP/1.1 404 Not Found');
-        echo ($content === '') ? '404 Not Found' : $content;
-        die();
-    }
-
-    public static function movedPermanently() {
-        header('HTTP/1.1 301 Moved Permanently');
-    }
-
     public static function disableCache() {
         header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
         header('Expires: Thu, 14 Apr 1982 05:00:00 GMT');
         header('Pragma: no-cache');
         header('ETag: ' . md5( time() ) );
     }
+
 
     public static function redirect( $url, $delay = 0, $message = "You will be redirected" ) {
         if( $delay > 0 ) {
@@ -49,24 +34,78 @@ class Header {
             exit;
         }
     }
-    
+
     public static function poweredBy( $name ) {
         header('X-Powered-By: '. $name);
     }
-    
+
     public static function contentLanguage( $cl ) {
         header('Content-language: '. $cl);
     }
-    
+
     public static function lastModified($birth) {
         header('Last-Modified: '.gmdate('D, d M Y H:i:s', $birth).' GMT');
     }
-    
+
     /**
      * Connexion persistente pour les imgages, SOAP sont inutiles...
      */
     public static function disableKeepAlive() {
         header('Connection: Close');
+    }
+
+    public static function contentLength($size) {
+        header('Content-Length: '.$size);
+    }
+
+    public static function expires( $birth, $life ) {
+        $life = $birth + $life;
+        header('Expires: ' . gmdate('D, d M Y H:i:s', $life));
+    }
+
+    public static function neverExpires() {
+        $then = gmstrftime("%a, %d %b %Y %H:%M:%S GMT", time() + 365*86440);
+        header('HTTP/1.1 304 Not Modified');
+        header("Expires: $then");
+    }
+
+    public static function fromCache($birth,$life,$content) {
+        self::lastModified($birth);
+        self::expires($birth, $life);
+        self::contentLength(strlen($content));
+        self::notModified();
+    }
+
+    public static function noCache() {
+        self::disableCache();
+        self::disableKeepAlive();
+    }
+
+    public static function hideInfos() {
+        header('Server: ');
+        header('X-Powered-By: ');
+    }
+
+    public static function set($key,$value) {
+        $_key = $key;
+        $_key = ( !is_null($_key) ) ? ucfirst( strtolower($_key) ) : null;
+        header($_key . ': ' . $value);
+    }
+
+    public static function movedPermanently() {
+        header('HTTP/1.1 301 Moved Permanently');
+    }
+
+    public static function forbidden( $content='' ) {
+        header('HTTP/1.1 403 Forbidden');
+        echo ($content === '') ? '403 Forbidden' : $content;
+        die();
+    }
+
+    public static function notFound( $content='' ) {
+        header('HTTP/1.1 404 Not Found');
+        echo ($content === '') ? '404 Not Found' : $content;
+        die();
     }
     
     public static function notModified() {
@@ -88,40 +127,6 @@ class Header {
     public static function serverError() {
         header('HTTP/1.1 500 Server Error');
     }
-
-    public static function contentLength($size) {
-        header('Content-Length: '.$size);
-    }
-
-    public static function expires( $birth, $life ) {
-        $life = $birth + $life;
-        header('Expires: ' . gmdate('D, d M Y H:i:s', $life));
-    }
-    
-    public static function neverExpires() {
-        $then = gmstrftime("%a, %d %b %Y %H:%M:%S GMT", time() + 365*86440);
-        header('HTTP/1.1 304 Not Modified');
-        header("Expires: $then");
-    }
-    
-    public static function fromCache($birth,$life,$content) {
-        self::lastModified($birth);
-        self::expires($birth, $life);
-        self::contentLength(strlen($content));
-        self::notModified();
-    }
-    
-    public static function noCache() {
-        self::disableCache();
-        self::disableKeepAlive();
-    }
-
-
-    public static function hideInfos() {
-        header('Server: ');
-        header('X-Powered-By: ');
-    }
-
     public static function error($httpErrorNumber) {
         switch( $httpErrorNumber ) {
             default:
@@ -129,12 +134,6 @@ class Header {
                 header("HTTP/1.0 404 Not Found");
                 break;
         }
-    }
-
-    public static function set($key,$value) {
-        $_key = $key;
-        $_key = ( !is_null($_key) ) ? ucfirst( strtolower($_key) ) : null;
-        header($_key . ': ' . $value);
     }
 
     public static function json() {

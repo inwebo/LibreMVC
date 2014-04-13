@@ -43,16 +43,9 @@ class Router {
         $this->routeConstraint  = $routeConstraintClass;
     }
 
-    /**
-     * Parcours toute la collection de route, création d'un uriparser par route,
-     */
-    /**
-     * @return bool|Route False si aucune route
-     */
     public function dispatch() {
 
         $this->routesCollection->routes->rewind();
-
         while($this->routesCollection->routes->valid()) {
             $routeConstraint = new RouteConstraint($this->uri, $this->routesCollection->routes->current() );
 
@@ -66,6 +59,7 @@ class Router {
                 // UriIsGreaterThanRoute
                 if( $routeConstraint->isUriSegmentsGreaterThanRouteSegments() === false ) {
                     $parser = new UriParser( $this->uri,$this->routesCollection->routes->current());
+
                     return $parser->processPattern();
                 }
                 // Uri invalide 404
@@ -73,9 +67,11 @@ class Router {
                     throw new RouterExceptionError404('Router : 404 Not found');
                 }
             }
+
             $this->routesCollection->routes->next();
         }
         // Si on arrive ici est une route inconnue.
+        //throw new RouterExceptionError404('Router : 404 Not found');
         return false;
 
     }
