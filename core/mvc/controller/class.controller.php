@@ -18,6 +18,6 @@ class Controller extends BaseController {
     }
 
     public function toView($key, $value) {
-        $this->_view->vo->$key = $value;
+        $this->_view->getDataProvider()->$key = $value;
     }
 }
