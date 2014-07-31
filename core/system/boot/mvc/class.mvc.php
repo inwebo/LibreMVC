@@ -318,9 +318,15 @@ class Mvc {
         }
 
         // Dispatcher qui invoke le bon controller
-        $dispatcher = new Dispatcher( self::$request, self::$routedRoute, $view );
-        // Auto render de la vue.
-        $dispatcher->dispatch();
+        try {
+            $dispatcher = new Dispatcher( self::$request, self::$routedRoute, $view );
+            // Auto render de la vue.
+            $dispatcher->dispatch();
+        }
+        catch(\Extepion $e) {
+            var_dump($e);
+        }
+
     }
 
 }
