@@ -9,8 +9,5 @@ include('uriparser/routeconstraint/class.routeconstraint.php');
 include('uriparser/segmentable/class.segmentable.php');
 include('uriparser/segmentconstraint/segmentcomparable/class.segmentcomparable.php');
 include('uriparser/segmentconstraint/class.segmentconstraint.php');
-
-
-
 include('core/http/uri/class.uri.php');
 include('core/http/header/class.header.php');
