@@ -1,16 +1,7 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: inwebo
- * Date: 13/10/13
- * Time: 16:41
- * To change this template use File | Settings | File Templates.
- */
 
 namespace LibreMVC\Database;
 use LibreMVC\Database\Driver\IDriver;
-use LibreMVC\Database\Results;
-use LibreMVC\Http\Header;
 
 /**
  * Class Statement
