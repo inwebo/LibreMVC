@@ -69,7 +69,7 @@ function getBaseHref() {
     echo Environnement::this()->instance->getBaseUrl();
 }
 
-function instanceBaseUri() {
+function getInstanceBaseUri() {
     $baseUri =  trim(Environnement::this()->instance->getInstanceBaseUri(),'/');
     if( $baseUri !== '') {
         $base_uri = '/'.$baseUri.'/';
