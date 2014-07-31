@@ -44,7 +44,12 @@ beforeSend:function(xhr){
 
 
  */
-
+// Snippet will crypt any chars
+//return hash_hmac("sha256", $password, ""  );
+/*if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
+    $salt = '$2y$11$' . substr(md5(uniqid(rand(), true)), 0, 22);
+    return crypt($password, $salt);
+}*/
 try {
     AutoLoader::instance()->addPool( './core/' );
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );

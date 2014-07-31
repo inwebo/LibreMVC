@@ -58,6 +58,9 @@ class Parser {
     /**
      * Parse les balises utilisateurs et les remplace par le résultat d'une regex
      */
+    /**
+     *
+     */
     public function process() {
         $this->tasksCollection->rewind();
         // Pour chaque tache contenue dans la file d'attente des taches.

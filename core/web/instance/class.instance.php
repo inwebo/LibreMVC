@@ -141,9 +141,14 @@ class Instance {
         $loop = count($url);
         $name = null;
 
+        /**
+         * @todo
+         */
+        /*
         if( Context::getUri() === "admin/" ) {
             return 'admin';
         }
+        */
 
         for($i=1; $i <= $loop; $i++) {
             $asDirName = implode('.', $url);

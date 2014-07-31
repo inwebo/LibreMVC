@@ -1,6 +1,7 @@
 <?php
 
 namespace LibreMVC;
+
 class ClassNamespace {
 
     protected $namespace;

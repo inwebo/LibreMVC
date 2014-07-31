@@ -19,6 +19,7 @@ class DispatcherUnknownActionController extends \Exception {};
  *
  * @package LibreMVC\Mvc
  */
+
 class Dispatcher {
     const ACTION_SUFFIX = "Action";
     /**
