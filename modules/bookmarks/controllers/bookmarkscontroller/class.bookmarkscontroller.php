@@ -68,13 +68,13 @@ class BookmarksController extends PageController{
     }
 
     public function tagAction( $tag ) {
-        $tags = $this->_db->query('SELECT * FROM ' . $this->_tableBookmarks . ' WHERE tags LIKE "%' . $tag . '%"', array($tag))->all();
+        $tags = $this->_db->query('SELECT * FROM ' . $this->_tableBookmarks . ' WHERE tags LIKE "%' . $tag . '%" ORDER BY dt desc', array($tag))->all();
         $this->toView("tags",ViewObject::map($tags));
         $this->_view->render();
     }
 
     public function tagsAction() {
-        $tags = $this->_db->query('SELECT tags FROM '. $this->_tableBookmarks . " GROUP BY tags")->all();
+        $tags = $this->_db->query('SELECT tags FROM '. $this->_tableBookmarks . " GROUP BY tags ORDER BY dt desc")->all();
         $stringTagInput = "";
         foreach($tags as $tag) {
             $stringTagInput .= $tag->tags;
