@@ -13,11 +13,26 @@ use LibreMVC\View\Parser;
  */
 class View {
 
-    public $vo;
+    protected $vo;
+    /**
+     * @var View\Template
+     */
     protected $_template;
+
+    /**
+     * @var View\Parser
+     */
     protected $_parser;
+
+    /**
+     * @var bool
+     */
     protected $_autoRender = true;
 
+    /**
+     * @param Template $template Un fichier a parser
+     * @param ViewObject $viewObject Un IDataProvider
+     */
     public function __construct( Template $template, ViewObject $viewObject ) {
         try {
             $this->_template = $template;
@@ -28,6 +43,9 @@ class View {
         }
     }
 
+    /**
+     * @param Template $template
+     */
     public function setTemplate(Template $template) {
         $this->_template = $template;
     }
@@ -36,10 +54,16 @@ class View {
      * Est nécessaire pour avoir le contexte $this d'une vue dans un fichier parsé.
      */
     protected function setViewContext() {
-        $content = $this->vo->strongTypedView($this->_template->getFile());
-        $this->_template->set($content);
+        $content = $this->vo->strongTypedView( $this->_template->getFile() );
+        $this->_template->set( $content );
     }
 
+    /**
+     * Setter autorender.
+     *
+     * @param null $bool
+     * @return bool
+     */
     public function isAutoRender( $bool = null ) {
         if(is_null($bool)){
             return $this->_autoRender;
@@ -51,6 +75,9 @@ class View {
         }
     }
 
+    /**
+     * @return Parser
+     */
     public function render() {
         $this->setViewContext();
         $this->_parser = new Parser($this->_template, $this->vo);
@@ -62,6 +89,15 @@ class View {
         }
     }
 
+    public function getDataProvider() {
+        return $this->vo;
+    }
+
+    /**
+     * @param $path
+     * @param IDataProvider $viewObject
+     * @return View
+     */
     static public function partial( $path, IDataProvider &$viewObject = null ) {
         if(is_null($viewObject)) {
             return new self( new Template($path), new  ViewObject());

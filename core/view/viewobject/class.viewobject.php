@@ -18,7 +18,7 @@ use \StdClass;
  */
 class ViewObject extends StdClass implements IDataProvider {
 
-    static public function map($object) {
+    static public function map( $object ) {
         $_this = new self;
         foreach($object as $k => $v) {
             $_this->$k = $v;
@@ -26,6 +26,12 @@ class ViewObject extends StdClass implements IDataProvider {
         return $_this;
     }
 
+    /**
+     * Permet d'obtenir le context $this dans la vue.
+     *
+     * @param $viewFile Un fichier à inclure.
+     * @return string Le contenus parsé par PHP
+     */
     public function strongTypedView($viewFile) {
         ob_start();
         include($viewFile);
