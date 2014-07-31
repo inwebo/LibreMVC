@@ -67,20 +67,6 @@ class Route {
         return $mandatory;
     }
 
-    public function toArray() {
-        $buffer = $this->pattern;
-        $named = preg_match_all(
-            //@todo a revoir mange le crochet fermant
-            //"#\[{1}(.*)\]{1}#mU",
-            //@todo a tester
-            '#(\[:(.*)(\#\])|\[{1}(.*)\|\#\]$]{1})|\[{1}(.*)\]{1}#mU',
-            $buffer,
-            $match
-        );
-
-        return array_merge( $this->mandatoryToArray(), $match[0] )  ;
-    }
-
     public function mandatoryToArray() {
         $mandatory = $this->extractMandatorySegment();
         // 1 - Final slash ?
@@ -109,6 +95,24 @@ class Route {
         return $buffer;
     }
 
+    public function toArray() {
+        $buffer = $this->pattern;
+        $named = preg_match_all(
+        //@todo a revoir mange le crochet fermant
+        //"#\[{1}(.*)\]{1}#mU",
+        //@todo a tester
+            '#(\[:(.*)(\#\])|\[{1}(.*)\|\#\]$]{1})|\[{1}(.*)\]{1}#mU',
+            $buffer,
+            $match
+        );
+
+        return array_merge( $this->mandatoryToArray(), $match[0] )  ;
+    }
+
+    /**
+     * @todo Voir class.uri.php toSegments, ISegmentable + AbstractSegment
+     * @return array
+     */
     public function toSegments() {
         $buffer = array();
         $segments = $this->toArray();

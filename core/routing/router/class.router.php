@@ -71,7 +71,7 @@ class Router {
             $this->routesCollection->routes->next();
         }
         // Si on arrive ici est une route inconnue.
-        //throw new RouterExceptionError404('Router : 404 Not found');
+        throw new RouterExceptionError404('Router : 404 Not found');
         return false;
 
     }
