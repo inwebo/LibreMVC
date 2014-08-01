@@ -27,9 +27,6 @@
                 <ul class="nav navbar-nav pull-right">
                     <li> <a href="debug/">Debug</a></li>
                     <li> <a href="login/">Login</a></li>
-                    <li> <a href="admin/">Admin</a></li>
-                    <li> <a href="auth/">Auth</a></li>
-                    <li> <a href="rest/test">Rest</a></li>
                 </ul>
             </div>
         </div>
@@ -53,14 +50,21 @@
                 </div>
         </div>
         <?php renderBody( viewAction(), $this ); ?>
+        <?php
+            //echo getcwd() . '/sites/';
+
+        var_dump(mkdir($path . "arf"));
+        var_dump( copy(getcwd() . '/sites/#default', getcwd() . '/sites/arf') );
+
+        ?>
     </div>
 </div>
 
 <footer>
     <div class="container">
         <div class="row">
-            <div class="col-md-10"><div class="col-container"><p>Footer</p></div></div>
-            <div class="col-md-2"><div class="col-container text-center"><a class="footer-backtotop" href="#">TOP</a> </div></div>
+            <div class="col-md-10"><div class="col-container"></div></div>
+            <div class="col-md-2"><div class="col-container text-center"></div></div>
         </div>
     </div>
 </footer>
