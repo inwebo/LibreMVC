@@ -7,37 +7,10 @@ class FilesException extends \Exception{};
 class IO {
 
     /**
-     * @var bool True all inputs are in DECIMAL, False all inputs are in OCTAL.
-     */
-    public static $decimalMode = true;
-
-    public static $cache = false;
-
-    /**
      * @return bool
      */
     public static function isUnix() {
         return ( bool ) ( PHP_OS === 'Linux' );
-    }
-
-    protected static function isLink( $filename ) {
-        return is_link( $filename );
-    }
-
-    protected static function isDir( $filename ) {
-        return is_dir( $filename );
-    }
-
-    public static function isWritable( $node ) {
-        return is_writable( $node );
-    }
-
-    public static function isReadable( $node ) {
-        return is_readable( $node );
-    }
-
-    public static function copyDir() {
-
     }
 
     public static function mkDir( $where, $folderName, $chmod, $erase = true) {
@@ -68,7 +41,14 @@ class IO {
 
     }
 
-    public static function rmDir( $dir ) {
+    public static function _mkDir( $folderPath, $chmod ) {
+            $old = umask(0);
+            mkdir($folderPath, $chmod, true);
+            chmod($folderPath, $chmod);
+            umask($old);
+    }
+
+    public static function rm( $dir ) {
         $files = array_diff( scandir( $dir ), array( '.', '..' ) );
         foreach ($files as $file) {
             $current = $dir . '/' . $file;
@@ -77,20 +57,37 @@ class IO {
         return rmdir($dir);
     }
 
-    public static function copyFile( $filename, $destinationFilename ) {
-        $context = dirname($filename);
-        //var_dump($context);
+    public static function cp( $src, $target ) {
+        $chMode = self::getPerms($src);
 
-        // Le dossier de destination est il accessible en écriture ?
-        //var_dump(is_writable($context));
+        if ( !is_dir( $target ) ) {
+            self::_mkDir($target,octdec($chMode));
+        }
 
-        // Oui
+        try {
+            $iterator = $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($src, \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST);
+        }
+        catch(\Exception $e ) {
+            var_dump($e);
+        }
 
-        return copy( $filename, $destinationFilename );
+        foreach($iterator as $item) {
+            if ( $item->isDir() ) {
+                mkdir($target . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), $item->getPerms() );
+                chmod($target . DIRECTORY_SEPARATOR . $iterator->getSubPathName(), $item->getPerms() );
+            } else {
+                copy( $item, $target . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+                chmod($target . DIRECTORY_SEPARATOR . $iterator->getSubPathName(),$item->getPerms());
+            }
+        }
+
+        return true;
     }
 
     public static function move( $from, $to ) {
-
+        return rename($from, $to);
     }
 
     public static function getDaemonUser() {
@@ -134,10 +131,9 @@ class IO {
         else {
             throw new FilesException('Current deamon user : ' . self::getCurrentDeamonUser() .' is not allowed to change mode.');
         }
-
     }
 
-    public static function getChmod( $file ) {
+    public static function getPerms( $file ) {
         return substr(sprintf('%o', fileperms($file)), -4);
     }
 
@@ -151,10 +147,10 @@ class IO {
         return ( bool ) get_current_user() === self::getDaemonUser();
     }
 
-    public static function recursiveChmod( $pathname, $mode ) {
+    public static function rChmod( $pathname, $mode ) {
         $iterator = new \RecursiveIteratorIterator (new \RecursiveDirectoryIterator( $pathname ) );
         foreach( $iterator as $item ) {
-            chmod( $item, octdec( $mode ) );
+            chmod( $item, $mode );
         }
     }
 
