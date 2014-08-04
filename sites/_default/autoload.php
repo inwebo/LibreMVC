@@ -8,23 +8,31 @@ try {
     $base_uri = getInstanceBaseUri();
 
     // FILO routes
-    $defaultRoute = new Route( $base_uri.'[:action][/]',
+    // Une route statique n'a pas besoin d'action du controller StaticController, voir __call
+    /*
+    $staticRoute = new Route( $base_uri . '[:static][/]',
+        '\LibreMVC\Controllers\StaticController'
+    );
+    RoutesCollection::get( 'default' )->addRoute( $staticRoute );
+    */
+
+    $defaultRoute = new Route( $base_uri . '[:action][/]',
     	'\LibreMVC\Controllers\HomeController',
         'index'
     );
-    RoutesCollection::get('default')->addRoute($defaultRoute);
+    RoutesCollection::get( 'default' )->addRoute( $defaultRoute );
 
-    $login = new Route( $base_uri.'log-in',
+    $login = new Route( $base_uri . 'log-in',
         '\LibreMVC\Controllers\LoginController',
         'login'
     );
-    RoutesCollection::get('default')->addRoute($login);
+    RoutesCollection::get( 'default' )->addRoute( $login );
 
-    $logout = new Route( $base_uri.'log-out',
+    $logout = new Route( $base_uri . 'log-out',
         '\LibreMVC\Controllers\LoginController',
         'logout'
     );
-    RoutesCollection::get('default')->addRoute($logout);
+    RoutesCollection::get( 'default' )->addRoute( $logout );
 
 } catch (\Exception $e) {
     var_dump($e);
