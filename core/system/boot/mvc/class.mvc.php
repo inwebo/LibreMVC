@@ -242,6 +242,7 @@ class Mvc {
         $router = new Router( Uri::current() ,RoutesCollection::get('default')->getRoutes(), '\\LibreMVC\\Routing\\UriParser\\RouteConstraint' );
         self::$routedRoute = $routedRoute = $router->dispatch();
         self::$environnement->route = $routedRoute;
+
         // Prepare mvc config
         $mvcPlaceHolders =  array_merge(
             (array)self::$config->paths->Dirs,
@@ -251,16 +252,23 @@ class Mvc {
             array(
                 "%controller%"  => NameSpaces::getControllerSuffixedName($routedRoute->controller),
                 "%action%"      => $routedRoute->action,
-                "%instance%"    => self::$instance->getDir()."/"
+                "%instance%"    => self::$instance->getDir() . "/"
             )
         );
+
         // Process paths
         self::$paths['mvc'] = self::$pathsProcessor->processBasePath(
             $mvcPlaceHolders,
             self::$config->paths->MVC
         );
+
+        // Est ce un controller static ?
+        if( $routedRoute->controller === "\\LibreMVC\\Controllers\\StaticController") {
+            // Les vues par défaults se trouvent à la racine du dossier /views/
+            self::$paths['mvc']->mvc_view = self::$paths['instance']->instance_static . $routedRoute->params["staticFile"] . ".php";
+        }
+
         Mvc::debug(self::$paths);
-        //var_dump(self::$paths);
     }
 
     static public function processHttpPaths() {

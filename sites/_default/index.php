@@ -50,13 +50,6 @@
                 </div>
         </div>
         <?php renderBody( viewAction(), $this ); ?>
-        <?php
-            //echo getcwd() . '/sites/';
-
-        var_dump(mkdir($path . "arf"));
-        var_dump( copy(getcwd() . '/sites/#default', getcwd() . '/sites/arf') );
-
-        ?>
     </div>
 </div>
 
