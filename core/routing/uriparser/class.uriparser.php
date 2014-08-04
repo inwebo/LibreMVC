@@ -74,19 +74,27 @@ class UriParser {
 
         foreach( $routeSegments as $routeSegment ) {
             //var_dump($routeSegment);
-            if(isset($uriSegments[$j])) {
+            if( isset( $uriSegments[$j] ) ) {
                 // Alias segment courant
                 $uriSegment = $uriSegments[$j];
 
-                $constraint = new SegmentConstraint($uriSegment,$routeSegment );
+                $constraint = new SegmentConstraint( $uriSegment, $routeSegment );
 
+                // Le segment un element static
+                if( $constraint->isStatic() ) {
+                    $params["staticFile"] = $constraint->getStatic();
+                }
+
+                // Le segment valide t il la contraite d'un controller
                 if( $constraint->isController() ) {
                     $this->route->controller = $constraint->getController();
                 }
-                if( $constraint->isAction() ) {
 
+                // Le segment valide t il la contraite d'une action
+                if( $constraint->isAction() ) {
                     $this->route->action = $constraint->getAction();
                 }
+
                 // Est un parametre
                 if( $constraint->isParam() ) {
                     // Est il typé
@@ -104,6 +112,8 @@ class UriParser {
                         $params[] = $uriSegment->getSegment();
                     }
                 }
+
+
             }
             $j++;
         }

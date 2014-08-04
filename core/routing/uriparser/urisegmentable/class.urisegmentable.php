@@ -9,9 +9,6 @@
 
 namespace LibreMVC\Routing\UriParser;
 
-use LibreMVC\Http\Uri;
-use LibreMVC\Routing\Segmentable;
-
 class UriSegmentable implements Segmentable{
 
     protected $raw;

@@ -54,6 +54,10 @@ class SegmentConstraint implements SegmentComparable {
         return $this->valid;
     }
 
+    public function isStatic() {
+        return ($this->segmentRoute->getSegment() === ":static");
+    }
+
     public function isController() {
         return ($this->segmentRoute->getSegment() === ":controller");
     }
@@ -76,6 +80,10 @@ class SegmentConstraint implements SegmentComparable {
 
     public function getAction() {
         return ($this->isAction()) ? $this->segmentUri->getSegment() : null;
+    }
+
+    public function getStatic() {
+        return ($this->isStatic()) ? $this->segmentUri->getSegment() : null;
     }
 
     public function getParam() {

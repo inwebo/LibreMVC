@@ -52,10 +52,7 @@ class RouteConstraint {
         $valid         = true;
         $uriSegments   = $this->uri->toSegments();
         $routeSegments = $this->route->toSegments();
-/*
-        var_dump($uriSegments);
-        var_dump($routeSegments);
-*/
+
         $j = 0;
         foreach($routeSegments as $routeSegment) {
 
@@ -72,7 +69,6 @@ class RouteConstraint {
             }
             $j++;
         }
-        //var_dump((bool)$valid);
         return (bool)$valid;
     }
 
