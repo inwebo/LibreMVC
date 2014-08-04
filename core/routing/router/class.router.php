@@ -43,6 +43,12 @@ class Router {
         $this->routeConstraint  = $routeConstraintClass;
     }
 
+    /**
+     *
+     *
+     * @return bool|Route|mixed
+     * @throws RouterExceptionError404
+     */
     public function dispatch() {
 
         $this->routesCollection->routes->rewind();
@@ -58,7 +64,7 @@ class Router {
             if( $routeConstraint->isValidUri("LibreMVC\\Routing\\UriParser\\SegmentConstraint") ) {
                 // UriIsGreaterThanRoute
                 if( $routeConstraint->isUriSegmentsGreaterThanRouteSegments() === false ) {
-                    $parser = new UriParser( $this->uri,$this->routesCollection->routes->current());
+                    $parser = new UriParser( $this->uri, $this->routesCollection->routes->current() );
 
                     return $parser->processPattern();
                 }
@@ -71,7 +77,7 @@ class Router {
             $this->routesCollection->routes->next();
         }
         // Si on arrive ici est une route inconnue.
-        throw new RouterExceptionError404('Router : 404 Not found');
+        throw new RouterExceptionError404('Router : route 404 Not found');
         return false;
 
     }
