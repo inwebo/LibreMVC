@@ -267,3 +267,32 @@ FORM
     width: 100%;
     z-index: 999997;
 }
+
+.bookmarks-list {
+    /*background: black;*/
+}
+
+.bookmarks-list dt{
+
+}
+
+    .bookmarks-list dt a {
+
+    }
+
+
+.bookmarks-list dd {
+
+}
+
+    .bookmarks-list dd ul {
+
+    }
+
+        .bookmarks-list dd li {
+            display: inline-block;
+        }
+
+            .bookmarks-list dd li a {
+                margin-left: 1em;
+            }
