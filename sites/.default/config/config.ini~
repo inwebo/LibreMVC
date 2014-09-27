@@ -1,4 +1,4 @@
-# Toutes les clefs présentes ici seront disponible pour l intance courante.
+# Toutes les clefs présentes ici seront disponible pour l'intance courante. #
 [Db]
 server       = ""
 database     = ""
