@@ -1,99 +1,148 @@
+<?php
+    use LibreMVC\Routing\RoutesCollection;
+
+    $path = getcwd() . '/sites/';
+    $pathNewSite = $path . 'new';
+    $pathInstance = $path . 'instance';
+?>
+
 <div class="container">
+
     <div class="row">
-        <div class="col-md-4">
-            <h3>Ajax</h3>
-            <div class="col-container">
-
-                <form>
-                    <fieldset>
-                        <legend>Verb</legend>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="verb" id="verbGet" value="get" checked>
-                                get
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="verb" id="verbPost" value="post">
-                                post
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="verb" id="verbUpdate" value="update">
-                                update
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="verb" id="verbDelete" value="delete">
-                                delete
-                            </label>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Content type</legend>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="ctype" value="application/json" checked>
-                                application/json
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="ctype" value="text/xml">
-                                text/xml
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="ctype" value="text/html">
-                                text/html
-                            </label>
-                        </div>
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="ctype" value="text/plain">
-                                text/plain
-                            </label>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
+        <div class="col-md-12">
+            <h3>Content</h3>
+            <ul>
+                <li><a href="debug/#instance">Instance</a></li>
+                <li><a href="debug/#user">User</a></li>
+                <li><a href="debug/#routes">Registered routes</a></li>
+                <li><a href="debug/#route">Current route</a></li>
+                <li><a href="debug/#this">Context : $this</a></li>
+                <li><a href="debug/#ev">Registre::ev()</a></li>
+                <li><a href="debug/#config">Config file loaded</a></li>
+                <li><a href="debug/#modules">Loaded modules</a></li>
+                <li><a href="debug/#themes">Loaded themes</a></li>
+            </ul>
         </div>
-        <div class="col-md-4">
-            <h3>User</h3>
-            <div class="col-container">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="User" class="col-sm-2 control-label">User</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="User" placeholder="eg : inwebo" value="inwebo">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="token" class="col-sm-2 control-label">Token</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="Token" placeholder="md5 hash" value="5e24ec4339ab1bb6b16e24658b94754add7c9a4c">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button id="submit" type="button" class="btn btn-default">execute</button>
-                        </div>
-                    </div>
-                </form>
+    </div>
 
-            </div>
+    <a name="instance"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Instance</h3>
+            <?php
+                var_dump(ev()->instance);
+            ?>
         </div>
+    </div>
+
+    <a name="user"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Instance</h3>
+            <?php
+                var_dump(ev()->instance);
+            ?>
+        </div>
+    </div>
+
+
+    <a name="routes"></a>
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Registered routes</h3>
+            <?php
+                $routes = RoutesCollection::get( 'default' );
+            ?>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Pattern</th>
+                        <th>Controller</th>
+                        <th>Action</th>
+                        <th>Params</th>
+                    </tr>
+                    <?php
+                        foreach($routes->routes as $k => $v) { ?>
+                            <tr>
+                                <td><?php echo $v->name ?></td>
+                                <td><?php echo $v->pattern ?></td>
+                                <td><?php echo $v->controller ?></td>
+                                <td><?php echo $v->action ?></td>
+                                <td><?php print_r( $v->params ) ?></td>
+                            </tr>
+                    <?php
+                        }
+                    ?>
+                </thead>
+            </table>
+        </div>
+        <a name="route"></a>
         <div class="col-md-4">
-            <h3>Response</h3>
-            <div class="col-container">
+            <h3>Current route</h3>
+            <?php
+            var_dump(ev()->route);
+            ?>
+        </div>
+    </div>
 
-                <textarea id="response" class="form-control" rows="10"></textarea>
+    <a name="this"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>$this</h3>
+            <?php
+                var_dump($this);
+            ?>
+        </div>
+    </div>
 
-            </div>
+    <a name="ev"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Registre environnement</h3>
+            <?php
+            var_dump(ev());
+            ?>
+        </div>
+    </div>
+
+    <a name="config"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Config files</h3>
+            <?php
+            var_dump(\LibreMVC\System\Boot\Mvc::$config);
+            ?>
+        </div>
+    </div>
+
+    <a name="modules"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Module(s)</h3>
+            <?php
+            var_dump(\LibreMVC\System\Boot\Mvc::$config->modules);
+            ?>
+        </div>
+    </div>
+
+    <a name="themes"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Theme(s)</h3>
+            <?php
+            var_dump(ev()->themes);
+            ?>
+        </div>
+    </div>
+
+    <a name="users"></a>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>User(s)</h3>
+            <?php
+                var_dump($this->_user);
+            ?>
         </div>
     </div>
 </div>
