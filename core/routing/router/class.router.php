@@ -70,7 +70,8 @@ class Router {
                 }
                 // Uri invalide 404
                 else {
-                    throw new RouterExceptionError404('Router : 404 Not found');
+                    // var_dump($this->uri);
+                    throw new RouterExceptionError404('Uri : ' . $this->uri->value . ' is not a valid uri.');
                 }
             }
 
