@@ -34,6 +34,12 @@ try {
     );
     RoutesCollection::get( 'default' )->addRoute( $logout );
 
+    $logout = new Route( $base_uri . 'page/[:static][/]',
+        '\LibreMVC\Mvc\Controller\StaticController',
+        'index'
+    );
+    RoutesCollection::get( 'default' )->addRoute( $logout );
+
 } catch (\Exception $e) {
     var_dump($e);
 }
