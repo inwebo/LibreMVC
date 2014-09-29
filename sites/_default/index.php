@@ -1,4 +1,3 @@
-<?php //var_dump($this) ?>
 <html>
 <head>
     <title><?php echo $this->_meta->title ?></title>
@@ -26,7 +25,9 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav pull-right">
                     <li> <a href="debug/">Debug</a></li>
-                    <li> <a href="login/">Login</a></li>
+                    <li> <a href="login/">Login (<?php echo $_SESSION['User']->login ?>)</a></li>
+                    <li> <a href="routes/">Routes</a></li>
+                    <li> <a href="admin/users/">Users</a></li>
                 </ul>
             </div>
         </div>
@@ -35,11 +36,6 @@
 </header>
 <div id="parallax-wrapper">
     <div class="container">
-
-        <div class="starter-template">
-            <h1>Welcome <?php echo $_SESSION['User']->login ?></h1>
-            <p class="lead">Default index page.</p>
-        </div>
         <div class="row">
                 <div class="col-md-12">
                     <div id="breadcrumbs" data-spy="affix" data-offset-top="100">
