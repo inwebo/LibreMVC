@@ -65,6 +65,12 @@ function instanceCss() {
     echo(ev()->themes['default']->theme_baseUrl_css);
 }
 
+function themeCssFiles()  {
+    foreach(ev()->css as $k => $v) {
+        //var_dump($v);
+    }
+}
+
 /**
  * Ajoute un item au bread crumb.
  */

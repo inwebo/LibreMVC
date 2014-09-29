@@ -23,8 +23,14 @@ class PageController extends Controller {
     }
 
     public function __destruct() {
+        // New Head
+        if( is_null($this->_headClone->uri) ) {
+            //var_dump($this->_headClone);
+            $this->_view->getDataProvider()->head->save();
+        }
 
-        if( $this->_view->getDataProvider()->head->isEqual($this->_headClone) ) {
+        // Updated Head
+        elseif( $this->_view->getDataProvider()->head->isEqual( $this->_headClone ) ) {
             $this->_view->getDataProvider()->head->save();
         }
 

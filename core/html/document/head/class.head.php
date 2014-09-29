@@ -26,6 +26,7 @@ class Head extends Entity{
 
     public function isEqual(Head $head) {
         return ( ( $this == $head ) === false );
+        //return ( ( $this == $head ) === false );
     }
 
 }
