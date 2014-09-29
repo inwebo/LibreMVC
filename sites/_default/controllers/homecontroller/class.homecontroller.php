@@ -5,7 +5,6 @@ use LibreMVC\Database\Driver;
 use LibreMVC\Database\Provider;
 use LibreMVC\Models\User;
 use LibreMVC\Mvc\Controller\PageController;
-use LibreMVC\Mvc\Environnement;
 
 class HomeController extends PageController {
 
