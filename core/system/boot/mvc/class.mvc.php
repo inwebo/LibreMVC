@@ -243,6 +243,10 @@ class Mvc {
         self::$routedRoute = $routedRoute = $router->dispatch();
         self::$environnement->route = $routedRoute;
 
+        //var_dump(self::$config->paths->DefaultMVC);
+
+        //var_dump($routedRoute);
+
         // Prepare mvc config
         $mvcPlaceHolders =  array_merge(
             (array)self::$config->paths->Dirs,
@@ -256,17 +260,19 @@ class Mvc {
             )
         );
 
+        // Est ce un controller static càd Est ce que le params['staticFile'] est setter ?
+        // Substitution du chemin par defaut d'une vue par le chemin par defaut d'un fichier static
+
+        if(isset($routedRoute->params['staticFile'])) {
+            self::$config->paths->MVC->mvc_view = self::$config->paths->Pattern_Instance->instance_static . '' . $routedRoute->params['staticFile'] . '.php';
+        }
+
+
         // Process paths
         self::$paths['mvc'] = self::$pathsProcessor->processBasePath(
             $mvcPlaceHolders,
             self::$config->paths->MVC
         );
-
-        // Est ce un controller static ?
-        if( $routedRoute->controller === "\\LibreMVC\\Controllers\\StaticController") {
-            // Les vues par défaults se trouvent à la racine du dossier /views/
-            self::$paths['mvc']->mvc_view = self::$paths['instance']->instance_static . $routedRoute->params["staticFile"] . ".php";
-        }
 
         Mvc::debug(self::$paths);
     }
@@ -278,16 +284,25 @@ class Mvc {
         });
         self::$paths['http'] = $httpPaths;
         self::$environnement->urls->instance = $httpPaths;
+
         Mvc::debug(self::$paths);
+
     }
 
     static public function autoloadThemes() {
         // Pour chaques themes un nouvel objet theme.
         $themes = new \StdClass();
+        $css = array();
+        $js = array();
         foreach(self::$paths['themes'] as $k => $v) {
             $themes->$k = new Theme(Config::load($v->theme_config_file,true), $v);
+            $css= array_merge($themes->$k->getHref(),$css);
+            $js= array_merge($themes->$k->getSrc(),$js);
         }
-        //var_dump($themes);
+        //
+        Environnement::this()->css = $css;
+        Environnement::this()->js = $js;
+        //var_dump($js);
         Mvc::debug($themes);
     }
 
@@ -311,8 +326,14 @@ class Mvc {
     static public function frontController() {
         //var_dump(self::$environnement);
         try {
-            $template = new View\Template(self::$paths['mvc']->mvc_layout);
+
+            // @todo : Static view path.
+            // Static view ?
+            // var_dump(self::$paths);
+            // Layout du site
+
             try {
+                $template = new View\Template( self::$paths['mvc']->mvc_layout );
                 $view = new View($template, self::$viewObject);
             }
             catch(\Exception $e) {
