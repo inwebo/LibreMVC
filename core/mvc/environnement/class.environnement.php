@@ -14,12 +14,17 @@ class Environnement {
 
     protected $readOnly = false;
 
+    /*
+     * @todo
     public $paths;
     public $baseUrls;
-
+    */
 
     public $instance;
     public $route;
+
+    public $css;
+    public $js;
 
     protected static $_instance;
 
