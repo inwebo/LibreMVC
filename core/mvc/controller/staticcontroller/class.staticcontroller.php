@@ -9,9 +9,16 @@
 namespace LibreMVC\Mvc\Controller;
 
 use LibreMVC\Mvc\Controller;
+use LibreMVC\View\Template;
 
 class StaticController extends Controller{
 
+    /**
+     * Doit être creusé.
+     *
+     * @param $name
+     * @param $arguments
+     */
     public function __call( $name, $arguments ) {
         $this->_view->render();
     }
