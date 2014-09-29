@@ -4,7 +4,7 @@
         <div class="col-container">
             <h3>IndexAction</h3>
             <p>
-                <?php //var_dump($this) ?>
+                Welcome
             </p>
         </div>
     </div>
