@@ -261,7 +261,7 @@ class Mvc {
         );
 
         // Est ce un controller static càd Est ce que le params['staticFile'] est setter ?
-        // Substitution du chemin par defaut d'une vue par le chemin par defaut d'un fichier static
+
 
         if(isset($routedRoute->params['staticFile'])) {
             self::$config->paths->MVC->mvc_view = self::$config->paths->Pattern_Instance->instance_static . '' . $routedRoute->params['staticFile'] . '.php';
