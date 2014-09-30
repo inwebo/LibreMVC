@@ -24,10 +24,9 @@ class BookmarksController extends PageController{
     protected $_totalBookmarks;
 
     public function init() {
+
         // Chargement dans le context d'une configuration.
         $this->_config = Environnement::this()->config->instance;
-
-//        var_dump($this->_config);
 
         // tables
         $this->_tableBookmarks = $this->_config->Db->tablePrefix . "bookmarks";
@@ -60,10 +59,10 @@ class BookmarksController extends PageController{
         $pagination = Pagination::dummyPagination( $this->_totalBookmarks, $page, 20 );
         $sqlLimit = $pagination->sqlLimit( $this->_totalBookmarks, $page, 20 );
         $bookmarks = $this->_db->query("SELECT * FROM " . $this->_tableBookmarks . " ORDER BY dt desc LIMIT " . $sqlLimit['start'] . ", 20")->all();
-        //var_dump($bookmarks);
         //var_dump(ViewObject::map($bookmarks));
         $this->toView("bookmarks", ViewObject::map($bookmarks));
         $this->toView("pagination", $pagination);
+        $this->toView("bookmarksCount", $this->_totalBookmarks);
         $this->_view->render();
     }
 
@@ -85,6 +84,7 @@ class BookmarksController extends PageController{
     }
 
     public function widgetAction() {
+        /*
         $widgetFile = Environnement::this()->instance->realPath.'/assets/js/widget.js';
         $widgetFileAsString = file_get_contents($widgetFile, 1024);
         $widgetFileAsString = str_replace("%user%",Sessions::this()['User']->login,$widgetFileAsString);
@@ -92,5 +92,6 @@ class BookmarksController extends PageController{
         $widgetFileAsString = str_replace("%restService%", Environnement::this()->instance->baseUrl."form", $widgetFileAsString);
         $this->_viewbag->get()->widget = $widgetFileAsString;
         Views::renderAction();
+        */
     }
 }
