@@ -84,14 +84,11 @@ class BookmarksController extends PageController{
     }
 
     public function widgetAction() {
-        /*
-        $widgetFile = Environnement::this()->instance->realPath.'/assets/js/widget.js';
-        $widgetFileAsString = file_get_contents($widgetFile, 1024);
+        $widgetFileAsString = file_get_contents(TPL_BOOKMARKS_WIDGET, 1024);
         $widgetFileAsString = str_replace("%user%",Sessions::this()['User']->login,$widgetFileAsString);
         $widgetFileAsString = str_replace("%publicKey%",Sessions::this()['User']->publicKey,$widgetFileAsString);
         $widgetFileAsString = str_replace("%restService%", Environnement::this()->instance->baseUrl."form", $widgetFileAsString);
-        $this->_viewbag->get()->widget = $widgetFileAsString;
-        Views::renderAction();
-        */
+        $this->toView("widget", $widgetFileAsString);
+        $this->_view->render();
     }
 }

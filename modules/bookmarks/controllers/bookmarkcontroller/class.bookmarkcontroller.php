@@ -21,8 +21,9 @@ class BookmarkController extends RestController{
 
     protected $_public = false;
 
-    public function get() {
-        $this->_reply->msg = "yeah";
+    public function formAction() {
+        $view = new View(new View\Template(TPL_BOOKMARKS_FORM),new View\ViewObject());
+        $view->render();
     }
 
 }
