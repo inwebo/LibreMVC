@@ -55,7 +55,7 @@ class RestController extends Controller{
      * @var string To set
      * @todo TO SET to prod
      */
-    protected $_salt = "s";
+    protected $_salt = "salt";
 
     public function __construct( Request $request, $view = null ) {
         $this->_request = $request;
@@ -102,7 +102,7 @@ class RestController extends Controller{
     protected function unauthorized() {
         Header::unauthorized();
         $this->_reply->msg ="Unauthorized acces";
-        return;
+        exit;
     }
 
     /**
