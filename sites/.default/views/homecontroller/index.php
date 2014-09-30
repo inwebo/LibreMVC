@@ -4,7 +4,7 @@
         <div class="col-container">
             <h3>IndexAction</h3>
             <p>
-                Welcome
+                <?php echo $this->head->title ?>
             </p>
         </div>
     </div>
