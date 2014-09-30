@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="col-container">
-            <h3>IndexAction</h3>
+            <h3><?php echo $this->_head->title ?></h3>
             <p>
                 Welcome
             </p>

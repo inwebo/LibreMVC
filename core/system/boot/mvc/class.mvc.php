@@ -326,12 +326,6 @@ class Mvc {
     static public function frontController() {
         //var_dump(self::$environnement);
         try {
-
-            // @todo : Static view path.
-            // Static view ?
-            // var_dump(self::$paths);
-            // Layout du site
-
             try {
                 $template = new View\Template( self::$paths['mvc']->mvc_layout );
                 $view = new View($template, self::$viewObject);

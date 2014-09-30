@@ -24,10 +24,10 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav pull-right">
-                    <li> <a href="debug/">Debug</a></li>
-                    <li> <a href="login/">Login (<?php echo $_SESSION['User']->login ?>)</a></li>
-                    <li> <a href="routes/">Routes</a></li>
-                    <li> <a href="admin/users/">Users</a></li>
+                    <li> <a href="debug/">Dump</a></li>
+                    <li> <a href="page/about/">About</a></li>
+                    <li> <a href="page/debug/">Debug</a></li>
+                    <li> <a href="logme/">Login (<?php echo $_SESSION['User']->login ?>)</a></li>
                 </ul>
             </div>
         </div>

@@ -95,6 +95,10 @@ footer .container {
     margin: 0;
     padding: 0;
     width: 100%;
+    margin-bottom: 2em;
+}
+.bookmarks-list p{
+    font-size: 0.6em;
 }
 
 .bookmarks-list div dt span.label{
@@ -121,7 +125,6 @@ footer .container {
 
 .bookmarks-list dd {
     margin-left: 0.5em;
-    margin-top: 1em;
 }
 
 .bookmarks-list dd ul {
@@ -277,7 +280,7 @@ FORM
 }
 
     .bookmarks-list dt a {
-
+        font-size: 1.4em;
     }
 
 
