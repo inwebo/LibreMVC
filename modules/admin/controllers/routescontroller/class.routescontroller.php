@@ -6,8 +6,7 @@
  * Time: 13:12
  */
 
-namespace LibreMVC\Modules\Admin;
-
+namespace LibreMVC\Modules\Admin\Controllers;
 
 use LibreMVC\Mvc\Controller\PageController;
 
