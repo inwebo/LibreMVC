@@ -10,6 +10,7 @@ try {
 
     define('TPL_BOOKMARK_BOOKMARK', __DIR__ . '/views/tpl/bookmark.php');
     define('TPL_BOOKMARKS_WIDGET', __DIR__ . '/assets/js/widget.js');
+    define('BOOKMARKS_CRUD', __DIR__ . '/assets/js/crud.js');
     define('TPL_BOOKMARKS_FORM', __DIR__ . '/views/tpl/form.php');
 
     // API
@@ -18,7 +19,7 @@ try {
     $bookmarks->action = 'index';
     RoutesCollection::get('default')->addRoute($bookmarks);
 
-    $bookmarks = new Route($base_uri.'api/bookmark/form');
+    $bookmarks = new Route($base_uri.'api/bookmark/form/[:id]');
     $bookmarks->controller = '\LibreMVC\Modules\Bookmarks\Controllers\BookmarkController';
     $bookmarks->action = 'form';
     RoutesCollection::get('default')->addRoute($bookmarks);
