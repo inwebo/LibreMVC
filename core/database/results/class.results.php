@@ -18,11 +18,12 @@ class Results {
 
     public function __construct(\PDOStatement $pdoStatement) {
         $this->pdoStatement = $pdoStatement;
-        // @todo : Après un insert est inutile.
-        $isInsert = (strpos($this->pdoStatement->queryString,'INSERT') );
-        //$this->rows = ($isInsert === false) ? new \ArrayIterator($this->pdoStatement->fetchAll()) :  new \ArrayIterator();
-        $this->rows = ($isInsert === false) ? new \ArrayIterator($this->pdoStatement->fetchAll()) :  new \ArrayIterator();
+        $this->rows = ($this->returnResults()) ? new \ArrayIterator( $this->pdoStatement->fetchAll() ) :  new \ArrayIterator();
         $this->rows->rewind();
+    }
+
+    public function returnResults() {
+        return ( $this->pdoStatement->columnCount() === 0 ) ? false : true;
     }
 
     public function all() {
