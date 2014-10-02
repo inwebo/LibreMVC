@@ -1,23 +1,22 @@
 <?php
-use LibreMVC\Mvc\Environnement;
+    use LibreMVC\Mvc\Environnement;
+    $bookmark = $this->bookmark;
 ?>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>
-    $("h1").hide();
-    $(".starter-template").hide();
-    $("#breadcrumbs").hide();
-    $("footer").css('display', 'none');
-    $("header").hide();
-    $("body").css('padding-top', '1em');
 
     $(document).ready(function(){
-        //@todo sauvegarde des bookmarks
-        window.LibreMVC.Config.User.login = '<?php echo $_GET['user'] ?>';
-        window.LibreMVC.Config.User.publicKey = '<?php echo $_GET['publicKey'] ?>';
+
+
+
+        var login = '<?php echo $this->login ?>';
+        var publicKey = '<?php echo $this->publicKey ?>';
 
         $('#save').on('click',function(){
+            console.log($('#bookmark').serialize());
             $.ajax({
-                type: "PUT",
-                url: "<?php echo Environnement::this()->instance->baseUrl; ?>bookmark",
+                type: "<?php echo $this->verb ?>",
+                url: "<?php echo $this->restUrl ?>",
                 data:$('#bookmark').serialize(),
                 headers: {
                     Accept : "application/json",
@@ -25,22 +24,21 @@ use LibreMVC\Mvc\Environnement;
                 },
                 beforeSend:function(xhr){
                     var timestamp = Date.now();
-                    xhr.setRequestHeader('User', window.LibreMVC.Config.User.login);
+                    xhr.setRequestHeader('User', login);
                     xhr.setRequestHeader('Timestamp', timestamp);
-                    xhr.setRequestHeader('Token', window.LibreMVC.Config.User.publicKey);
+                    xhr.setRequestHeader('Token', publicKey);
                 }
             }).error(function(msg){
                 $('#msgRestBookmark').toggle();
                 $('#msgRestBookmarkFalse').toggle();
                 setTimeout(function(){
-                    self.close();
+                    //self.close();
                 },2000);
-            })
-                .done(function( msg ) {
+            }).done(function( msg ) {
                     $('#msgRestBookmark').toggle();
                     $('#msgRestBookmarkTrue').toggle();
                     setTimeout(function(){
-                        self.close();
+                        //self.close();
                     },2000);
                 });
         });
@@ -55,72 +53,47 @@ use LibreMVC\Mvc\Environnement;
         <p>Added to the base!</p>
     </div>
 </div>
-<?php //var_dump( $_GET ); ?>
+<?php //var_dump( $this ); ?>
 <div class="col-md-12">
-
     <div class="col-container">
         <form id="bookmark" class="form-horizontal" role="form">
+            <input id="id" type="hidden" name="id" value="<?php echo $bookmark->id; ?>">
+            <input id="hash" type="hidden" name="hash" value="<?php echo $bookmark->hash; ?>">
+            <input id="dt" type="hidden" name="dt" value="<?php echo $bookmark->dt; ?>">
+            <input id="category" type="hidden" name="category" value="<?php echo $bookmark->category; ?>">
+            <input id="public" type="hidden" name="public" value="<?php echo $bookmark->public; ?>">
+            <input id="favicon" type="hidden" name="favicon" value="<?php echo $bookmark->favicon; ?>">
             <div class="form-group">
                 <label for="url" class="col-lg-2 control-label">Url</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="url" name="url" placeholder="eg : http://www.inwebo.net" value="<?php echo $_GET['url'] ?>">
+                    <input type="text" class="form-control" id="url" name="url" placeholder="eg : http://www.inwebo.net" value="<?php echo $bookmark->url; ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="title" class="col-lg-2 control-label">Title</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="title" name="title" placeholder="I'm a title" value="<?php echo $_GET['title'] ?>">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="I'm a title" value="<?php echo $bookmark->title; ?>">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="keywords" class="col-lg-2 control-label">keywords</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="keywords" name="keywords" placeholder="eg : hello world these are keywords example" value="<?php echo $_GET['keywords'] ?>">
+                    <input type="text" class="form-control" id="keywords" name="keywords" placeholder="eg : hello world these are keywords example" value="<?php echo $bookmark->tags; ?>">
                 </div>
             </div>
             <div class="form-group">
                 <label for="description" class="col-lg-2 control-label">Description</label>
                 <div class="col-lg-10">
-                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="A brief description of the current bookmark"><?php echo $_GET['description'] ?></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="A brief description of the current bookmark"><?php echo $bookmark->description; ?></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-10">
-                    <id id="save" name="save" type="submit" class="btn btn-default">Save</id>
+                    <a href="#" id="save" name="save" class="btn btn-default" />Save</a>
                 </div>
             </div>
-            <input id="favicon" name="favicon" type="hidden" value="<?php echo $_GET['favicon'] ?>">
-            <!--
-<a target="_blank" href="javascript:(function(){
-
-    var publicKey = '';
-    //@todo publicKey dynamic & restServiceDynamique
-    var restService = '';
-
-    var url = encodeURIComponent(location.href);
-
-    var title = encodeURIComponent(document.title);
-
-    var faviconQuery = document.evaluate('//*[contains(@rel,\'shortcut icon\')]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    var favicon = (faviconQuery.snapshotLength != 0) ? faviconQuery.snapshotItem(0).getAttribute('href')  : null;
-
-    var description;
-    var keywords;
-
-
-    var metas = document.getElementsByTagName('meta');
-    for (var x=0,y=metas.length; x<y; x++) {
-        if (metas[x].name.toLowerCase() == 'description') {
-            description = metas[x].content;
-        }
-        if (metas[x].name.toLowerCase() == 'keywords') {
-            keywords = metas[x].content;
-        }
-    }
-
-    window.open(restService+'?url='+url+'&title='+title+'&description='+'&keywords='+keywords,'AddBookmaks','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
-})();">&hearts;</a>-->
+            <input id="favicon" name="favicon" type="hidden" value="<?php echo $bookmark->favicon ?>">
         </form>
     </div>
 </div>
