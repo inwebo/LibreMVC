@@ -21,17 +21,19 @@ class Entity {
     static public $_tableDescription;
     static public $_statement;
 
-    /**
-     * @todo: Devrait exister 1 constructeur pour l'instanciation ET pour le chargement de la database, cela évite les contructeur
-     * avec des parametres par default inutile (cf Model\User )
-     */
+    public function __construct() {
+        $this->init();
+    }
+
+    protected function init() {
+
+    }
 
     /**
      * @param $statement
      * @param null $table
      * @param null $primaryKey
      */
-
     static public function binder($statement, $table = null, $primaryKey = null) {
        $class = get_called_class();
        if( strpos( $class , '\\') ) {
@@ -64,7 +66,9 @@ class Entity {
         if( !is_object($class::$_statement) ) {
             throw new \Exception("From object" . $class . ' please bind your entity to a table.' );
         }
+        // @todo : Void fonctionnement de toObject() tronque les resultats.
         $class::$_statement->toObject($class);
+
         $result = $class::$_statement->query('select * from ' . $class::$_table . ' WHERE ' . $pk . "=? LIMIT 1",array($primaryKeyValue))->first();
         if( $enableAutoload && is_null($result)) {
             $instance = new $class;
@@ -109,6 +113,7 @@ class Entity {
             try {
 
                 $query = "UPDATE " . $class::$_table . ' SET ' . Query::toUpdate($tableCols) . ' WHERE ' . $pk . ' =?';
+                echo $query;
                 $arrayValues = array_merge($arrayValues, array($this->$pk));
                 $statement = $class::$_statement->query($query, $arrayValues );
                 if($statement instanceof \Exception) {
