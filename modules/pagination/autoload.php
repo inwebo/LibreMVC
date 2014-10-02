@@ -3,7 +3,7 @@ LibreMVC\AutoLoader::instance()->addPool( './' );
 
 define('TPL_PAGINATION', __DIR__ . '/views/tpl/pagination.php');
 
-function renderPagination($pagination, $baseUri, $activeClass= "") {
+function renderPagination($pagination, $baseUri, $activeClass= "", $intervalSize = 10) {
     $vo = new \LibreMVC\View\ViewObject();
 
     $vo->min = $pagination->min;
@@ -18,5 +18,10 @@ function renderPagination($pagination, $baseUri, $activeClass= "") {
 
     $vo->baseUri = $baseUri;
     $vo->activeClass = $activeClass;
+
+    $vo->interval = new \StdClass();
+    $interval = $pagination->getInterval($intervalSize);
+    $vo->interval->start = $interval[0];
+    $vo->interval->stop = $interval[1];
     partial(TPL_PAGINATION, $vo);
 }
