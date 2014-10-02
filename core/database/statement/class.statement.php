@@ -2,6 +2,7 @@
 
 namespace LibreMVC\Database;
 use LibreMVC\Database\Driver\IDriver;
+use LibreMVC\Http\Header;
 
 /**
  * Class Statement
@@ -49,6 +50,14 @@ class Statement {
         // N'est pas un statement valid
         catch(\Exception $e) {
             //Header::badRequest();
+
+            if ($e->getCode() == 23000) {
+                // Doublons
+                Header::badRequest();
+                echo $e->getMessage();
+                return;
+            }
+
             return $e;
         }
         if( isset($this->toObject) ) {
