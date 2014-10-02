@@ -57,6 +57,8 @@ class RestController extends Controller{
      */
     protected $_salt = "salt";
 
+    public $_INPUTS;
+
     public function __construct( Request $request, $view = null ) {
         $this->_request = $request;
         $this->init();
@@ -67,20 +69,18 @@ class RestController extends Controller{
         if( !$this->_cachable ) {
             Header::noCache();
         }
-
         // Est ce un methode privée sans authentification
         if( !$this->_public && !$this->isLoginIn()) {
-
             $this->unauthorized();
+            Header::badRequest();
         }
-
         if( !$this->_public ) {
 
             $this->_user = new RestUser( $this->_request->httpHeader['User'],
                                          $this->_request->httpHeader['Token'],
                                          $this->_request->httpHeader['Timestamp']
             );
-            //var_dump($this->_user);
+
 
         }
 
@@ -94,6 +94,8 @@ class RestController extends Controller{
 
         // indexAction disponible
 
+        // Peuple.
+        parse_str(file_get_contents('php://input'), $this->_INPUTS);
     }
 
     /**
@@ -110,6 +112,7 @@ class RestController extends Controller{
      * @return bool
      */
     public function isLoginIn() {
+        //var_dump($this);
         //var_dump( isset( $this->_request->httpHeader['User'] ) && isset( $this->_request->httpHeader['Token'] ) && isset( $this->_request->httpHeader['Timestamp'] ));
         return ( isset( $this->_request->httpHeader['User'] ) && isset( $this->_request->httpHeader['Token'] ) && isset( $this->_request->httpHeader['Timestamp'] ));
     }
@@ -145,6 +148,7 @@ class RestController extends Controller{
      * @param $args
      */
     public function indexAction($args){
+        // @todo : Les variables globales $_GET, $_POST devraient être dans une var global $_INPUT
         switch( strtolower($this->_request->verb ) ) {
             //@todo options verb
             case 'options':
@@ -154,6 +158,7 @@ class RestController extends Controller{
             /**
              * ESt inutile recuperation variable depuis le dispatcher
              */
+            // @todo : A nettoyer parse_str
             case 'get':
                 // Peuple variable globale
                 parse_str(file_get_contents('php://input'), $_GET);
@@ -214,7 +219,6 @@ class RestController extends Controller{
         $user = User::load($this->_user->user,'login');
         // L'utilisateur n'existe pas.
         if(is_null($user)) {
-
             $this->unauthorized();
         }
         else {
@@ -226,13 +230,13 @@ class RestController extends Controller{
                                                             $user->publicKey .
                                                             $this->_user->timestamp .
                                                             $this->_salt ) ) {
+
                 // Et sa clef privé est valide.
-                if( User::hashPrivateKey($this->_user->login, $this->_user->token, $user->passPhrase) === $user->privateKey ) {
+                if( self::comparePublicPrivateKeys( $this->_user->login, $this->_user->token, $user ) ) {
                     // Continue
                     return true;
                 }
                 else {
-
                     $this->unauthorized();
                 }
             }
@@ -242,6 +246,10 @@ class RestController extends Controller{
         }
 
         return true;
+    }
+
+    static function comparePublicPrivateKeys($login, $publicKey, User $user) {
+        return (int) $user::hashPrivateKey($login, $publicKey, $user->passPhrase) == $user->privateKey;
     }
 
     /**
@@ -266,6 +274,10 @@ class RestController extends Controller{
                 echo $this->_reply->toString();
                 break;
         }
+    }
+
+    public function getVerb() {
+        return strtolower($this->_request->verb);
     }
 
 }
