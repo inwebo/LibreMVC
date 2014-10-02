@@ -113,7 +113,6 @@ class Entity {
             try {
 
                 $query = "UPDATE " . $class::$_table . ' SET ' . Query::toUpdate($tableCols) . ' WHERE ' . $pk . ' =?';
-                echo $query;
                 $arrayValues = array_merge($arrayValues, array($this->$pk));
                 $statement = $class::$_statement->query($query, $arrayValues );
                 if($statement instanceof \Exception) {
