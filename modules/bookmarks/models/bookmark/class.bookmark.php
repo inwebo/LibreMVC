@@ -21,24 +21,30 @@ class Bookmark extends Entity{
     public $tags;
     public $description;
     public $dt;
-    public $category;
-    public $public;
-    public $favicon;
-	
-    public function  __construct( $url, $title = "Bookmark", $tags = "new", $description ="todo", $dt, $category, $public, $favicon ) {
-        $this->url = $url;
+    public $category = 1;
+    public $public = 1;
+    //public $favicon;
+
+    public function  __construct( $url, $title , $tags, $description  ) {
+        $this->init($url, $title , $tags, $description);
+    }
+
+    public function init($url, $title , $tags, $description) {
+        $this->url = (is_null($url))? $this->url:$url;
         $this->hash = md5($this->url);
-        $this->title = $title;
-        $tags = new Tags($tags);
+        $this->title = (is_null($title))? $this->title:$title;
+        $tags = new Tags((is_null($tags))? $this->tags:$tags);
         $this->tags = $tags->toString();
-        $this->description = $description;
+        $this->description = (is_null($description))? $this->description:$description;
         $this->dt = $this->toSqlTimeStamp();
+        /*
         $this->category = $category;
         $this->public = $public;
         //@todo favicon
-        //$this->favicon = $favicon;
+        $this->favicon = $favicon;
+        */
     }
-	
+
 	public function dateHuman() {
 		$buffer    = explode( ' ', $this->dt );
 		$buffer[0] = implode( '-', array_reverse( explode( '-', $buffer[0] ) ) );
