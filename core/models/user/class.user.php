@@ -95,6 +95,22 @@ class User extends Entity {
         return $role;
     }
 
+    static public function factory( $login, $pwd, $pass, $role = 1) {
+        $u = new User();
+        $u->login = $login;
+        $u->password = sha1($pwd);
+        $u->passPhrase = sha1($pass);
+        $u->publicKey = self::hashPublicKey($u->login, $u->password);
+        $u->privateKey = self::hashPrivateKey($u->login, $u->publicKey,$u->passPhrase);
+        $u->id_role = 1;
+        return $u;
+    }
+
+    /**
+     * @param $user User login.
+     * @param $password User password, must be a sha1.
+     * @return bool Couple login/password exists
+     */
     static public function isValidUser($user, $password) {
         $class = get_called_class();
         $class::$_table = 'Users';
