@@ -2,7 +2,7 @@
 <div class="bookmarks-list" data-bookmark-id="<?php echo md5( $this->url) ?>" data-bookmark-dt="<?php echo $this->dt ?>" data-bookmark-id-category="<?php echo $this->category ?>" contenteditable="false">
     <dt>
         <!--<img width="16" height="16" src="http://www.inwebo.dev/LibreMVC/assets/img/favicon/<?php echo md5( $this->url) ?>.png">-->
-        <a href="<?php echo $this->url ?>"><?php echo stripslashes($this->title) ?></a><p>Ajouté le <?php echo $this->dt; ?></p>
+        <span class="bookmark-edit">edit</span> - <span class="bookmark-delete">delete</span> <a href="<?php echo $this->url ?>"><?php echo stripslashes($this->title) ?></a><p>Ajouté le <?php echo $this->dt; ?></p>
     </dt>
     <dd><?php echo $this->description ?>
         <?php
