@@ -1,40 +1,47 @@
-$(".bookmark-delete").on('click', function(){
-    var bookmark = $(this).closest('div.bookmarks-list');
+$( document ).ready(function() {
 
-    var title =  bookmark.first().find('a').first().html();
-    var hash =  bookmark.attr('data-bookmark-id');
+    $(".bookmark-delete").on('click', function(){
+        var bookmark = $(this).closest('div.bookmarks-list');
 
-    var r = confirm("Delete bookmark, " + title + ' ' + hash);
+        var title =  bookmark.first().find('a').first().html();
+        var hash =  bookmark.attr('data-bookmark-id');
 
-    if( r ) {
-        $.ajax({
-            type: "DELETE",
-            url: "http://bookmarks.inwebo.dev/api/bookmark/",
-            data:{
-                hash:hash
-            },
-            headers: {
-                Accept : "application/json",
-                "Content-Type": "application/json"
-            },
-            beforeSend:function(xhr){
-                var timestamp = Date.now();
-                xhr.setRequestHeader('User', 'test');
-                xhr.setRequestHeader('Timestamp', timestamp);
-                xhr.setRequestHeader('Token', 'test');
-            }
-        }).error(function(msg){
-            console.log(msg);
-        }).done(function( msg ) {
-            console.log(msg);
-            bookmark.remove();
-        });
-    }
+        var r = confirm("Delete bookmark, " + title + ' ' + hash);
 
-} );
+        if( r ) {
+            $.ajax({
+                type: "DELETE",
+                url: "%restService%",
+                data:{
+                    hash:hash
+                },
+                headers: {
+                    Accept : "application/json",
+                    "Content-Type": "application/json"
+                },
+                beforeSend:function(xhr){
+                    var timestamp = Date.now();
+                    xhr.setRequestHeader('User', '%user%');
+                    xhr.setRequestHeader('Token', '%publicKey%');
+                    xhr.setRequestHeader('Timestamp', timestamp);
+                }
+            }).error(function(msg){
+                console.log(msg);
+            }).done(function( msg ) {
+                console.log(msg);
+                bookmark.remove();
+            });
+        }
 
-$(".bookmark-edit").on('click', function(){
-    var bookmark = $(this).closest('div.bookmarks-list');
-    var hash =  bookmark.attr('data-bookmark-id');
-    window.open("http://bookmarks.inwebo.dev/api/bookmark/form/" + hash);
-} );
+    } );
+
+    $(".bookmark-edit").on('click', function(){
+        var bookmark = $(this).closest('div.bookmarks-list');
+        var hash =  bookmark.attr('data-bookmark-id');
+        window.open(
+            "%restService%form/" + hash,
+            'Save me !',
+            'location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0'
+        );
+    } );
+});
