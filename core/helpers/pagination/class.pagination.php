@@ -237,4 +237,47 @@ class Pagination {
         }
     }
 
+    public function getInterval( $interval ) {
+
+        $index = $this->index;
+        $pages = $this->max;
+
+        $start  = 0;
+        $end    = 0;
+
+        $plage = $interval * 2 + 1;
+
+        if( $index - $interval > 0 && $index + $interval <= $pages ) {
+
+            $start = $index-$interval;
+            $end    = $index + $interval;
+        }
+
+        if( $index <= $pages ) {
+            // Borne moins en dehors
+            if( $index - $interval <= 0 ) {
+                $start = 1;
+                $end = $plage + $start;
+            }
+            elseif($index <= $interval) {
+
+                $start = 1;
+                $end = ($interval*2+1)-($index - $interval);
+            }
+            else {
+
+                $start = $index - $interval;
+                $end = $index + $interval;
+            }
+
+            if( $index + $interval >= $pages ) {
+                $end = $pages;
+                $start = $pages-$plage;
+            }
+
+        }
+
+        return array($start, $end);
+    }
+
 }
