@@ -3,14 +3,14 @@
  */
 $(document).ready(function() {
     // Namespace
-    LibreMVC = window.LibreMVC = window.LibreMVC || {};
-    LibreMVC.Modules = LibreMVC.Modules || {};
-    LibreMVC.Config = LibreMVC.Config || {};
-    LibreMVC.Config = LibreMVC.Config || {};
+    LibreMVC            = window.LibreMVC = window.LibreMVC || {};
+    LibreMVC.Modules    = LibreMVC.Modules                  || {};
+    LibreMVC.Config     = LibreMVC.Config                   || {};
+    LibreMVC.Config     = LibreMVC.Config                   || {};
 
     LibreMVC.Modules.Bookmarks = {
         Config: {
-            RestService:""
+
         },
         Create: {
 
@@ -25,7 +25,5 @@ $(document).ready(function() {
 
         }
     };
-
-    $('#breadcrumbs').affix({});
 
 });
