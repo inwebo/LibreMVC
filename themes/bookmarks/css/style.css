@@ -299,3 +299,7 @@ FORM
             .bookmarks-list dd li a {
                 margin-left: 1em;
             }
+
+.form-control {
+    width: inherit;
+}
