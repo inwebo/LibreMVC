@@ -28,6 +28,8 @@ class Environnement {
 
     protected static $_instance;
 
+    public $paths;
+
     /**
      * Constructeur privé.
      * Pattern singleton
@@ -73,5 +75,7 @@ class Environnement {
             return $this->$key;
         }
     }
+
+    public function process(){}
 
 }
