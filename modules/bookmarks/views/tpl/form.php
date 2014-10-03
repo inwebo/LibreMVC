@@ -1,8 +1,19 @@
 <?php
-    use LibreMVC\Mvc\Environnement;
     $bookmark = $this->bookmark;
 ?>
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Bookmarks agent</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php baseCss(); ?>bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="<?php instanceCss(); ?>style.css">
+</head>
+
+<body id="form">
+
 <script>
 
     $(document).ready(function(){
@@ -35,25 +46,26 @@
                     //self.close();
                 },2000);
             }).done(function( msg ) {
-                    $('#msgRestBookmark').toggle();
-                    $('#msgRestBookmarkTrue').toggle();
-                    setTimeout(function(){
-                        //self.close();
-                    },2000);
-                });
+                $('#msgRestBookmark').toggle();
+                $('#msgRestBookmarkTrue').toggle();
+                setTimeout(function(){
+                    //self.close();
+                },2000);
+            });
         });
     });
 
 </script>
+
+
 <div id="msgRestBookmark" class="shadowBackground" style="display: none;">
     <div id="msgRestBookmarkFalse" class="msgRestCreateBookmark msgRestCreateBookmarkError" style="display: none;">
         <p>Already in base !</p>
     </div>
     <div id="msgRestBookmarkTrue" class="msgRestCreateBookmark msgRestCreateBookmarkValid" style="display: none;">
-        <p>Added to the base!</p>
+        <p>Saved</p>
     </div>
 </div>
-<?php //var_dump( $this ); ?>
 <div class="col-md-12">
     <div class="col-container">
         <form id="bookmark" class="form-horizontal" role="form">
@@ -97,3 +109,7 @@
         </form>
     </div>
 </div>
+
+</body>
+</html>
+
