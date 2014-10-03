@@ -1,14 +1,9 @@
-<?php
-    $interval = 11;
-    $startIterator = ( $this->index > $interval ) ? $this->index - $interval : 1;
-    $stopIterator = ( ( $this->index + $interval ) < $this->max ) ? $this->index + $interval : $this->max;
-?>
 <ul class="pagination">
     <li><a href="<?php echo $this->baseUri . $this->min; ?>">&laquo;</a></li>
     <?php if( $this->hasPrev ) { ?>
         <li><a href="<?php echo $this->baseUri . $this->prev; ?>">&LeftArrow;</a></li>
     <?php } ?>
-    <?php for($v =$startIterator;$v <= $stopIterator ;$v++) { ?>
+    <?php for($v =$this->interval->start;$v <= $this->interval->stop ;$v++) { ?>
     <li class="<?php echo (($v == $this->index) ? $this->activeClass : "") ; ?>"><a href="<?php echo $this->baseUri . $v; ?>" ><?php echo $v ?></a></li>
     <?php } ?>
     <?php if( $this->hasNext ) { ?>
