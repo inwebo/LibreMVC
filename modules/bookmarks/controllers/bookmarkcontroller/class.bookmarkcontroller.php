@@ -124,6 +124,9 @@ class BookmarkController extends RestController{
         $bookmark = new Bookmark($this->_INPUTS['url'], $this->_INPUTS['title'], $this->_INPUTS['keywords'], $this->_INPUTS['description']);
         $bookmark->category = 1;
         $bookmark->public = 1;
+
+        $c = Bookmark::loadAll()->count();
+        $this->_reply->msg = $c;
         $bookmark->save();
     }
 
