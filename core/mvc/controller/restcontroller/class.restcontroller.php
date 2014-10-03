@@ -249,6 +249,8 @@ class RestController extends Controller{
     }
 
     static function comparePublicPrivateKeys($login, $publicKey, User $user) {
+        //var_dump($user::hashPrivateKey($login, $publicKey, $user->passPhrase) );
+        //var_dump($user->privateKey);
         return (int) $user::hashPrivateKey($login, $publicKey, $user->passPhrase) == $user->privateKey;
     }
 
