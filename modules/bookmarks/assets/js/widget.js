@@ -24,4 +24,7 @@ javascript:(function(){
     }
 
     window.open(restService+'?user='+user+'&publicKey='+publicKey+'&url='+bookmark.url+'&title='+bookmark.title+'&description='+'&keywords='+bookmark.keywords+'&favicon='+bookmark.favicon,'Save me !','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
+
+
+
 })();
