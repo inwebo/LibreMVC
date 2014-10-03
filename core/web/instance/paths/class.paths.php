@@ -10,13 +10,24 @@
 namespace LibreMVC\Web\Instance;
 
 use LibreMVC\Files\Config;
+use LibreMVC\Mvc\Environnement;
+use LibreMVC\System\Boot\Mvc;
 
 class Paths {
 
     protected $_config;
 
-    public function __construct( $config ) {
+    public $realPath;
+
+    public $placeholders;
+    public $replacements;
+
+    public function __construct( Config $config ) {
         $this->_config = $config;
+    }
+
+    public function pushPlaceholder( $array ) {
+        $this->placeholders = array_merge($this->placeholders,$array);
     }
 
     public function  processBasePath( $placeHolders, $patterns ) {
@@ -35,6 +46,10 @@ class Paths {
         $search = array_keys($treePool);
         $replace = array_values($treePool);
         return str_replace($search, $replace, $stringToProcess);
+    }
+
+    public function processRealPath( $realPath = true ) {
+
     }
 
 }
