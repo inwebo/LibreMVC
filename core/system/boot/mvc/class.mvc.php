@@ -179,6 +179,9 @@ class Mvc {
         self::$environnement->basePaths =self::$paths['base'];
         self::$environnement->themes =self::$paths['themes'];
         Mvc::debug(self::$paths);
+
+
+
         //var_dump(self::$paths);
     }
 
