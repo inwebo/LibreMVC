@@ -37,8 +37,14 @@ function renderBody($path, $vo) {
     $v->render();
 }
 
-function partial($path, $vo) {
-    renderBody($path,$vo);
+function partial( $path, \LibreMVC\View\ViewObject $vo ) {
+    try {
+        $v = LibreMVC\View::partial($path, $vo);
+        $v->render();
+    }
+    catch(\Exception $e) {
+        var_dump($e);
+    }
 }
 
 function viewAction() {
