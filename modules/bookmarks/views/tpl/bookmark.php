@@ -1,16 +1,22 @@
-<?php // var_dump($this) ?>
 <div class="bookmarks-list" data-bookmark-id="<?php echo md5( $this->url) ?>" data-bookmark-dt="<?php echo $this->dt ?>" data-bookmark-id-category="<?php echo $this->category ?>" contenteditable="false">
     <dt>
-        <!--<img width="16" height="16" src="http://www.inwebo.dev/LibreMVC/assets/img/favicon/<?php echo md5( $this->url) ?>.png">-->
-        <span class="bookmark-edit">edit</span> - <span class="bookmark-delete">delete</span> <a href="<?php echo $this->url ?>"><?php echo stripslashes($this->title) ?></a><p>Ajouté le <?php echo $this->dt; ?></p>
+        <?php if($_SESSION['User']->login !== 'guest') { ?>
+            <div class="bookmark-editor">
+                <button type="button" class="bookmark-edit btn btn-warning btn-xs">E</button>
+                <button type="button" class="bookmark-delete btn btn-danger btn-xs">X</button>
+            </div>
+        <?php } ?>
+        <h2><a href="<?php echo $this->url ?>"><?php echo stripslashes($this->title) ?></a><p><small>Ajouté le <?php echo $this->dt; ?></small></p></h2>
     </dt>
-    <dd><?php echo $this->description ?>
-        <?php
-            $tags = new \LibreMVC\Modules\Bookmarks\Models\Bookmark\Tags($this->tags);
-            $tags = $tags->toArray();
-        ?>
+    <dd>
+        <p>
+        <?php echo $this->description ?>
+            <?php
+                $tags = new \LibreMVC\Modules\Bookmarks\Models\Bookmark\Tags($this->tags);
+                $tags = $tags->toArray();
+            ?>
+        </p>
         <ul>
-            <!--<li><span class="label label-info"><a href="tags/"><span class="glyphicon glyphicon-tags"></span> Tags</a></span></li>-->
             <?php foreach($tags as $tag) {?>
                 <li><span class="label label-primary"><a href="tag/<?php echo( $tag )?>"><?php echo( $tag )?></a></span></li>
             <?php } ?>

@@ -19,11 +19,6 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
                 <a class="navbar-brand" href="#">Bookmarks</a>
             </div>
             <div class="collapse navbar-collapse">
@@ -39,30 +34,18 @@
     </div>
     </div>
 </header>
-<div id="parallax-wrapper">
-    <div class="container">
-        <div class="starter-template">
-            <h1>Welcome</h1>
-            <p class="lead">Actuellement <?php echo $this->bookmarksCount ?> liens en base.</p>
-        </div>
-        <div class="row">
-                <div class="col-md-12">
-                    <div id="breadcrumbs" data-spy="affix" data-offset-top="100">
-                        <ol class="breadcrumb">
-                            <li>Index</li>
-                        </ol>
-                    </div>
-                </div>
-        </div>
-        <?php renderBody( viewAction(), $this ); ?>
-    </div>
+<div class="fadeTop">&nbsp;</div>
+<div id="body" class="container"><a name="top"></a>
+    <?php renderBody( viewAction(), $this ); ?>
 </div>
 
 <footer>
     <div class="container">
         <div class="row">
-            <div class="col-md-10"><div class="col-container"><p>Footer</p></div></div>
-            <div class="col-md-2"><div class="col-container text-center"><a class="footer-backtotop" href="#">TOP</a> </div></div>
+            <div class="col-md-8 text-center">
+                <div class="col-container"><p>Propulsé par LibreMVC.</p></div>
+            </div>
+            <div class="col-md-4 text-center"><div class="col-container text-center"> <div id="toTop"><a class="footer-backtotop" href="#top">TOP</a></div></div></div>
         </div>
     </div>
 </footer>
