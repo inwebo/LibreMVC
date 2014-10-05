@@ -169,7 +169,6 @@ class Pagination {
     }
 
     public function current() {
-        var_dump($this);
         return $this->page((int)$this->index, true);
     }
 
