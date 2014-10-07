@@ -11,6 +11,6 @@
 
 <body id="home">
 <h1>HTML5 boilerplate</h1>
-<?php renderBody( viewAction(), $this ); ?>
+<?php $this->partial( 'body' )->render(); ?>
 </body>
 </html>
