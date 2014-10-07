@@ -12,23 +12,19 @@ namespace LibreMVC\Mvc;
 
 class Environnement {
 
-    protected $readOnly = false;
-
-    /*
-     * @todo
-    public $paths;
-    public $baseUrls;
-    */
-
-    public $instance;
-    public $route;
-
-    public $css;
-    public $js;
-
     protected static $_instance;
-
+    public $basePaths;
+    public $config;
+    public $css;
+    public $instance;
+    public $js;
+    // est null ?
     public $paths;
+    protected $readOnly = false;
+    public $route;
+    public $templateAction;
+    public $themes;
+    public $urls;
 
     /**
      * Constructeur privé.
