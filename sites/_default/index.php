@@ -5,10 +5,13 @@
     <meta name="keywords" content="">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <base href="<?php getBaseHref(); ?>">
-    <link type="text/css" rel="stylesheet" href="<?php baseCss(); ?>bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="<?php instanceCss(); ?>style.css">
-    <script src="<?php baseJs(); ?>jquery.min.js"></script>
+    <base href="<?php echo getBaseUrl(); ?>">
+    <?php foreach(getCss() as $v) { ?>
+        <link type="text/css" rel="stylesheet" href="<?php echo $v ?>">
+    <?php } ?>
+    <?php foreach(getJs() as $v) { ?>
+        <script src="<?php echo $v ?>"></script>
+    <?php } ?>
 </head>
 <body>
 <header>
@@ -45,15 +48,14 @@
                     </div>
                 </div>
         </div>
-        <?php renderBody( viewAction(), $this ); ?>
+        <?php $this->partial( 'body' )->render(); ?>
     </div>
 </div>
 
 <footer>
     <div class="container">
         <div class="row">
-            <div class="col-md-10"><div class="col-container"></div></div>
-            <div class="col-md-2"><div class="col-container text-center"></div></div>
+            <div class="col-md-12"><div class="col-container"></div></div>
         </div>
     </div>
 </footer>
