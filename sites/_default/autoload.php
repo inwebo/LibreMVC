@@ -6,7 +6,7 @@ try {
     LibreMVC\AutoLoader::instance()->addPool( './' );
 
     $base_uri = getInstanceBaseUri();
-
+    
     // FILO routes
     $defaultRoute = new Route( $base_uri . '[:action][/]',
     	'\LibreMVC\Controllers\HomeController',
