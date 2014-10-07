@@ -1,40 +1,32 @@
 <?php
-/**
- *
- */
-
 use LibreMVC\Mvc\Environnement;
 
-function css() {
-    foreach (ev()->Theme->assets->css as $css) {
-        echo $css;
-    }
-}
-function js() {
-    foreach (Environnement::this()->Theme->assets->js as $js) {
-        echo $js;
-    }
+function getBaseUrl() {
+    return ev()->instance->getBaseUrl();
 }
 
-function getBreadCrumbs() {
-
+function getBaseAssetsFolder() {
+    return ev()->Files->core['url']['global_assets'];
 }
 
-function vb() {
-    return \LibreMVC\View\Template\ViewBag::get();
+function getBaseJsFolder() {
+    return ev()->Files->core['url']['global_assets_js'];
 }
 
-/**
- * Retourne l environnement courant
- * @return \LibreMVC\Mvc\ViewBag
- */
+function getBaseCssFolder() {
+    return ev()->Files->core['url']['global_assets_css'];
+}
+
+function getThemeBaseFolder($theme) {
+    return ev()->Files->Themes[$theme]['url']['base'];
+}
+
+function getThemeBaseUrl($theme) {
+    return ev()->Files->Themes[$theme]['realPath']['base'];
+}
+
 function ev() {
     return \LibreMVC\Mvc\Environnement::this();
-}
-
-function renderBody($path, $vo) {
-    $v = LibreMVC\View::partial($path, $vo);
-    $v->render();
 }
 
 function partial( $path, \LibreMVC\View\ViewObject $vo ) {
@@ -47,44 +39,15 @@ function partial( $path, \LibreMVC\View\ViewObject $vo ) {
     }
 }
 
-function viewAction() {
-    return ev()->templateAction;
+function getCss() {
+    return ev()->Files->css;
 }
 
-function getInstanceUri() {
-    return \LibreMVC\Http\Context::getBaseUri();
+function getJs() {
+    return ev()->Files->js;
 }
 
-function baseJs() {
-    echo(ev()->basePaths->global_assets_js);
-}
-
-function instanceJs() {
-    echo(ev()->urls->instance->instance_assets_js);
-}
-
-function baseCss() {
-    echo(ev()->basePaths->global_assets_css);
-}
-
-function instanceCss() {
-    echo(ev()->themes['default']->theme_baseUrl_css);
-}
-
-function themeCssFiles()  {
-    foreach(ev()->css as $k => $v) {
-        //var_dump($v);
-    }
-}
-
-/**
- * Ajoute un item au bread crumb.
- */
 function addToBreadCrumbs() {}
-
-function getBaseHref() {
-    echo Environnement::this()->instance->getBaseUrl();
-}
 
 function getInstanceBaseUri() {
     $baseUri =  trim(Environnement::this()->instance->getInstanceBaseUri(),'/');
@@ -100,3 +63,11 @@ function getInstanceBaseUri() {
 function vd($var) {
     var_dump($var);
 }
+
+/**
+ * Snippets
+ */
+/*if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
+    $salt = '$2y$11$' . substr(md5(uniqid(rand(), true)), 0, 22);
+    return crypt($password, $salt);
+}*/
