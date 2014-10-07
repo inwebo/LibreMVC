@@ -23,8 +23,15 @@ javascript:(function(){
         }
     }
 
-    window.open(restService+'?user='+user+'&publicKey='+publicKey+'&url='+bookmark.url+'&title='+bookmark.title+'&description='+'&keywords='+bookmark.keywords+'&favicon='+bookmark.favicon,'Save me !','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
-
-
-
+    window.open(
+        restService +   '?user=' + user +
+                        '&publicKey=' + publicKey +
+                        '&url=' + bookmark.url +
+                        '&title=' + bookmark.title +
+                        '&description=' + bookmark.description +
+                        '&keywords=' + bookmark.keywords +
+                        '&favicon=' + bookmark.favicon,
+        'BookmarksForm',
+        'location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=640,height=490,left=0,top=0'
+    ).focus();
 })();

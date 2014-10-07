@@ -40,8 +40,8 @@ $( document ).ready(function() {
         var hash =  bookmark.attr('data-bookmark-id');
         window.open(
             "%restService%form/" + hash,
-            'Save me !',
-            'location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0'
+            'BookmarksForm',
+            'location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=640,height=490,left=0,top=0'
         );
     } );
 });
