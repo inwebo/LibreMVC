@@ -1,4 +1,3 @@
-<?php themeCssFiles() ?>
 <html>
 <head>
     <title><?php echo $this->_meta->title ?></title>
@@ -6,117 +5,88 @@
     <meta name="keywords" content="">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <base href="<?php getBaseHref(); ?>">
-    <link type="text/css" rel="stylesheet" href="<?php baseCss(); ?>bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="<?php instanceCss(); ?>style.css">
+    <base href="<?php echo getBaseUrl(); ?>">
+    <?php foreach(getCss() as $v) { ?>
+        <link type="text/css" rel="stylesheet" href="<?php echo $v ?>">
+    <?php } ?>
+    <?php foreach(getJs() as $v) { ?>
+        <script src="<?php echo $v ?>"></script>
+    <?php } ?>
     <?php foreach(ev()->css as $k => $v) { ?>
         <link type="text/css" rel="stylesheet" href="<?php echo $v; ?>">
     <?php } ?>
-    <script src="<?php baseJs(); ?>jquery.min.js"></script>
-    <?php foreach(ev()->js as $k => $v) { ?>
-        <script src="<?php instanceJs(); ?>"></script>
-    <?php } ?>
-</head>
-<body><div class="wrapper">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // cache the window object
+            $window = $(window);
 
-    <div class="info-bar">
+            var px = window.innerHeight - $('.navbar.navbar-inverse.navbar-fixed-top').height();
+            $('#intro').height(px);
+            console.log(px);
+            $('section[data-type="background"]').each(function(){
+                // declare the variable to affect the defined data-type
+                var $scroll = $(this);
+
+                $(window).scroll(function() {
+                    // HTML5 proves useful for helping with creating JS functions!
+                    // also, negative value because we're scrolling upwards
+                    var yPos = -($window.scrollTop() / $scroll.data('speed'));
+
+                    // background position
+                    var coords = '50% '+ yPos + 'px';
+
+                    // move the background
+                    $scroll.css({ backgroundPosition: coords });
+                }); // end window scroll
+            });  // end section function
+        }); // close out script
+    </script>
+</head>
+<body>
+<header>
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="icon cmn-tut" data-title="Back To Tutorial" href="http://www.callmenick.com/?p=722"></a>
-            <a class="icon cmn-prev" data-title="Pevious Demo - Simple Parallax Scrolling Effect" href="http://callmenick.com/tutorial-demos/simple-parallax-effect/"></a>
-            <!-- <a class="icon cmn-next" data-title="Next Demo - " href="http://www.callmenick.com/tutorial-demos/..."></a> -->
-            <a class="icon cmn-download" data-title="Download Source" href="http://www.callmenick.com/tutorial-demos/advanced-parallax-effect/advanced-parallax-effect-source.zip"></a>
-            <a class="icon cmn-archive" data-title="Tutorial Archives" href="http://www.callmenick.com/category/tutorials/"></a>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Julien Hannotin</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav pull-right">
+                    <li> <a href="wam/">Wam</a></li>
+                    <li> <a href="musicophagie/">Musicophagie</a></li>
+                    <li> <a href="curriculum-vitae/">Pro</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-
-    <main>
-
-        <section class="module parallax parallax-1">
-            <div class="container">
-                <h1>Motion</h1>
-            </div>
-        </section>
-
-        <section class="module content">
-            <div class="container">
-                <h2>Lorem Ipsum Dolor</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil consequuntur, nesciunt dicta, esse rem ducimus itaque quis. Adipisci ullam nam qui illum debitis sit ad in delectus, repudiandae non dolorum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit veritatis, facere aliquid itaque tempore consequatur nihil sint enim aliquam id saepe magnam totam repellat placeat a fugit nulla molestias voluptas.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta cum distinctio eum asperiores rem enim fugit eaque voluptas est laboriosam in repudiandae architecto placeat, illum atque quasi explicabo, culpa, molestias!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit voluptas, aperiam quae provident, recusandae rem quis. Ut quaerat, quasi iste voluptate et dolorem atque sed neque voluptates, molestias dolor enim!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam odit tempore, quibusdam impedit deserunt. Natus quisquam, facilis numquam, molestias nesciunt modi, at debitis maxime sunt et quo quas labore perferendis.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde delectus laborum doloremque recusandae, debitis maxime a! Nihil distinctio ex, cumque tempore ea voluptas omnis odit, quaerat natus nam excepturi corporis!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque eius harum atque unde nihil aut quam provident sunt, iste error vitae suscipit dolores cupiditate totam, eum quae alias! Dicta, nisi.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate beatae impedit officia quis odit rerum sequi, explicabo commodi illum suscipit, tempore eum doloremque quae obcaecati tempora quidem neque sapiente modi?</p>
-            </div>
-        </section>
-
-        <section class="module parallax parallax-2">
-            <div class="container">
-                <h1>Shape</h1>
-            </div>
-        </section>
-
-        <section class="module content">
-            <div class="container">
-                <h2>Lorem Ipsum Dolor</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil consequuntur, nesciunt dicta, esse rem ducimus itaque quis. Adipisci ullam nam qui illum debitis sit ad in delectus, repudiandae non dolorum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit veritatis, facere aliquid itaque tempore consequatur nihil sint enim aliquam id saepe magnam totam repellat placeat a fugit nulla molestias voluptas.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta cum distinctio eum asperiores rem enim fugit eaque voluptas est laboriosam in repudiandae architecto placeat, illum atque quasi explicabo, culpa, molestias!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit voluptas, aperiam quae provident, recusandae rem quis. Ut quaerat, quasi iste voluptate et dolorem atque sed neque voluptates, molestias dolor enim!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam odit tempore, quibusdam impedit deserunt. Natus quisquam, facilis numquam, molestias nesciunt modi, at debitis maxime sunt et quo quas labore perferendis.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde delectus laborum doloremque recusandae, debitis maxime a! Nihil distinctio ex, cumque tempore ea voluptas omnis odit, quaerat natus nam excepturi corporis!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque eius harum atque unde nihil aut quam provident sunt, iste error vitae suscipit dolores cupiditate totam, eum quae alias! Dicta, nisi.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate beatae impedit officia quis odit rerum sequi, explicabo commodi illum suscipit, tempore eum doloremque quae obcaecati tempora quidem neque sapiente modi?</p>
-            </div>
-        </section>
-
-        <section class="module parallax parallax-3">
-            <div class="container">
-                <h1>Colour</h1>
-            </div>
-        </section>
-
-        <section class="module content">
-            <div class="container">
-                <h2>Lorem Ipsum Dolor</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil consequuntur, nesciunt dicta, esse rem ducimus itaque quis. Adipisci ullam nam qui illum debitis sit ad in delectus, repudiandae non dolorum! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit veritatis, facere aliquid itaque tempore consequatur nihil sint enim aliquam id saepe magnam totam repellat placeat a fugit nulla molestias voluptas.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta cum distinctio eum asperiores rem enim fugit eaque voluptas est laboriosam in repudiandae architecto placeat, illum atque quasi explicabo, culpa, molestias!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit voluptas, aperiam quae provident, recusandae rem quis. Ut quaerat, quasi iste voluptate et dolorem atque sed neque voluptates, molestias dolor enim!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam odit tempore, quibusdam impedit deserunt. Natus quisquam, facilis numquam, molestias nesciunt modi, at debitis maxime sunt et quo quas labore perferendis.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde delectus laborum doloremque recusandae, debitis maxime a! Nihil distinctio ex, cumque tempore ea voluptas omnis odit, quaerat natus nam excepturi corporis!</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque eius harum atque unde nihil aut quam provident sunt, iste error vitae suscipit dolores cupiditate totam, eum quae alias! Dicta, nisi.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate beatae impedit officia quis odit rerum sequi, explicabo commodi illum suscipit, tempore eum doloremque quae obcaecati tempora quidem neque sapiente modi?</p>
-            </div>
-        </section>
-
-    </main><!-- /main -->
-
-    <footer>
-        <div class="container">
-            <div class="asides clearfix">
-                <aside>
-                    <nav>
-                        <ul>
-                            <li><a href="http://www.callmenick.com/">Welcome</a></li>
-                            <li><a href="http://www.callmenick.com/category/tutorials">Tutorials</a></li>
-                            <li><a href="http://www.callmenick.com/category/snippets">Snippets</a></li>
-                            <li><a href="http://www.callmenick.com/category/articles">Articles</a></li>
-                            <li><a href="http://www.callmenick.com/category/resources">Resources</a></li>
-                        </ul>
-                    </nav>
-                </aside>
-                <aside>
-                    <nav>
-                        <ul>
-                            <li><a href="http://www.callmenick.com/archive/">Archive</a></li>
-                            <li><a href="http://www.callmenick.com/about">About</a></li>
-                            <li><a href="http://www.callmenick.com/contact">Contact</a></li>
-                            <li><a href="http://www.callmenick.com/subscribe">Subscribe</a></li>
-                        </ul>
-                    </nav>
-                </aside>
-                <aside class="logo">
-                    <a href="http://www.callmenick.com/"><img alt="Tutorials, Snippets, Resources, and Articles for Web Design and Web Development" onerror="this.src=logo-alt.png" src="img/core/logo-alt.svg"></a>
-                </aside>
-            </div>
-            <div class="copyright">
-                <small>
-                    &copy; 2014, Nick Salloum<br><a href="http://callmenick.com">callmenick.com</a>
-                </small>
+    </div>
+</header>
+<!-- Section 1 -->
+<section id="intro" data-speed="6" data-type="background">
+    <div class="container">
+        Content goes here!
+    </div>
+</section>
+<!-- Section 2 -->
+<section id="home" data-speed="4" data-type="background">
+    <div class="container">
+        More content goes here!
+    </div>
+</section>
+<!-- Section 3 -->
+<section id="about" data-speed="2" data-type="background">
+    <div class="container">
+        This is the final section!
+    </div>
+</section>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                contact
             </div>
         </div>
-    </footer><!-- /footer -->
-
-</div><!-- /#wrapper -->
+    </div>
+</footer>
 </body>
 </html>

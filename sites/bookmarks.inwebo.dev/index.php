@@ -6,13 +6,13 @@
     <meta name="keywords" content="">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <base href="<?php getBaseHref(); ?>">
-    <link type="text/css" rel="stylesheet" href="<?php baseCss(); ?>bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="<?php instanceCss(); ?>style.css">
-    <?php foreach(ev()->css as $k => $v) { ?>
-        <link type="text/css" rel="stylesheet" href="<?php echo $v; ?>">
+    <base href="<?php echo getBaseUrl(); ?>">
+    <?php foreach(getCss() as $v) { ?>
+        <link type="text/css" rel="stylesheet" href="<?php echo $v ?>">
     <?php } ?>
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <?php foreach(getJs() as $v) { ?>
+        <script src="<?php echo $v ?>"></script>
+    <?php } ?>
 </head>
 <body>
 <header>
@@ -36,18 +36,18 @@
 </header>
 <div class="fadeTop">&nbsp;</div>
 <div id="body" class="container"><a name="top"></a>
-    <?php renderBody( viewAction(), $this ); ?>
+    <?php $this->partial( 'body' )->render(); ?>
 </div>
 
 <footer>
     <div class="container">
         <div class="row">
-            <div class="col-md-8 text-center">
-                <div class="col-container"><p>Propulsé par LibreMVC.</p></div>
+            <div class="col-md-12">
+                <div class="col-container text-center"><p><a href="https://github.com/inwebo/LibreMVC" target="">Propulsé par LibreMVC</a>.</p></div>
             </div>
-            <div class="col-md-4 text-center"><div class="col-container text-center"> <div id="toTop"><a class="footer-backtotop" href="#top">TOP</a></div></div></div>
         </div>
     </div>
+    <div id="toTop"><a class="footer-backtotop" href="#top">TOP</a></div>
 </footer>
 </body>
 </html>
