@@ -18,6 +18,16 @@ use \StdClass;
  */
 class ViewObject extends StdClass implements IDataProvider {
 
+    /**
+     * Views collection
+     * @var \StdClass
+     */
+    protected $_partials;
+
+    public function __construct(){
+        $this->_partials = new \StdClass;
+    }
+
     static public function map( $object ) {
         $_this = new self;
         foreach($object as $k => $v) {
@@ -32,12 +42,17 @@ class ViewObject extends StdClass implements IDataProvider {
      * @param $viewFile Un fichier à inclure.
      * @return string Le contenus parsé par PHP
      */
-    public function strongTypedView($viewFile) {
-        ob_start();
-        include($viewFile);
-        $content = ob_get_contents();
-        ob_end_clean();
-        return $content;
+    public function strongTypedView( $viewFile ) {
+        if( is_file($viewFile) ) {
+            ob_start();
+            include($viewFile);
+            $content = ob_get_contents();
+            ob_end_clean();
+            return $content;
+        }
+        else {
+            trigger_error(__CLASS__ . ' ' . __FUNCTION__ . ' ' . __LINE__ . ' ' . 'View file : ' . $viewFile . ' doesn\'t exists.');
+        }
     }
 
     public function propertyExists($property) {
@@ -52,4 +67,23 @@ class ViewObject extends StdClass implements IDataProvider {
         return isset($this->$property);
     }
 
+    public function attachPartial( $name, View $view ) {
+        return ( $this->_partials->$name = $view );
+    }
+
+    public function removePartial( $name ) {
+        if( isset($this->_partials->$name ) ) {
+            unset( $this->_partials->$name );
+        }
+    }
+
+    public function partial( $name ) {
+        if( isset( $this->_partials->$name ) ) {
+            return $this->_partials->$name;
+        }
+    }
+
+    public function getPartials() {
+        return $this->_partials;
+    }
 }
