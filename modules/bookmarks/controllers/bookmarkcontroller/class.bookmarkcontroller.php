@@ -127,7 +127,13 @@ class BookmarkController extends RestController{
 
         $c = Bookmark::loadAll()->count();
         $this->_reply->msg = $c;
-        $bookmark->save();
+        try {
+            $bookmark->save();
+        }
+        catch(\Exception $e) {
+            $this->_reply->msg = "integrity";
+        }
+
     }
 
     /**
