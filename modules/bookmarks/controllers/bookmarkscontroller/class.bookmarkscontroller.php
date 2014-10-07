@@ -62,7 +62,8 @@ class BookmarksController extends PageController{
         $this->toView("bookmarks", ViewObject::map($bookmarks));
         $this->toView("pagination", $pagination);
         $this->toView("bookmarksCount", $this->_totalBookmarks);
-        $this->_head->title = "My.Bookmarks actuellement " . $this->_totalBookmarks . " bookmarks, page " . $page . " sur " . $pagination->max;
+        //$this->_head->title = "My.Bookmarks actuellement " . $this->_totalBookmarks . " bookmarks, page " . $page . " sur " . $pagination->max;
+        $this->_head->title = "Inwebo's &hearts; bookmarks.";
 
         $crud = $this->injectStringsToView(
             BOOKMARKS_CRUD,
@@ -78,11 +79,13 @@ class BookmarksController extends PageController{
             )
         );
         $this->toView("crud",$crud);
+
         $this->_view->render();
     }
 
     public function tagAction( $tag ) {
         $tags = $this->_db->query('SELECT * FROM ' . $this->_tables . ' WHERE tags LIKE "%' . $tag . '%" ORDER BY dt desc', array($tag))->all();
+        //$tags = $this->_db->query('SELECT * FROM ' . $this->_tables . ' WHERE LOCATE('. $tag .',tags) ORDER BY dt desc', array($tag))->all();
         $this->toView("tags",ViewObject::map($tags));
         $this->_head->title = "My.Bookmarks tag : '" .  $tag . "' " . count($tags) . " résultats.";
         //var_dump(Environnement::this());
@@ -100,6 +103,7 @@ class BookmarksController extends PageController{
             )
         );
         $this->toView("crud",$crud);
+        $this->toView("total",count($tags));
         $this->_view->render();
 
     }
@@ -115,6 +119,7 @@ class BookmarksController extends PageController{
         $this->toView('tags',$tagsObject);
 
         $this->_head->title = "My.Bookmarks " . $totalTags . " tags.";
+        $this->toView('total', $totalTags);
 
         $this->_view->render();
     }
