@@ -9,13 +9,15 @@ use LibreMVC\Mvc\Controller\AuthPageController;
 use LibreMVC\Database;
 use LibreMVC\Mvc\Environnement;
 use LibreMVC\Sessions;
+use LibreMVC\View;
 use LibreMVC\View\Template;
 
 class LoginController extends AuthPageController {
     public $_public = true;
 
     public function init() {
-        Environnement::this()->templateAction = getcwd() . "/modules/login/views/tpl/form.php";
+        $this->_view->getDataProvider()->removePartial('body');
+        $this->_view->getDataProvider()->attachPartial('body', View::partial(getcwd() . "/modules/login/views/tpl/form.php"));
     }
 
     public function inAction() {
