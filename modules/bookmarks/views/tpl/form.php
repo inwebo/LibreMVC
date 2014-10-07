@@ -22,7 +22,6 @@ $bookmark = $this->bookmark;
     $(document).ready(function(){
         var login = '<?php echo $this->login ?>';
         var publicKey = '<?php echo $this->publicKey ?>';
-
         $('#bookmark-save').on('click',function(){
             $.ajax({
                 type: "<?php echo $this->verb ?>",
