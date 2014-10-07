@@ -61,11 +61,13 @@ class Dispatcher {
             return new $this->_route->controller( $this->_request, $this->_view );
         }
         else {
+            // ???????
             var_dump($this->_route);
             ob_start();
             var_dump($this);
             $msg=ob_get_contents();
             ob_get_clean();
+
             throw new DispatcherUnknownController("Unknown controller " . $this->_route->controller);
         }
     }
