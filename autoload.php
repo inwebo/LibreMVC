@@ -1,73 +1,37 @@
 <?php
-include( dirname(__FILE__) . "/core/autoloader/class.autoloader.php" );
-include('core/standart.php');
-include('core/helpers.php');
 
-use LibreMVC\Mvc\Environnement;
 use LibreMVC\System\Boot;
+use LibreMVC\System\Boot\Requirements;
 use LibreMVC\System\Boot\Mvc;
 use LibreMVC\AutoLoader;
-use LibreMVC\Views\Template\ViewBag;
-use LibreMVC\Http\Header;
-use LibreMVC\Errors\ErrorsHandler;
-use LibreMVC\Routing\RoutesCollection;
 
-/**
- * JS
- */
+// Custom class autoloader.
+include( "./core/autoloader/class.autoloader.php" );
+// IDE helper.
+include('core/standart.php');
+// Global functions
+include('core/helpers.php');
 
-/*
-
-var user = 'inwebo';
-var token = 'd46a1e7d07cb1bca68b501f85c803abc';
-
-$.ajax({
-type: "POST",
-url: "http://www.inwebo.dev/LibreMVC/restservice/",
-
-headers: {
-    Accept : "application/json",
-    "Content-Type": "application/json"
-},
-beforeSend:function(xhr){
-    var timestamp = Date.now();
-    xhr.setRequestHeader('User', user);
-    xhr.setRequestHeader('Timestamp', timestamp);
-    xhr.setRequestHeader('Token', token);
-}
-}).error(function(msg){
-    console.log(msg.responseText);
-})
-.done(function( msg ) {
-    console.log( msg );
-});
-
-
- */
-// Snippet will crypt any chars
-//return hash_hmac("sha256", $password, ""  );
-/*if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
-    $salt = '$2y$11$' . substr(md5(uniqid(rand(), true)), 0, 22);
-    return crypt($password, $salt);
-}*/
 try {
+    // Default framework classes pool
     AutoLoader::instance()->addPool( './core/' );
+    // Custom error handler
     spl_autoload_register( "\\LibreMVC\\AutoLoader::handler" );
 
-    if(php_sapi_name() !== 'cli') {
+    // Requirements
+    new Boot( new Requirements() );
+
+    if( php_sapi_name() !== 'cli' ) {
         //Boot MVC
         new Boot( new Mvc() );
     }
     else {
-        //Boot cli
+        //Boot CLI
+        new Boot( new Cli() );
     }
 
-    new Boot( new Boot\Requirements() );
-
 } catch (\Exception $e) {
-    $message = time() . ',' . $e->getCode() . ',' . $e->getFile() . ',' . $e->getLine() . ',' . $e->getMessage() . "\n";
+    // Redirection vers une page ?
     \LibreMVC\Http\Header::serverError();
-    \LibreMVC\View\ViewBag::get()->exception = $e;
-    include('error500.php');
+    var_dump($e);
 }
-
