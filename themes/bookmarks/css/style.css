@@ -54,7 +54,17 @@
     min-width: 25%;
 }
 
-#toTop { /*width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 25px solid black;*/ }
+#toTop {
+    position: fixed;
+    right: 1em;
+    bottom: 1em;
+    background-color: #ffffff;
+    padding: 0.25em;
+}
+
+#topTop a{
+
+}
 
 .fadeTop {
     background: -moz-linear-gradient(top, rgba(232,232,232,1) 0%, rgba(232,232,232,0) 99%, rgba(232,232,232,0) 100%); /* FF3.6+ */
@@ -82,7 +92,7 @@ footer {
 }
 
 footer .container {
-    background-color: #000101;
+    /*background-color: #000101;*/
 }
 #body {
     position: relative;
@@ -91,5 +101,5 @@ footer .container {
 }
 #body {
     position: relative;
-    margin-bottom: 80px;
+    margin-bottom: 0;
 }
