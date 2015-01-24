@@ -1,73 +1,33 @@
 <?php
-use LibreMVC\Mvc\Environnement;
 
-function getBaseUrl() {
-    return ev()->instance->getBaseUrl();
+use LibreMVC\Autoloader\Handler;
+use LibreMVC\Autoloader\Decorators;
+
+function addRoute($pattern, $controller, $action){
+    $uri = \LibreMVC\System::this()->instance->getBaseUri();
+    $route = new \LibreMVC\Routing\Route(
+        $uri .= $pattern,
+        $controller,
+        $action
+    );
+    \LibreMVC\Routing\RoutesCollection::get('default')->addRoute($route);
 }
 
-function getBaseAssetsFolder() {
-    return ev()->Files->core['url']['global_assets'];
+function addStaticRoute($pattern){
+    $uri = \LibreMVC\System::this()->instance->getBaseUri();
+    $route = new \LibreMVC\Routing\Route(
+        $uri .= $pattern,
+        '\\LibreMVC\\Mvc\\Controller\\StaticController',
+        ''
+    );
+    \LibreMVC\Routing\RoutesCollection::get('default')->addRoute($route);
 }
 
-function getBaseJsFolder() {
-    return ev()->Files->core['url']['global_assets_js'];
+function registerModule(){
+    Handler::addDecorator(new Decorators(getcwd()));
 }
 
-function getBaseCssFolder() {
-    return ev()->Files->core['url']['global_assets_css'];
+function registerInstance(){
+    $path = \LibreMVC\System::this()->instance->getRealPath();
+    Handler::addDecorator(new Decorators($path));
 }
-
-function getThemeBaseFolder($theme) {
-    return ev()->Files->Themes[$theme]['url']['base'];
-}
-
-function getThemeBaseUrl($theme) {
-    return ev()->Files->Themes[$theme]['realPath']['base'];
-}
-
-function ev() {
-    return \LibreMVC\Mvc\Environnement::this();
-}
-
-function partial( $path, \LibreMVC\View\ViewObject $vo ) {
-    try {
-        $v = LibreMVC\View::partial($path, $vo);
-        $v->render();
-    }
-    catch(\Exception $e) {
-        var_dump($e);
-    }
-}
-
-function getCss() {
-    return ev()->Files->css;
-}
-
-function getJs() {
-    return ev()->Files->js;
-}
-
-function addToBreadCrumbs() {}
-
-function getInstanceBaseUri() {
-    $baseUri =  trim(Environnement::this()->instance->getInstanceBaseUri(),'/');
-    if( $baseUri !== '') {
-        $base_uri = '/'.$baseUri.'/';
-    }
-    else {
-        $base_uri = '/';
-    }
-    return $base_uri ;
-}
-
-function vd($var) {
-    var_dump($var);
-}
-
-/**
- * Snippets
- */
-/*if (defined("CRYPT_BLOWFISH") && CRYPT_BLOWFISH) {
-    $salt = '$2y$11$' . substr(md5(uniqid(rand(), true)), 0, 22);
-    return crypt($password, $salt);
-}*/
