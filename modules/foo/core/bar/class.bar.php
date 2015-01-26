@@ -1,6 +1,6 @@
 <?php
-
 namespace LibreMVC\Modules\Foo\Core;
+
 
 class Bar {
     public function __construct(){
