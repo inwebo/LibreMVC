@@ -60,13 +60,13 @@ namespace LibreMVC\System\Boot {
             $basePaths = (array)Path::processPattern(array_merge(self::$_config->Pattern, self::$_config->Root),(array)self::$_config->Tokens);
             $path = new Path( $basePaths, Url::get()->getUrl(), getcwd() . '/');
             self::$_appPaths = $path;
+
             return self::$_appPaths;
         }
 
         static public function instance(){
             $factory = new InstanceFactory(Url::get()->getUrl(), self::$_config->Tokens['%dir_sites%']);
             $instance = $factory->search();
-
             if( is_null($instance) ) {
                 self::$_instance = new Instance(self::$_appPaths->getBaseDir()['siteDefault']);
             }
@@ -79,13 +79,27 @@ namespace LibreMVC\System\Boot {
 
         static public function instancePaths(){
             $basePaths = (array)Path::processPattern(array_merge(self::$_config->Pattern, self::$_config->Root, self::$_config->Instances),(array)self::$_config->Tokens);
-            $path = new Path( $basePaths, self::$_instance->getBaseUrl() . self::$_instance->getParent(). '/' . self::$_instance->getName() . '/', getcwd() . '/' . self::$_instance->getParent() . '/' . self::$_instance->getName() . '/' );
+            // Instance par default config
+            if( self::$_instance->getName() === trim(self::$_config->Tokens['%dir_site_default%'],"/") ) {
+                $baseUrl = self::$_instance->getBaseUrl() . basename(self::$_instance->getParent()  ) . "/" . self::$_instance->getName() .'/';
+                $baseDir = self::$_instance->getParent() . '/' . self::$_instance->getName() . '/' ;
+            }
+            // Named
+            else {
+                $baseUrl = self::$_instance->getBaseUrl() . self::$_instance->getParent(). '/' . self::$_instance->getName() . '/';
+                $baseDir = getcwd() . '/' . self::$_instance->getParent() . '/' . self::$_instance->getName() . '/' ;
+            }
+
+            //var_dump(getcwd(),$baseUrl,$baseDir);
+
+            $path = new Path( $basePaths, $baseUrl, $baseDir );
+
             self::$_instancePaths = $path;
             return self::$_instancePaths;
         }
 
         static public function autoloadInstance() {
-            if(self::$_instancePaths->getBaseDir()['autoload']) {
+            if(is_file(self::$_instancePaths->getBaseDir()['autoload'])) {
                 include(self::$_instancePaths->getBaseDir()['autoload']);
             }
         }
