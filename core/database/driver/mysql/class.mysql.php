@@ -46,15 +46,15 @@ namespace LibreMVC\Database\Driver {
             parent::__construct();
             try {
                 $dsn = 'mysql:host=' . $host . ';dbname=' . $database;
-                $this->resource = new \PDO($dsn, $username, $password, $options);
-                $this->resource->setAttribute(\PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION);
+                $this->driver = new \PDO($dsn, $username, $password, $options);
+                $this->driver->setAttribute(\PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION);
                 $this->host = $host;
                 $this->database = $database;
                 $this->username = $username;
                 $this->passwd = $password;
                 $this->options = $options;
 
-                return $this->resource;
+                return $this->driver;
 
             } catch (\Exception $e) {
                 var_dump($e);
@@ -65,8 +65,8 @@ namespace LibreMVC\Database\Driver {
          * @param $table Database table's name.
          * @return array All table's columns.
          */
-        public function _getTableInfos( $table ) {
-            $info = $this->resource->query( 'SHOW COLUMNS FROM ' . $table );
+        public function getTableInfos( $table ) {
+            $info = $this->driver->query( 'SHOW COLUMNS FROM ' . $table );
             $info->setFetchMode(\PDO::FETCH_OBJ);
             return $info->fetchAll();
         }

@@ -14,6 +14,6 @@ namespace LibreMVC\Database\Driver;
  * @package LibreMVC\Database\Driver
  */
 interface IDriver {
-    public function getResource();
+    public function getDriver();
     function getTableInfos($table);
 }

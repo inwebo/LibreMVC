@@ -1,4 +1,5 @@
 <?php
+include('driver/basedriver/class.basedriver.php');
 include('driver/idriver/class.idriver.php');
 include('driver/class.driver.php');
 include('driver/mysql/class.mysql.php');

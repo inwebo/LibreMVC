@@ -42,9 +42,9 @@ class SqLite extends Driver {
             $this->filename = ($this->isValidDataBaseFile($filename)) ? $filename : "";
             $this->version = $version;
             $this->dsn = $this->prepareDSN() ;
-            $this->resource = new \PDO($this->dsn);
-            $this->resource->setAttribute(\PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION);
-            return $this->resource;
+            $this->driver = new \PDO($this->dsn);
+            $this->driver->setAttribute(\PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION);
+            return $this->driver;
         } catch (\Exception $error_string) {
             var_dump($error_string);
         }
@@ -96,7 +96,7 @@ class SqLite extends Driver {
     public function getTableInfos( $table , $filter = null) {
             $table = explode('\\',$table);
             $table = $table[count($table)-1];
-            $statement = $this->resource->query('PRAGMA table_info('. $table .');');
+            $statement = $this->driver->query('PRAGMA table_info('. $table .');');
             $statement->setFetchMode(\PDO::FETCH_ASSOC);
             return $statement->fetchAll();
     }

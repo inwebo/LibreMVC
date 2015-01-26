@@ -26,8 +26,8 @@ class SqLiteToMemory extends SqLite{
             $this->version = $version;
             $this->toMemory = true;
             $this->dsn = $this->prepareDSN() ;
-            $this->resource = ($this->persistent) ? new \PDO( $this->dsn, null, null, array( \PDO::ATTR_PERSISTENT => true ) ) : new \PDO($this->dsn);
-            return $this->resource;
+            $this->driver = ($this->persistent) ? new \PDO( $this->dsn, null, null, array( \PDO::ATTR_PERSISTENT => true ) ) : new \PDO($this->dsn);
+            return $this->driver;
 
         } catch (\Exception $error_string) {
             echo $error_string->getMessage();
