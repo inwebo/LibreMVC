@@ -13,7 +13,7 @@ use LibreMVC\Database\Entity;
 
 class Playlist extends Entity{
 
-    const SQL_SONGS_TABLE = "Songs";
+    const SQL_TABLE_SONGS = "Songs";
 
     public $id;
     public $name;
@@ -26,7 +26,7 @@ class Playlist extends Entity{
     public function init() {
         $conf = static::$_entityConfiguration;
         $conf->driver->toObject("\\LibreMVC\\Modules\\Playlist\\Models\\Song");
-        $this->_songs = $conf->driver->query("SELECT S.id, S.title FROM Songs AS S JOIN ".$conf->table." as P WHERE P.id = ?",array($this->id))->all();
+        $this->_songs = $conf->driver->query("SELECT S.id, S.title FROM ".self::SQL_TABLE_SONGS." AS S JOIN ".$conf->table." as P WHERE P.id = ?",array($this->id))->all();
     }
 
     public function getSongs(){
