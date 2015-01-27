@@ -30,6 +30,7 @@ namespace LibreMVC\System\Boot {
         static protected $_instancePaths;
         static protected $_viewObject;
         static protected $_layout;
+        static protected $_modules;
         /**
          * @var Route
          */
@@ -104,16 +105,21 @@ namespace LibreMVC\System\Boot {
             }
         }
 
-        static public function autoloadModule() {
+        static public function modules() {
             // Pour tous les modules contenus dans l'instance courante
             $dirs = dir(self::$_instancePaths->getBaseDir()['modules']);
+            $modules = array();
             while( false !== ($entry = $dirs->read()) ){
                 if( $entry !== "." && $entry !==".." ) {
+                    $basePaths = (array)Path::processPattern(array_merge(self::$_config->Pattern, self::$_config->Instances),(array)self::$_config->Tokens);
+                    $modules[$entry] = new Path($basePaths,self::$_instancePaths->getBaseUrl()['modules'] . $entry . "/",self::$_instancePaths->getBaseDir()['modules']);
                     if (is_file(self::$_instancePaths->getBaseDir()['modules'] . $entry . '/' . self::$_config->Tokens['%autoload%'])) {
                         include(self::$_instancePaths->getBaseDir()['modules'] . $entry . '/' . self::$_config->Tokens['%autoload%']);
                     }
                 }
             }
+            self::$_modules = $modules;
+            return $modules;
         }
 
         static public function viewObject(){
@@ -143,7 +149,7 @@ namespace LibreMVC\System\Boot {
 
         static public function body(){
             // {controller}/{action}.php
-
+            System\Hooks::this()->createHook("_changePartial");
             $viewsBaseDir = self::$_instancePaths->getBaseDir()['views'];
             $controller = self::$_route->controller;
             $body  = $viewsBaseDir . $controller::getControllerName().'/'.self::$_route->action.'.php';
@@ -151,9 +157,14 @@ namespace LibreMVC\System\Boot {
                 self::$_viewObject->attachPartial('body', self::$_layout->partial($body, self::$_viewObject));
             }
             else {
-                //Header::error(500);
+                try {
+
+                }
+                catch(\Exception $e) {
+
+                }
                 Header::badRequest();
-                //trigger_error("Body template :" . $body . ' is missing');
+                trigger_error("Body template :" . $body . ' is missing');
             }
 
         }
