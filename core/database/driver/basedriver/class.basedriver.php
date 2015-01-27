@@ -18,6 +18,8 @@ namespace LibreMVC\Database\Driver {
          */
         protected $tables = array();
 
+        protected $toObject;
+
         public function __construct(){}
 
         public function getDriver() {
@@ -47,7 +49,6 @@ namespace LibreMVC\Database\Driver {
         }
 
         public function filterColumnInfo($_table, $col_filter) {
-            $class= get_called_class();
             $selectKeys = array($col_filter);
             $buffer = array();
             $j = 0;
@@ -70,18 +71,17 @@ namespace LibreMVC\Database\Driver {
         }
 
         public function getColsName($_table) {
-            $class = get_called_class();
-            return $this->filterColumnInfo($_table, $class::COLS_NAME);
+            return $this->filterColumnInfo($_table, static::COLS_NAME);
         }
+
         public function getColumnsNullable($_table) {
-            $class = get_called_class();
-            return $this->filterColumnInfo($_table, $class::COLS_NULLABLE);
+            return $this->filterColumnInfo($_table, static::COLS_NULLABLE);
         }
+
         public function getPrimaryKey( $_table ) {
-            $class = get_called_class();
-            $table = (array)$this->filterColumnInfo($_table, $class::COLS_PRIMARY_KEY);
+            $table = (array)$this->filterColumnInfo($_table, static::COLS_PRIMARY_KEY);
             foreach($table as $k => $v) {
-                if( $v == $class::COLS_PRIMARY_VALUE ) {
+                if( $v == static::COLS_PRIMARY_VALUE ) {
                     return $k;
                 }
             }
