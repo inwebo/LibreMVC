@@ -59,6 +59,11 @@ class System {
      */
     public $route;
 
+    /**
+     * @var array
+     */
+    public $modules = array();
+
     private function __construct() {}
 
     public function readOnly($bool) {
