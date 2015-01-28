@@ -2,7 +2,7 @@
 
 namespace LibreMVC\System\Hooks {
 
-    use LibreMVC\System\Patterns\AdjustablePriorityQueue;
+    use LibreMVC\Patterns\AdjustablePriorityQueue;
 
     class Hook {
         /**
