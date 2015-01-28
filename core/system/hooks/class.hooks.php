@@ -1,8 +1,10 @@
 <?php
 namespace LibreMVC\System {
 
-    class Hooks{
+    use LibreMVC\Patterns\Singleton;
 
+    class Hooks extends Singleton{
+        static protected $_instances;
     }
 
 }
