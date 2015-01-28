@@ -1,6 +1,6 @@
 <?php
 
-namespace LibreMVC\System\Patterns {
+namespace LibreMVC\Patterns {
 
     class AdjustablePriorityQueue extends \SplPriorityQueue{
 
