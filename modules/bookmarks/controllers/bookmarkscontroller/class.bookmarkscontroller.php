@@ -12,12 +12,12 @@ namespace LibreMVC\Modules\Bookmarks\Controllers;
 use LibreMVC\Files\Config;
 use LibreMVC\Helpers\Pagination;
 use LibreMVC\Modules\Bookmarks\Models\Tags;
-use LibreMVC\Mvc\Controller;
+use LibreMVC\Mvc\Controller\BaseController;
 use LibreMVC\System;
 use LibreMVC\Database\Drivers;
 use LibreMVC\Database\Driver\MySql;
 
-class BookmarksController extends Controller{
+class BookmarksController extends BaseController{
 
     /**
      * @var Config
