@@ -9,11 +9,10 @@
 namespace LibreMVC\Mvc\Controller;
 
 use LibreMVC\Http\Header;
-use LibreMVC\Mvc\Controller;
 use LibreMVC\System;
 use LibreMVC\View\Template;
 
-class StaticController extends Controller{
+class StaticController extends BaseController{
 
     protected $_staticView;
 
@@ -33,7 +32,6 @@ class StaticController extends Controller{
             Header::error(404);
             // Manque le fichier template, affichage du nom attendus.
             //echo 'Static file to : ' . $partial;
-
         }
     }
 

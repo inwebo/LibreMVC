@@ -1,18 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inwebo
- * Date: 06/04/14
- * Time: 01:24
- */
 
 namespace LibreMVC\Mvc\Controller;
 
 use LibreMVC\Http\Header;
-use LibreMVC\Mvc\Controller;
 use LibreMVC\Sessions;
 
-class AuthPageController extends Controller{
+class AuthPageController extends BaseController{
 
     /**
      * @var bool Test l'authentification sur toutes les actions AVANT leurs execution. Pratique pour les admins

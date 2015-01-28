@@ -32,7 +32,7 @@ class RestUser {
  * Class RestController
  * @package LibreMVC\Mvc\Controller
  */
-class RestController extends Controller{
+class RestController extends BaseController{
 
     /**
      * @var bool Le resultat de la requête doit il être mis en cache ?

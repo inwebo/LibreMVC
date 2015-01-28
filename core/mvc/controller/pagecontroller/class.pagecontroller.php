@@ -5,7 +5,7 @@ use LibreMVC\Html\Document\Head;
 use LibreMVC\Mvc\Controller;
 use LibreMVC\Database;
 
-class PageController extends Controller {
+class PageController extends BaseController {
 
     protected $_head;
     private $_headClone;
@@ -21,6 +21,7 @@ class PageController extends Controller {
         $this->_headClone = clone $this->_head;
         $this->toView('_head', $this->_head );
         $this->toView('_user', $_SESSION['User'] );
+
     }
 
     public function __destruct() {
