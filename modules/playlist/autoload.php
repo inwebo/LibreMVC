@@ -1,5 +1,4 @@
 <?php
-
 registerModule();
 
     use LibreMVC\Database\Drivers;
@@ -8,9 +7,8 @@ registerModule();
     use LibreMVC\Modules\Playlist\Models\Song;
     use LibreMVC\Modules\Playlist\Models\Mood;
 
-
     Drivers::add( "Playlist", new MySql("localhost", "playlist","root", "root") );
-    var_dump(Drivers::get("Playlist"));
+    //var_dump(Drivers::get("Playlist"));
     $db = Drivers::get('Playlist')->toStdClass();
     Playlist::binder($db);
     Song::binder($db);
@@ -18,6 +16,7 @@ registerModule();
 
     $playlist = Playlist::load(1);
 //var_dump($p);
+/*
     $songs = $playlist->getSongs();
     while($songs->valid()){
         echo $songs->current()->title . '<br>';
@@ -29,3 +28,4 @@ registerModule();
         echo '<br>';
         $songs->next();
     }
+*/
