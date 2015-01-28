@@ -11,6 +11,9 @@ use LibreMVC\Web\Instance\PathsFactory\Path;
 
 class System {
 
+    /**
+     * @var System
+     */
     protected static $_instance;
     protected $readOnly = false;
 
