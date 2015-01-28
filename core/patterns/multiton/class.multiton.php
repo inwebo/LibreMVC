@@ -1,5 +1,5 @@
 <?php
-namespace LibreMVC\System\Patterns {
+namespace LibreMVC\Patterns {
     class Multiton {
         /**
          * Doit être surchargé !
@@ -23,6 +23,9 @@ namespace LibreMVC\System\Patterns {
             }
 
             return static::$_instances->$name;
+        }
+        static public function all(){
+            return static::$_instances;
         }
     }
 }

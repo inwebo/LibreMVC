@@ -1,5 +1,5 @@
 <?php
-namespace LibreMVC\System\Patterns {
+namespace LibreMVC\Patterns {
     class Singleton {
         /**
          * @var Singleton
