@@ -3,6 +3,7 @@
 use LibreMVC\Autoloader\Handler;
 use LibreMVC\Autoloader\Decorators;
 
+
 function addRoute($pattern, $controller, $action){
     $uri = \LibreMVC\System::this()->instance->getBaseUri();
     $route = new \LibreMVC\Routing\Route(
@@ -30,4 +31,10 @@ function registerModule(){
 function registerInstance(){
     $path = \LibreMVC\System::this()->instance->getRealPath();
     Handler::addDecorator(new Decorators($path));
+}
+function getModules(){
+    return \LibreMVC\System::this()->modules;
+}
+function getModule($name){
+    return \LibreMVC\System::this()->modules[$name];
 }
