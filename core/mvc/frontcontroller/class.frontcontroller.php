@@ -17,6 +17,8 @@ class DispatcherUnknownActionController extends \Exception {};
  * Recoit un objet Http\Request, une routes déjà routée ainsi qu'une vue, le frontcontroller doit permettre
  * l'instaciation de l'ActionController, appel de la methode d'action correspondante avec les bon paramètres.
  *
+ * @todo : Devrait gérér les plugins.
+ *
  * @package LibreMVC\Mvc
  */
 
@@ -81,8 +83,6 @@ class FrontController {
      * @return mixed
      * @throws DispatcherUnknownActionController Si l'action demandée n'existe pas.
      * @throws DispatcherUnknownController Si le controller n'existe pas
-     * @todo : Un controller par www.test.fr ?
-     * @todo : Destruction de l'instance de référence ?
      */
     public function invoker() {
         // Action souhaitée
@@ -118,8 +118,12 @@ class FrontController {
         }
     }
 
-    public function reroute(Route $route){
+    public function reRoute(Route $route){
         $this->_route               = $route;
+        $this->_actionController    = $this->actionControllerFactory();
+    }
+    public function reLayout(View $view){
+        $this->_view                = $view;
         $this->_actionController    = $this->actionControllerFactory();
     }
 }
