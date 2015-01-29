@@ -1,7 +1,7 @@
 <?php
 registerModule();
 use LibreMVC\Modules\Admin as Module;
-addRoute("admin/[:controller]/[:action]",'\\LibreMVC\\Modules\\Admin\\Controllers\\RoutesController','index');
+addRoute("admin/routes/[:action]",'\\LibreMVC\\Modules\\Admin\\Controllers\\RoutesController','index');
 /*
 use LibreMVC\System;
 use LibreMVC\System\Hooks\CallBack;
