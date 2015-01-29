@@ -24,7 +24,7 @@ try {
         System::this()
     );
     $boot->start();
-    var_dump(System::this());
+    //var_dump(System::this());
 
 }
 catch (\Exception $e) {
