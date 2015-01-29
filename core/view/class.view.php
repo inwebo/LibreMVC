@@ -13,6 +13,9 @@ use LibreMVC\View\Parser;
  */
 class View {
 
+    /**
+     * @var ViewObject
+     */
     protected $vo;
     /**
      * @var View\Template
@@ -55,7 +58,6 @@ class View {
      */
     protected function setViewContext() {
         $content = $this->vo->strongTypedView( $this->_template->getFile() );
-
         $this->_template->set( $content );
     }
 
