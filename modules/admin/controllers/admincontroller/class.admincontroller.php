@@ -8,16 +8,14 @@
 
 namespace LibreMVC\Modules\Admin\Controllers;
 
+
 use LibreMVC\Mvc\Controller\BaseController;
 
-use LibreMVC\Routing\RoutesCollection;
-use LibreMVC\System;
-
-class RoutesController extends BaseController{
-
-    protected $_routesCollections;
+abstract class AdminController extends BaseController{
 
     protected function init(){
+        // Call hooks->__layout
+        //$this->changeLayout(".");
         $this->toView("routed", System::this()->routed);
         $this->toView("routes", RoutesCollection::get("default"));
     }
