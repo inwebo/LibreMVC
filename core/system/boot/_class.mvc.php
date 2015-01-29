@@ -20,36 +20,64 @@ namespace LibreMVC\System\Boot {
     use LibreMVC\Mvc\FrontController;
     use LibreMVC\System\Hooks\Hook\BindedHook;
     use LibreMVC\System\Hooks;
+    use LibreMVC\View\Interfaces\IDataProvider;
 
     class MVC implements IBootable{
 
         const ROUTE_CONSTRAINT = '\\LibreMVC\\Routing\\UriParser\\RouteConstraint';
 
+        /**
+         * @var Path
+         */
         static protected $_configPath;
+        /**
+         * @var Request
+         */
         static protected $_request;
+        /**
+         * @var Config
+         */
         static protected $_config;
         /**
          * @var Hooks
          */
         static protected $_hooks;
+        /**
+         * @var Path
+         */
         static protected $_basePaths;
+        /**
+         * @var Path
+         */
         static protected $_appPaths;
+        /**
+         * @var Instance
+         */
         static protected $_instance;
+        /**
+         * @var Path
+         */
         static protected $_instancePaths;
+        /**
+         * @var IDataProvider
+         */
         static protected $_viewObject;
+        /**
+         * @var View
+         */
         static protected $_layout;
         /**
          * @var AdjustablePriorityQueue
          */
         static protected $_modules;
         /**
-         * @var array
+         * @var array[Module]
          */
         static protected $modules;
         /**
          * @var Route
          */
-        static protected $_route;
+        static protected $_routed;
 
         public function __construct($configPath){
             self::$_configPath = $configPath;
@@ -130,6 +158,7 @@ namespace LibreMVC\System\Boot {
                 include(self::$_instancePaths->getBaseDir()['autoload']);
             }
         }
+
         #region Helpers
         static protected function getBasePaths( $pattern ){
             $basePattern = (array)self::$_config->Pattern;
@@ -240,10 +269,13 @@ namespace LibreMVC\System\Boot {
         }
 
         static public function viewObject(){
-            self::$_viewObject =new View\ViewObject();
+            self::$_viewObject = new View\ViewObject();
             return self::$_viewObject;
         }
 
+        /**
+         * @todo Vers le controller
+         */
         static public function layout(){
             $layout =self::$_instancePaths->getBaseDir('index');
             System\Hooks::this()->__layout->call($layout);
@@ -255,22 +287,27 @@ namespace LibreMVC\System\Boot {
             return self::$_layout;
         }
 
-
-        static public function router(){
+        static public function routed(){
             $router = new Router(
                 Uri::this(),
                 RoutesCollection::get('default'),
                 self::ROUTE_CONSTRAINT
             );
-            self::$_route = $router->dispatch();
-            return self::$_route;
+            self::$_routed = $router->dispatch();
+            return self::$_routed;
         }
 
+        /**
+         * Vers controller
+         */
         static public function body(){
             // {controller}/{action}.php
             $viewsBaseDir = self::$_instancePaths->getBaseDir()['views'];
-            $controller = self::$_route->controller;
-            $body  = $viewsBaseDir . $controller::getControllerName().'/'.self::$_route->action.'.php';
+            $controller = self::$_routed->controller;
+            System\Hooks::this()->__layout_body_partial->call($viewsBaseDir);
+            $body  = $viewsBaseDir .
+                $controller::getControllerName() .'/' .
+                self::$_routed->action.'.php';
 
             if( is_file($body) ) {
                 self::$_viewObject->attachPartial('body', self::$_layout->partial($body, self::$_viewObject));
@@ -292,11 +329,22 @@ namespace LibreMVC\System\Boot {
             System::this()->readOnly(true);
         }
 
+        /**
+         * @todo : instanciation par reflection, nombre inderterminés de paramétres, devrait injecter System dans le controller
+         */
         static public function frontController(){
+            //var_dump(System::this()->getModuleBaseDirs("error"));
+            //$controller = new \ReflectionClass("\\LibreMVC\\Mvc\\FrontController");
+            //$frontController = $controller->newInstanceArgs();
+            //var_dump($frontController);
+            //var_dump($controller);
+
+
+
             try {
                 $front = new FrontController(
                     self::$_request,
-                    self::$_route,
+                    self::$_routed,
                     self::$_layout
                 );
                 $front->invoker();
@@ -307,10 +355,10 @@ namespace LibreMVC\System\Boot {
                 $defaultRoute = new Route('static/error');
                 $defaultRoute->action = "error";
                 $defaultRoute->controller = '\\LibreMVC\\Mvc\\Controller\\StaticController';
-                $front->reroute($defaultRoute);
+                $front->reRoute($defaultRoute);
                 $front->invoker();
-
             }
+
         }
 
     }
