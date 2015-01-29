@@ -3,6 +3,7 @@
 namespace LibreMVC\Mvc\Controller {
     use LibreMVC\Http\Request;
     use LibreMVC\View;
+    use LibreMVC\View\Parser\Logic\Template;
     use LibreMVC\View\Interfaces\IDataProvider;
 
     abstract class BaseController implements IController {
@@ -18,26 +19,21 @@ namespace LibreMVC\Mvc\Controller {
         protected $_view;
 
         /**
-         * @var IDataProvider
+         * @var View\ViewObject
          */
-        protected $_data;
+        protected $_vo;
 
         public function __construct( Request $request, View $view ) {
             $this->_request = $request;
             $this->_view    = $view;
-            $this->_data    = $this->_view->getDataProvider();
+            $this->_vo      = $this->_view->getDataProvider();
+            /**
+             * System !
+             */
             $this->init();
         }
 
         protected function init() {}
-
-        /**
-         * @param $action
-         * @return bool
-         */
-        public function hasAction( $action ) {
-            return (bool)method_exists( $this, $action . self::ACTION_SUFFIX );
-        }
 
         static public function getControllerName(){
             $class = get_called_class();
@@ -58,8 +54,39 @@ namespace LibreMVC\Mvc\Controller {
             return $this->_view;
         }
 
-        public function toView($key, $value) {
-            $this->_data->$key = $value;
+        public function changeLayout($layout) {
+            try  {
+                $template= new Template($layout);
+                $this->_view = new View(
+                    $template,
+                    $this->_vo
+                );
+            }
+            catch(\Exception $e) {
+                var_dump($e);
+            }
+
         }
+
+        public function changePartial($name,$layout) {
+            try  {
+                $this->_vo->attachPartial($name,$layout);
+            }
+            catch(\Exception $e) {
+                var_dump($e);
+            }
+
+        }
+
+        public function toView($key, $value) {
+            $this->_vo->$key = $value;
+        }
+
+        public function preRender(){}
+        public function render(){
+            $this->_view->render();
+        }
+        public function postRender(){}
+
     }
 }
