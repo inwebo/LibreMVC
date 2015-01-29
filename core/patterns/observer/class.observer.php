@@ -1,40 +1,22 @@
 <?php
 
-namespace LibreMVC\System;
+namespace LibreMVC\Patterns {
 
-use LibreMVC\System\Boot\Task;
+    abstract class Observer implements \SplObserver{
 
-class Observer implements \SplObserver{
+        protected $_name;
 
-    public $tasks;
+        function __construct($_name) {
+            $this->_name = $_name;
+        }
 
-    public function __construct() {
-        $this->tasks = new \SplObjectStorage();
-        // Construction context http
+        public function update( \SplSubject $subject ) {
+            var_dump($subject);
+        }
 
-        // Constantes environnements
+        public function getName(){
+            return $this->_name;
+        }
 
-        // Chargement ini
-
-        // Erreur handler
-
-        // Db
-
-        // Routing
-
-        // Invokable
-
-        // Is cli
-
-        // View
-
-        new Task( "First observable", $this );
-        new Task( "Second observable", $this );
-        new Task( "Third observable", $this );
     }
-
-    public function update( \SplSubject $subject ) {
-        return true;
-    }
-
 }

@@ -1,32 +1,33 @@
 <?php
-namespace LibreMVC\System\Observer;
+namespace LibreMVC\Patterns\Observer {
 
-class Observable implements \SplSubject{
+    abstract class Observable implements \SplSubject{
 
-    public $observers;
-    public $name;
+        protected $_observers;
 
-    public function __construct( $name, $observer ) {
-        $this->observers = new \SplObjectStorage();
-        $this->attach($observer);
-        $this->name = $name;
-        $this->notify();
-    }
-
-    public function attach(\SplObserver $observer) {
-        $this->observers->attach($observer);
-    }
-
-    public function detach(\SplObserver $observer) {
-        $this->observers->detach($observer);
-    }
-
-    public function notify() {
-        $this->observers->rewind();
-        while($this->observers->valid()) {
-            $this->observers->current()->update($this);
-            $this->observers->next();
+        public function __construct() {
+            $this->_observers = new \SplObjectStorage();
         }
-    }
 
+        public function getObservers(){
+            return $this->_observers;
+        }
+
+        public function attach(\SplObserver $observer) {
+            $this->_observers->attach($observer);
+        }
+
+        public function detach(\SplObserver $observer) {
+            $this->_observers->detach($observer);
+        }
+
+        public function notify() {
+            $this->_observers->rewind();
+            while($this->_observers->valid()) {
+                $this->_observers->current()->update($this);
+                $this->_observers->next();
+            }
+        }
+
+    }
 }
