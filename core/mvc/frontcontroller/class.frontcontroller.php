@@ -4,9 +4,9 @@ namespace LibreMVC\Mvc;
 use LibreMVC\ClassNamespace;
 use LibreMVC\Http\Request;
 use LibreMVC\Mvc\Controller;
-use LibreMVC\Mvc\System;
 use LibreMVC\Routing\Route;
 use LibreMVC\View;
+use LibreMVC\System;
 
 class DispatcherUnknownController extends \Exception {};
 class DispatcherUnknownActionController extends \Exception {};
@@ -43,16 +43,16 @@ class FrontController {
      * @var mixed
      */
     protected $_actionController;
-
     /**
-     * @param Request $request Une requête HTTP.
-     * @param Route $route Une route.
-     * @param View $view Une vue a passer à l'action du controller.
+     * @var System
      */
-    public function __construct( Request $request, Route $route, View $view ) {
+    protected $_system;
+
+    public function __construct( Request $request, System $system ) {
         $this->_request             = $request;
-        $this->_route               = $route;
-        $this->_view                = $view;
+        $this->_system = $system;
+        $this->_view    = $this->_system->this()->layout;
+        $this->_route               = $this->_system->this()->routed;
         $this->_actionController    = $this->actionControllerFactory();
     }
 
@@ -63,7 +63,7 @@ class FrontController {
      */
     protected function actionControllerFactory() {
         if( $this->isRegistered() ) {
-            return new $this->_route->controller( $this->_request, $this->_view );
+            return new $this->_route->controller( $this->_request, $this->_system );
         }
     }
 
