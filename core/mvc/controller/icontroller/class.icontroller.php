@@ -11,6 +11,5 @@ namespace LibreMVC\Mvc\Controller;
 
 
 interface IController {
-    public function hasAction( $action );
     static public function getControllerName();
 }
