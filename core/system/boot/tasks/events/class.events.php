@@ -13,16 +13,16 @@ namespace LibreMVC\System\Boot\Tasks {
             $statement = $subject->getStatement();
             // Callbacks
             switch($statement) {
-                case 'idle':
-                    echo "idle";
+                case 'init':
+                    echo $subject->getName()." : init<br>";
                     break;
 
                 case 'started':
-                    echo "started";
+                    echo $subject->getName()." : started<br>";
                     break;
 
                 case 'ended':
-                    echo "ended";
+                    echo $subject->getName()." : ended<br>";
                     break;
             }
         }

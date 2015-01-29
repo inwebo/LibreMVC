@@ -9,16 +9,20 @@ namespace LibreMVC\System\Boot\Tasks {
 
         protected $_name;
         /**
-         * @var string idle|started|ended
+         * @var string init|started|ended
          */
         protected $_statement;
 
+        static protected $_request;
         static protected $_basePaths;
         static protected $_appPaths;
         static protected $_instance;
         static protected $_instancePaths;
         static protected $_modules;
         static protected $modules;
+        static protected $_viewObject;
+        static protected $_layout;
+        static protected $_routed;
         /**
          * @var Config
          */
@@ -27,7 +31,8 @@ namespace LibreMVC\System\Boot\Tasks {
         function __construct($_name="Task") {
             parent::__construct();
             $this->_name = $_name;
-            $this->_statement = "idle";
+            $this->_statement = "init";
+            $this->notify();
         }
 
         public function getName(){

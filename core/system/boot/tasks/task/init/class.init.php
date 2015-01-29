@@ -22,7 +22,8 @@ namespace LibreMVC\System\Boot\Tasks\Task {
         }
 
         protected function request() {
-            return Request::this(Url::get());
+            self::$_request = Request::this(Url::get());
+            return self::$_request;
         }
 
         protected function config() {
