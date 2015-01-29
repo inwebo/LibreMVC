@@ -8,7 +8,8 @@ use LibreMVC\Autoloader;
 use LibreMVC\Autoloader\Decorators;
 use LibreMVC\Autoloader\Handler;
 use LibreMVC\System\Boot;
-use LibreMVC\System\Boot\MVC;
+use LibreMVC\System\Boot\Tasks\Events;
+use LibreMVC\System\Boot\Tasks\MVC;
 use LibreMVC\System;
 
 try {
@@ -16,7 +17,14 @@ try {
     Handler::addDecorator(new Decorators('core'));
     spl_autoload_register( "\\LibreMVC\\Autoloader\\Handler::handle" );
 
-    new Boot( new Mvc('config/config.ini'), System::this() );
+    //new Boot( new Mvc('config/config.ini'), System::this() );
+    $boot = new Boot(
+        new Events("Logger"),
+        new MVC('config/config.ini'),
+        System::this()
+    );
+    $boot->start();
+    var_dump(System::this());
 
 }
 catch (\Exception $e) {
