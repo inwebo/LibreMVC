@@ -2,9 +2,11 @@
 
 namespace LibreMVC\Mvc\Controller {
     use LibreMVC\Http\Request;
+    use LibreMVC\System;
     use LibreMVC\View;
-    use LibreMVC\View\Parser\Logic\Template;
-    use LibreMVC\View\Interfaces\IDataProvider;
+    use LibreMVC\View\ViewObject;
+    use LibreMVC\View\Template;
+
 
     abstract class BaseController implements IController {
         const ACTION_SUFFIX = "Action";
@@ -19,17 +21,20 @@ namespace LibreMVC\Mvc\Controller {
         protected $_view;
 
         /**
-         * @var View\ViewObject
+         * @var ViewObject
          */
         protected $_vo;
 
-        public function __construct( Request $request, View $view ) {
+        /**
+         * @var System
+         */
+        protected $_system;
+
+        public function __construct( Request $request, System $system) {
             $this->_request = $request;
-            $this->_view    = $view;
-            $this->_vo      = $this->_view->getDataProvider();
-            /**
-             * System !
-             */
+            $this->_system = $system;
+            $this->_view    = $this->_system->layout;
+            $this->_vo      = $this->_system->this()->layout->getDataProvider();
             $this->init();
         }
 
@@ -70,6 +75,7 @@ namespace LibreMVC\Mvc\Controller {
 
         public function changePartial($name,$layout) {
             try  {
+                $layout = new View(new Template($layout), $this->_vo);
                 $this->_vo->attachPartial($name,$layout);
             }
             catch(\Exception $e) {
