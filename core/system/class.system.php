@@ -60,10 +60,10 @@ class System {
     /**
      * @var Route
      */
-    public $route;
+    public $routed;
 
     /**
-     * @var array
+     * @var array[Module]
      */
     public $modules = array();
 
@@ -92,6 +92,60 @@ class System {
         if (isset($this->$key)) {
             return $this->$key;
         }
+    }
+
+    public function getModule($name){
+        return (isset($this->modules[$name])) ? $this->modules[$name] : null;
+    }
+
+    public function getModules(){
+        return $this->modules;
+    }
+
+    public function getPaths($wich) {
+
+        switch($wich) {
+            case "base":
+                return $this->basePaths;
+
+            case "app":
+                return $this->appPaths;
+
+            case "instance":
+                return $this->instancePaths;
+
+            default:
+                return null;
+        }
+
+    }
+
+    public function getRoute(){
+        return $this->routed;
+    }
+
+    public function getBaseDirs($el=null){
+        return $this->basePaths->getBaseDir($el);
+    }
+
+    public function getBaseUrls($el=null){
+        return $this->basePaths->getBaseUrl($el);
+    }
+
+    public function getInstanceBaseDirs($el=null){
+        return $this->instancePaths->getBaseDir($el);
+    }
+
+    public function getInstanceBaseUrls($el=null){
+        return $this->instancePaths->getBaseUrls($el);
+    }
+
+    public function getModuleBaseDirs($module, $el = null){
+        return $this->getModule($module)->getPath()->getBaseDir($el);
+    }
+
+    public function getModuleBaseUrl($module, $el = null){
+        return $this->getModule($module)->getBaseUrl($el);
     }
 
 }
