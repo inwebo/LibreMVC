@@ -96,16 +96,12 @@ class Header {
         header('HTTP/1.1 301 Moved Permanently');
     }
 
-    public static function forbidden( $content='' ) {
+    public static function forbidden() {
         header('HTTP/1.1 403 Forbidden');
-        echo ($content === '') ? '403 Forbidden' : $content;
-        die();
     }
 
-    public static function notFound( $content='' ) {
+    public static function notFound() {
         header('HTTP/1.1 404 Not Found');
-        echo ($content === '') ? '404 Not Found' : $content;
-        die();
     }
     
     public static function notModified() {
