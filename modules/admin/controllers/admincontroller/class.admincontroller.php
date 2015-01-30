@@ -14,10 +14,12 @@ use LibreMVC\Mvc\Controller\BaseController;
 abstract class AdminController extends BaseController{
 
     protected function init(){
-        // Call hooks->__layout
-        //$this->changeLayout(".");
-        $this->toView("routed", System::this()->routed);
-        $this->toView("routes", RoutesCollection::get("default"));
+        $controller = $this->_system->this()->routed->controller;
+        $this->changeLayout($this->_system->getModuleBaseDirs('admin','index'));
+        $viewsPath = $this->_system->this()->getModuleBaseDirs('admin','views') .
+        $controller::getControllerName() . '/' . $this->_system->this()->routed->action . '.php';
+        $this->changePartial('body',$viewsPath);
+
     }
 
 }

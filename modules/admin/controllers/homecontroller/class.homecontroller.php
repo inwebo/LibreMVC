@@ -1,18 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inwebo
- * Date: 24/01/15
- * Time: 20:08
- */
 
-namespace LibreMVC\Modules\Admin\Controllers;
+namespace LibreMVC\Modules\Admin\Controllers {
+    use LibreMVC\System;
+    use LibreMVC\Routing\RoutesCollection;
 
-
-use LibreMVC\Mvc\Controller\BaseController;
-
-class HomeController extends BaseController{
-
-
-
+    class HomeController extends AdminController{
+        public function routesAction() {
+            $this->toView("routed", System::this()->routed);
+            $this->toView("routes", RoutesCollection::get("default"));
+            $this->render();
+        }
+    }
 }

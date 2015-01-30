@@ -62,6 +62,7 @@ class BookmarksController extends BaseController{
             $this->_db->toStdClass();
             $this->_total = $this->_db->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total;
             $this->toView('total',$this->_total);
+            //var_dump(Drivers->count());
         }
         catch(\Exception $e) {
             var_dump($e);

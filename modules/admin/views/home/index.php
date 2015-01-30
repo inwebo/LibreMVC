@@ -1,4 +1,4 @@
 <h3>Admin home</h3>
-<?php
-
-//var_dump( $this->routes );
+<ul>
+    <li><a href="routes">routes</a></li>
+</ul>
