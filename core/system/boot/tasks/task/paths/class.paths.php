@@ -92,9 +92,9 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
         #endregion
 
+
         protected function themesPaths() {
             $dir = self::getBasePaths("app")['themes'];
-            var_dump($dir);
         }
 
         protected function end() {

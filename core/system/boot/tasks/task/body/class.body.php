@@ -25,7 +25,6 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             $body  = $viewsBaseDir .
                 $controller::getControllerName() .'/' .
                 self::$_routed->action.'.php';
-
             if( is_file($body) ) {
                 self::$_viewObject->attachPartial('body', self::$_layout->partial($body, self::$_viewObject));
             }
