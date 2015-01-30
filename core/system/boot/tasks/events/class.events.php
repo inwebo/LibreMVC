@@ -14,15 +14,17 @@ namespace LibreMVC\System\Boot\Tasks {
             // Callbacks
             switch($statement) {
                 case 'init':
-                    echo $subject->getName()." : init<br>";
+                    //echo $subject->getName()." : init<br>";
                     break;
 
                 case 'started':
-                    echo $subject->getName()." : started<br>";
+                    //echo $subject->getName()." : started<br>";
+                    // Callbacks
                     break;
 
                 case 'ended':
-                    echo $subject->getName()." : ended<br>";
+                    //echo $subject->getName()." : ended<br>";
+                    // Callbacks
                     break;
             }
         }
