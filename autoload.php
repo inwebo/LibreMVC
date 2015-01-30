@@ -16,7 +16,6 @@ try {
     // Autoloader
     Handler::addDecorator(new Decorators('core'));
     spl_autoload_register( "\\LibreMVC\\Autoloader\\Handler::handle" );
-
     //new Boot( new Mvc('config/config.ini'), System::this() );
     $boot = new Boot(
         new Events("Logger"),
