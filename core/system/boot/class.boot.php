@@ -24,8 +24,7 @@ namespace LibreMVC\System {
          */
         protected $_dataProvider;
 
-        public function __construct(\SplObserver $_observer, IStepable $_tasks, $_dataProvider)
-        {
+        public function __construct(\SplObserver $_observer, IStepable $_tasks, $_dataProvider) {
             $this->_dataProvider = $_dataProvider;
             $this->_observer = $_observer;
             $this->_tasks = $_tasks;
