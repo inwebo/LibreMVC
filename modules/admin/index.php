@@ -6,6 +6,7 @@
 </head>
 <body>
 <h1>Admin</h1>
+{dump}
 <?php $this->partial( 'body' )->render(); ?>
 </body>
 </html>

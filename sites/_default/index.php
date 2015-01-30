@@ -6,7 +6,6 @@
 </head>
 <body>
 <h1>_default</h1>
-
 <?php $this->partial( 'body' )->render(); ?>
 </body>
 </html>
