@@ -61,7 +61,6 @@ namespace LibreMVC\Helpers {
 
             $this->min = $this->setMin();
             $this->max = $this->setMax();
-            var_dump($this);
         }
 
         /**
