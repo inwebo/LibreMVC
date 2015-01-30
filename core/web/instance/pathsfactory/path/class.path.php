@@ -15,6 +15,10 @@ namespace LibreMVC\Web\Instance\PathsFactory {
             $this->_baseDir = $baseDir;
         }
 
+        public function url() {
+            return $this->_baseUrl;
+        }
+
         public function getBaseDir($el = null){
             $path = $this->_path;
             $baseDir = self::inject($path, $this->_baseDir);
