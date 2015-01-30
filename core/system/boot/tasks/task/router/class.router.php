@@ -28,6 +28,8 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 RoutesCollection::get('default'),
                 self::ROUTE_CONSTRAINT
             );
+            $default = RoutesCollection::get(('error'))->getDefaultRoute();
+            $router->attachDefaultRoute($default);
             self::$_routed = $router->dispatch();
             return self::$_routed;
         }
