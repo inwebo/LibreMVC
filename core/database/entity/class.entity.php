@@ -9,15 +9,18 @@ namespace LibreMVC\Database {
     abstract class Entity implements IModelable
     {
 
+        const SQL_SELECT = "";
+
+        /**
+         * @var EntityConfiguration
+         */
         static public $_entityConfiguration;
 
         public function __construct(){
             $this->init();
         }
 
-        protected function init() {
-
-        }
+        protected function init() {}
 
         static public function binder(IDriver $iDriver, $pk = null, $table = null, $tableDesc = null){
             $i = $iDriver;
@@ -37,7 +40,6 @@ namespace LibreMVC\Database {
             } else {
                 throw new Exception("Bind model first");
             }
-
         }
 
         static public function classToTable() {
