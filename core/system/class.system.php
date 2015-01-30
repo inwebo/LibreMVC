@@ -137,7 +137,7 @@ class System {
     }
 
     public function getInstanceBaseUrls($el=null){
-        return $this->instancePaths->getBaseUrls($el);
+        return $this->instancePaths->getBaseUrl($el);
     }
 
     public function getModuleBaseDirs($module, $el = null){
