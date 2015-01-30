@@ -50,7 +50,7 @@ namespace LibreMVC\Routing {
                     // Uri invalide 404
                     else {
                         if( !is_null($this->_defaultRoute) ) {
-
+                            Header::notFound();
                             return $this->_defaultRoute;
                         }
                         else {
@@ -67,7 +67,9 @@ namespace LibreMVC\Routing {
             return false;
         }
 
-        public function attachDefaultRoute(Route $route){}
+        public function attachDefaultRoute(Route $route){
+            $this->_defaultRoute = $route;
+        }
 
     }
 }
