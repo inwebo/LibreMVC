@@ -10,7 +10,7 @@
 <h3>Bookmarks <?php echo $this->total ?></h3>
 <ul>
     <?php for($i=1;$i < $this->pagination->max;$i++) { ?>
-        <li><a href="<?php echo $i ?>"><?php echo $i ?></a></li>
+        <li><a href="bookmarks/page/<?php echo $i ?>"><?php echo $i ?></a></li>
     <?php } ?>
 </ul>
 <ul>
