@@ -17,7 +17,10 @@ namespace LibreMVC\Database {
                 var_dump($e);
             }
             if( isset($this->toObject) ) {
-                $pdoStatement->setFetchMode(\PDO::FETCH_CLASS , $this->toObject);
+                // Init constructor params.
+                $reflection = new \ReflectionMethod($this->toObject,'__construct');
+                $parameters = $reflection->getParameters();
+                $pdoStatement->setFetchMode(\PDO::FETCH_CLASS, $this->toObject,$parameters);
             }
             return new Results($pdoStatement);
         }
