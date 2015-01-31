@@ -28,4 +28,8 @@ class Module {
         return $this->_path;
     }
 
+    public function getName() {
+        return $this->_name;
+    }
+
 }
