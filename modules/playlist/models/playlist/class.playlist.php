@@ -1,36 +1,31 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inwebo
- * Date: 25/01/15
- * Time: 23:53
- */
 
-namespace LibreMVC\Modules\Playlist\Models;
+namespace LibreMVC\Modules\Playlist\Models {
 
 
-use LibreMVC\Database\Entity;
+    use LibreMVC\Database\Entity;
 
-class Playlist extends Entity{
+    class Playlist extends Entity{
 
-    const SQL_TABLE_SONGS = "Songs";
+        const SQL_TABLE_SONGS = "Songs";
 
-    public $id;
-    public $name;
+        public $id;
+        public $name;
 
-    /**
-     * @var \ArrayIterator
-     */
-    protected $_songs;
+        /**
+         * @var \ArrayIterator
+         */
+        protected $_songs;
 
-    public function init() {
-        $conf = static::$_entityConfiguration;
-        $conf->driver->toObject("\\LibreMVC\\Modules\\Playlist\\Models\\Song");
-        $this->_songs = $conf->driver->query("SELECT S.id, S.title FROM ".self::SQL_TABLE_SONGS." AS S JOIN ".$conf->table." as P WHERE P.id = ?",array($this->id))->all();
+        public function init() {
+            $conf = static::$_entityConfiguration;
+            $conf->driver->toObject("\\LibreMVC\\Modules\\Playlist\\Models\\Song");
+            $this->_songs = $conf->driver->query("SELECT S.id, S.title FROM ".self::SQL_TABLE_SONGS." AS S JOIN ".$conf->table." as P WHERE P.id = ?",array($this->id))->all();
+        }
+
+        public function getSongs(){
+            return $this->_songs;
+        }
+
     }
-
-    public function getSongs(){
-        return $this->_songs;
-    }
-
 }
