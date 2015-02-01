@@ -15,25 +15,7 @@ namespace LibreMVC\Controllers {
         protected $_mysql;
 
         public function init(){
-            $config = System::this()->instancePaths->getBaseDir()['config'];
-            $this->_config = Config::load($config, false);
-            // Prépare les accès bdd.
-            try{
-                Drivers::add( "bookmarks",
-                    new MySql(
-                        $this->_config->server,
-                        $this->_config->database,
-                        $this->_config->user,
-                        $this->_config->password )
-                );
 
-                $this->_mysql = Drivers::get('bookmarks');
-                Drivers::get('bookmarks')->toStdClass();
-            }
-            catch(\Exception $e) {
-                var_dump($e);
-            }
-            $this->_db = Drivers::get("bookmarks");
         }
 
         public function indexAction(){
