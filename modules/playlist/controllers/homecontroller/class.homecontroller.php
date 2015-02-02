@@ -49,7 +49,18 @@ class HomeController extends BaseController{
     }
 
     public function indexAction() {
+        $m = Mood::load(2);
+        //var_dump($m);
+        //$m = new Mood(9);
+        $m = Mood::load(8);
+        $m->name = "---";
+        //var_dump($m);
+        //$m->delete();
+        $m = new Mood();
+        $m->name = "test";
+        ///$m->save();
         $this->toView("Playlist",Playlist::load(1));
+        var_dump(Playlist::load(1));
         $this->_view->render();
     }
 
