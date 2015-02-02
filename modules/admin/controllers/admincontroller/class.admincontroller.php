@@ -19,7 +19,6 @@ abstract class AdminController extends BaseController{
         $viewsPath = $this->_system->this()->getModuleBaseDirs('admin','views') .
         $controller::getControllerName() . '/' . $this->_system->this()->routed->action . '.php';
         $this->changePartial('body',$viewsPath);
-
     }
 
 }

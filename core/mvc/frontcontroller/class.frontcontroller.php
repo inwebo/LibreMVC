@@ -100,13 +100,11 @@ class FrontController {
             // Sinon
             else {
                 // Route static
-                if(is_callable(array($this->_actionController, $action))) {
+                if(is_callable(array($this->_actionController, $action)) ) {
                     $action = str_replace(self::ACTION_SUFFIX,'',$action);
                     $this->_actionController->$action($this->_route->params);
                 }
                 else {
-                    // Route inconnue
-
                     throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists !' );
                 }
 
