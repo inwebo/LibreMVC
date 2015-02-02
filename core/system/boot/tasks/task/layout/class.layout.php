@@ -25,12 +25,27 @@ namespace LibreMVC\System\Boot\Tasks\Task {
         }
 
         protected function layout(){
-            $layout =self::$_instancePaths->getBaseDir('index');
+            try {
+                // Goo v
+                //$layout = self::$_instancePaths->getBaseDir('index');
 
-            $layout = new View(
-                new Template($layout),
-                self::$_viewObject
-            );
+                $layout = self::$_instancePaths->getBaseDir('index');
+
+                $layout = new View(
+                    new Template($layout),
+                    self::$_viewObject
+                );
+
+            }
+            catch(\Exception $e) {
+                // Layout Absent
+                //var_dump($e);
+                // Vue vide
+                $layout = new View(
+                    new Template\TemplateFromString(""),
+                    self::viewObject()
+                );
+            }
             self::$_layout = $layout;
             return self::$_layout;
         }

@@ -34,11 +34,27 @@ namespace LibreMVC\Mvc\Controller {
             $this->_request = $request;
             $this->_system = $system;
             $this->_view    = $this->_system->layout;
-            $this->_vo      = $this->_system->this()->layout->getDataProvider();
+            $this->_vo      = $this->_view->getViewObject();
             $this->init();
         }
+        protected function init(){
 
-        protected function init() {}
+        }
+        /**
+         * @return Request
+         */
+        public function getRequest()
+        {
+            return $this->_request;
+        }
+
+        /**
+         * @return ViewObject
+         */
+        public function getVo()
+        {
+            return $this->_vo;
+        }
 
         static public function getControllerName(){
             $class = get_called_class();
@@ -70,13 +86,15 @@ namespace LibreMVC\Mvc\Controller {
             catch(\Exception $e) {
                 var_dump($e);
             }
+        }
+
+        public function setEmptyLayout(){
 
         }
 
         public function changePartial($name,$layout) {
             try  {
-                $layout = new View(new Template($layout), $this->_vo);
-                $this->_vo->attachPartial($name,$layout);
+                $this->getView()->attachPartial($name,$layout);
             }
             catch(\Exception $e) {
                 var_dump($e);

@@ -24,8 +24,7 @@ class StaticController extends BaseController{
         $partial = $this->_staticView . $name.'.php';
 
         if( is_file($partial) ) {
-            $viewObject = $this->_view->getDataProvider();
-            $viewObject->attachPartial('body', $this->_view->partial( $partial, $viewObject ));
+            $this->_view->attachPartial('body',$partial);
             $this->_view->render();
         }
         else {

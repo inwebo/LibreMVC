@@ -35,6 +35,9 @@ Class Task {
      * Applique une classe métier LogicComparison au Tag if
      * 
      * Retourne le resultat de la comparaison de deux variables selon un opérateur.
+     *
+     * @param Tag $tag
+     * @param IProcess $logic
      */
     public function __construct(Tag $tag, IProcess $logic) {
         $this->tag     = $tag;

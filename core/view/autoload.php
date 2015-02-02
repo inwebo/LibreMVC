@@ -1,7 +1,7 @@
 <?php
 include('interfaces/iprocess/class.iprocess.php');
 include('interfaces/irenderable/class.irenderable.php');
-include('interfaces/idataprovider/class.idataprovider.php');
+include('interfaces/iviewobject/class.iviewobject.php');
 include('parser/class.parser.php');
 include('parser/tag/class.tag.php');
 include('parser/logic/class.logic.php');

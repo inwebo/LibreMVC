@@ -23,21 +23,14 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             $viewsBaseDir = self::$_instancePaths->getBaseDir()['views'];
             $controller = self::$_routed->controller;
             $body  = $viewsBaseDir .
-                $controller::getControllerName() .'/' .
-                self::$_routed->action.'.php';
-            if( is_file($body) ) {
-                self::$_viewObject->attachPartial('body', self::$_layout->partial($body, self::$_viewObject));
-            }
-            else {
+                $controller::getControllerName() . '/' .
+                self::$_routed->action . '.php';
                 try {
-
+                    self::$_layout->attachPartial('body',$body);
                 }
                 catch(\Exception $e) {
-
+                    //var_dump($e);
                 }
-                //trigger_error("Body template :" . $body . ' is missing');
-            }
-
         }
 
         protected function end() {

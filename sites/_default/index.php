@@ -11,7 +11,8 @@
     <li><a href="bookmarks/page/">Bookmarks</a></li>
     <li><a href="admin/">Admin</a></li>
     <li><a href="playlist/">Playlist</a></li>
+    <li><a href="login/">Login</a></li>
 </ul>
-<?php $this->partial( 'body' )->render(); ?>
+<?php $this->renderPartial('body'); ?>
 </body>
 </html>

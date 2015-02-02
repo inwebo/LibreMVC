@@ -31,9 +31,6 @@ class Parser {
 
     public $autoRender;
 
-    /**
-     * Lecture du contenu du fichier template. Création de l'ensemble des constantes de l'application
-     */
     public function __construct(Template $template, ViewObject $dataProvider, $autoRender = false) {
         try {
             $this->template = $template;
@@ -67,24 +64,24 @@ class Parser {
         // On execute une fonction preg_replace avec comme callback la methode
         // process d'un objet Logic sur le contenu courant du template.
         while ($this->tasksCollection->valid()) {
-            $this->template->set( preg_replace_callback(
+            $this->template->setContent( preg_replace_callback(
                                         $this->tasksCollection->current()->getTag()->getPattern(),
                                         // Snippet pour l'acces a une methode
                                         // d'objet dans un callback.
                                         // array( Objet, methode )
                                         array( $this->tasksCollection->current()->getLogic()->get(), 'process'),
-                                        $this->template->get() ) );
+                                        $this->template->getContent() ) );
             $this->tasksCollection->next();
         }
 
     }
 
     public function getContent() {
-        return $this->template->get();
+        return $this->template->getContent();
     }
 
     public function __toString() {
-        return $this->template->get();
+        return $this->template->getContent();
     }
 
     public function __destruct() {

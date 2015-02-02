@@ -1,116 +1,212 @@
 <?php
 
-namespace LibreMVC;
+namespace LibreMVC {
 
-use LibreMVC\View\Interfaces\IDataProvider;
-use LibreMVC\View\Template;
-use LibreMVC\View\ViewObject;
-use LibreMVC\View\Parser;
+    use LibreMVC\View\Template\TemplateFromString;
+    use LibreMVC\View\Template;
+    use LibreMVC\View\ViewObject;
+    use LibreMVC\View\Parser;
 
-/**
- * Class View
- * @package LibreMVC
- */
-class View {
+    class View {
 
-    /**
-     * @var ViewObject
-     */
-    protected $vo;
-    /**
-     * @var View\Template
-     */
-    protected $_template;
+        /**
+         * @var ViewObject
+         */
+        protected $_vo;
+        /**
+         * @var Template
+         */
+        protected $_template;
+        /**
+         * @var bool
+         */
+        protected $_autoRender = true;
+        /**
+         * @var array
+         */
+        protected $_partials;
 
-    /**
-     * @var View\Parser
-     */
-    protected $_parser;
-
-    /**
-     * @var bool
-     */
-    protected $_autoRender = true;
-
-    /**
-     * @param Template $template Un fichier a parser
-     * @param ViewObject $viewObject Un IDataProvider
-     */
-    public function __construct( Template $template, ViewObject $viewObject ) {
-        try {
-            $this->_template = $template;
-            $this->vo = $viewObject;
+        #region Getters
+        /**
+         * @param $name string
+         * @return mixed value if not null, else null
+         */
+        public function __get($name) {
+            if(isset($this->_vo->$name)) {
+                return $this->_vo->$name;
+            }
         }
-        catch(\Exception $e) {
-            var_dump($e);
+        /**
+         * @return ViewObject
+         */
+        public function getViewObject()
+        {
+            return $this->_vo;
         }
-    }
+        /**
+         * @return Template
+         */
+        public function getTemplate()
+        {
+            return $this->_template;
+        }
+        /**
+         * @return Parser
+         */
+        public function getParser()
+        {
+            return $this->_parser;
+        }
+        /**
+         * @return array
+         */
+        public function getPartials() {
+            return $this->_partials;
+        }
 
-    /**
-     * @param Template $template
-     */
-    public function setTemplate(Template $template) {
-        $this->_template = $template;
-    }
-
-    /**
-     * Est nécessaire pour avoir le contexte $this d'une vue dans un fichier parsé.
-     */
-    protected function setViewContext() {
-        $content = $this->vo->strongTypedView( $this->_template->getFile() );
-        $this->_template->set( $content );
-    }
-
-    /**
-     * Setter autorender.
-     *
-     * @param null $bool
-     * @return bool
-     */
-    public function isAutoRender( $bool = null ) {
-        if(is_null($bool)){
+        /**
+         * @param $name
+         * @return View
+         */
+        public function getPartial($name) {
+            if( isset($this->_partials[$name]) ) {
+                return $this->_partials[$name];
+            }
+        }
+        public function isAutoRender() {
             return $this->_autoRender;
         }
-        else {
-            if(is_bool($bool)) {
-                $this->_autoRender = $bool;
+        #endregion
+
+        #region Setters
+        /**
+         * @param boolean $autoRender
+         */
+        public function setAutoRender($autoRender) {
+            if( is_bool($autoRender) ) {
+                $this->_autoRender = $autoRender;
+            }
+        }
+
+        /**
+         * @param ViewObject $vo
+         */
+        public function setVo(ViewObject $vo)
+        {
+            $this->_vo = $vo;
+        }
+
+        /**
+         * @param Template $template
+         */
+        public function setTemplate(Template $template)
+        {
+            $this->_template = $template;
+        }
+        #endregion
+
+        /**
+         * @param Template $template
+         * @param ViewObject $viewObject
+         */
+        public function __construct( Template $template, ViewObject $viewObject ) {
+            $this->_template    = $template;
+            $this->_vo          = $viewObject;
+        }
+
+        /**
+         * @return Parser
+         */
+        public function render() {
+            $this->setContext();
+            $parser = $this->parserFactory();
+            if( $this->_autoRender ) {
+                echo $parser;
+            }
+            else {
+                return $parser;
+            }
+        }
+
+        public function renderPartial($name){
+            if( !is_null($this->getPartial($name) && is_string($name)) ) {
+                //@todo if type of View
+                $this->getPartial($name)->render();
+            }
+        }
+
+        protected function parserFactory() {
+            try{
+                $parser = new Parser($this->_template, $this->_vo);
+                return $parser;
+            }
+            catch(\Exception $e) {
+                var_dump($e);
+            }
+        }
+
+        static public function templateFactory($path) {
+            try{
+                $template = new Template($path);
+                return $template;
+            }
+            catch(\Exception $e) {
+                $template = new TemplateFromString("");
+                return $template;
+                var_dump($e);
+            }
+        }
+
+        public function changeLayout(Template $template){
+            $this->_template = $template;
+        }
+
+        public function setEmptyLayout(){
+            $this->_template = new TemplateFromString('');
+        }
+
+        /**
+         * @param $path
+         * @param ViewObject $viewObject
+         * @return View
+         */
+        static public function partialsFactory( $path, ViewObject &$viewObject = null ) {
+            $template = self::templateFactory($path);
+            $vo = (is_null($viewObject)) ? new ViewObject() : $viewObject;
+            return new self($template,$vo);
+        }
+
+        public function attachPartial($name,$path){
+            $this->_partials[$name] = self::partialsFactory($path,$this->_vo);
+        }
+
+        public function attachPartialView($name, View $view) {
+            $this->_partials[$name] = $view;
+        }
+
+        public function removePartial($name){
+            if(isset($this->_partials[$name])) {
+                unset($this->_partials[$name]);
+            }
+        }
+
+        public function setContext() {
+            $content = $this->strongTypedView($this->getTemplate()->getFilePath());
+            $this->getTemplate()->setContent($content);
+        }
+
+        /**
+         * @param $viewFile File to include from current context
+         * @return string
+         */
+        public function strongTypedView( $viewFile ) {
+            if( is_file($viewFile) ) {
+                ob_start();
+                include($viewFile);
+                $content = ob_get_contents();
+                ob_end_clean();
+                return $content;
             }
         }
     }
-
-    /**
-     * @return Parser
-     */
-    public function render( $vo = null  ) {
-        if( $vo ) {
-            $this->vo = ViewObject::map($vo);
-        }
-        $this->setViewContext();
-        $this->_parser = new Parser($this->_template, $this->vo);
-        if( $this->_autoRender ) {
-            echo $this->_parser;
-        }
-        else {
-            return $this->_parser;
-        }
-    }
-
-    public function getDataProvider() {
-        return $this->vo;
-    }
-
-    /**
-     * @param $path
-     * @param IDataProvider $viewObject
-     * @return View
-     */
-    static public function partial( $path, IDataProvider &$viewObject = null ) {
-        if(is_null($viewObject)) {
-            return new self( new Template($path), new  ViewObject());
-        }
-        else {
-            return new self( new Template($path), $viewObject );
-        }
-    }
-
 }
