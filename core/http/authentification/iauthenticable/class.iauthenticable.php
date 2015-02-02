@@ -6,7 +6,6 @@ namespace LibreMVC\Http\Authentification {
 
         public function header();
         public function validateRequest();
-        public function validateUser();
         public function addUsers($user);
 
     }
