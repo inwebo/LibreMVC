@@ -12,6 +12,13 @@ if( isset($_FILES) && !empty($_FILES) ) {
 ?>
 <html>
 <head></head>
+<style>
+    #holder {
+        width: 50%;
+        height: 20%;
+        background-color: red;
+    }
+</style>
 <body>
     <h1>Upload</h1>
     <?php if(!Upload::isSubmitted()){  ?>
@@ -47,5 +54,39 @@ if( isset($_FILES) && !empty($_FILES) ) {
         ?>
     </p>
     <?php } ?>
+<p id="holder">
+
+</p>
+<script>
+
+</script>
 </body>
 </html>
+<?php
+/*
+use LibreMVC\System;
+use LibreMVC\System\Hooks\CallBack;
+
+$hooks  = System::this()->hooks;
+$routed = System::this()->routed;
+*/
+//var_dump($routed);
+
+/* Systematique
+$hooks->__layout->attachCallback(new CallBack(function(){
+    $module = getModule('admin');
+    $path = $module->getPath()->getBaseDir('index');
+    return $path;
+}));
+*/
+/*
+$hooks->__layout_body_partial->attachCallback(new CallBack(function(){
+    $module = getModule('admin');
+    $path = $module->getPath()->getBaseDir('views');
+    return $path;
+}));
+*/
+
+$string ="\\LibreMVC\\Test\\Modiles\\Controller\\HomeController";
+var_dump(__NAMESPACE__);
+?>

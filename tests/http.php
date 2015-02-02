@@ -21,3 +21,4 @@ $request = Request::this(Url::get(false,true));
 var_dump($request);
 var_dump($request->getHeaders());
 
+
