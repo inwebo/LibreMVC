@@ -1,3 +1,4 @@
+<?php if(user()->is('Root')) { ?>
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -6,6 +7,8 @@
 </head>
 <body>
 <h1>Admin</h1>
-<?php $this->partial( 'body' )->render(); ?>
+<a href="http://localhost/libremvc/tests/">tests</a>
+<?php $this->renderPartial('body'); ?>
 </body>
 </html>
+<?php } ?>
