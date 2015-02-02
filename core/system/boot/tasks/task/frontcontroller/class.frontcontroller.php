@@ -31,7 +31,6 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             catch(\Exception $e) {
                 var_dump($e);
             }
-
         }
 
         protected function end() {
