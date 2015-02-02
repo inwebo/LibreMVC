@@ -4,6 +4,7 @@ namespace LibreMVC;
 
 use LibreMVC\Files\Config;
 use LibreMVC\Http\Request;
+use LibreMVC\Modules\AuthUser\Models\AuthUser;
 use LibreMVC\Routing\Route;
 use LibreMVC\View\ViewObject;
 use LibreMVC\Web\Instance;
@@ -66,6 +67,11 @@ class System {
      * @var array[Module]
      */
     public $modules = array();
+
+    /**
+     * @var AuthUser
+     */
+    public $defaultUser;
 
     private function __construct() {}
 
