@@ -35,11 +35,22 @@ namespace LibreMVC\Http {
             return $this->_headers;
         }
 
+        public function getHeader($name) {
+            $headers = $this->getHeaders();
+            if( isset($headers[$name]) ) {
+                return $headers[$name];
+            }
+        }
+
         public function getInfos() {
             $o = new \StdClass();
             $o->url = $this->_url;
             $o->headers = $this->_headers;
             return $o;
+        }
+
+        static function isRestRequest() {
+
         }
 
     }
