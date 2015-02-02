@@ -11,6 +11,7 @@ namespace LibreMVC\System\Boot\Tasks {
     use LibreMVC\System\Boot\Tasks\Task\Router;
     use LibreMVC\System\Boot\Tasks\Task\Body;
     use LibreMVC\System\Boot\Tasks\Task\FrontController;
+    use LibreMVC\System\Boot\Tasks\Task\Session;
 
     /**
      * Class MVC
@@ -26,6 +27,7 @@ namespace LibreMVC\System\Boot\Tasks {
             $this->attach( new Paths() );
             $this->attach( new Instance() );
             $this->attach( new Modules() );
+            $this->attach( new Session() );
             $this->attach( new Layout() );
             $this->attach( new Router() );
             $this->attach( new Body() );
