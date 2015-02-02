@@ -16,8 +16,11 @@ use LibreMVC\Mvc\Controller\BaseController;
 use LibreMVC\System;
 use LibreMVC\Database\Drivers;
 use LibreMVC\Database\Driver\MySql;
+use LibreMVC\View;
 
 class BookmarksController extends BaseController{
+
+    const BOOKMARKLET_FILE = "bookmarklet.js";
 
     /**
      * @var Config
@@ -43,11 +46,18 @@ class BookmarksController extends BaseController{
      */
     protected $_pagination;
 
+    protected $_uriRestService;
+
     public function init(){
         $config = System::this()->instancePaths->getBaseDir()['config'];
         $this->_config = Config::load($config);
-
         $this->_pagination = $this->_config->Bookmarks['pagination'];
+
+        // Local config
+        $c = $this->_system->getModule('bookmarks')->getConfig();
+        $c = Config::load($c);
+        $this->_uriRestService = $c->Rest['service'];
+
         // Prépare les accès bdd.
         try{
             Drivers::add( "bookmarks",
@@ -62,7 +72,7 @@ class BookmarksController extends BaseController{
             $this->_db->toStdClass();
             $this->_total = $this->_db->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total;
             $this->toView('total',$this->_total);
-            //var_dump(Drivers->count());
+
         }
         catch(\Exception $e) {
             var_dump($e);
@@ -95,6 +105,18 @@ class BookmarksController extends BaseController{
         $this->toView("bookmarks",$tags);
         $this->toView("tag",$tag);
         $this->_view->render();
+    }
+
+    public function bookmarkletAction() {
+        $body = System::this()->getModule('bookmarks')->getStaticDir() . $this->_system->routed->action . '.php';
+        $this->changePartial('body',$body);
+        $bookmarklet = $this->_system->getModule('bookmarks')->getJsDir() . self::BOOKMARKLET_FILE;
+        $this->toView('user', user()->login);
+        $this->toView('publicKey', user()->publicKey);
+        $this->toView('restService', $this->_uriRestService );
+        $view = View::partialsFactory($bookmarklet,$this->_vo);
+        $this->_vo->attachPartial('bookmarklet',$view);
+        $this->render();
     }
 
 }
