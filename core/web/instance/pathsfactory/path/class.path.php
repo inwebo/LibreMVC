@@ -10,9 +10,12 @@ namespace LibreMVC\Web\Instance\PathsFactory {
 
         public function __construct($path, $baseUrl, $baseDir) {
             $this->_path = $path;
-
             $this->_baseUrl = $baseUrl;
             $this->_baseDir = $baseDir;
+        }
+
+        public function dir() {
+            return $this->_baseDir;
         }
 
         public function url() {
