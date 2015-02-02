@@ -5,9 +5,9 @@ namespace LibreMVC\Models\User\Role\Filters {
 
         protected $_filter;
 
-        function __construct(\Iterator $iterator, $filter) {
+        function __construct(\Iterator $iterator, $permissionName) {
             parent::__construct($iterator);
-            $this->_filter = $filter;
+            $this->_filter = $permissionName;
         }
         /**
          * (PHP 5 &gt;= 5.1.0)<br/>

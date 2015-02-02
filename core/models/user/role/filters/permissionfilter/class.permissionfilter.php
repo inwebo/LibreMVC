@@ -13,9 +13,9 @@ class PermissionFilter extends \FilterIterator{
 
     protected $_filter;
 
-    function __construct(\Iterator $iterator, $filter) {
+    function __construct(\Iterator $iterator, $permissionName) {
         parent::__construct($iterator);
-        $this->_filter = $filter;
+        $this->_filter = $permissionName;
     }
 
     /**
