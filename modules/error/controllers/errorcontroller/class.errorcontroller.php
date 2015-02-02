@@ -3,7 +3,7 @@
 namespace LibreMVC\Modules\Error\Controllers;
 
 use LibreMVC\Mvc\Controller\StaticController;
-
+use LibreMVC\View;
 class ErrorController extends StaticController{
 
     const GET = '\\LibreMVC\\Modules\\Error\\Controllers\\ErrorController';
@@ -14,9 +14,10 @@ class ErrorController extends StaticController{
 
     public function __call( $name, $arguments ) {
         $this->_staticView  = $this->_staticView . $name.'.php';
-        $viewObject = $this->_view->getDataProvider();
+        $viewObject = $this->_view->getViewObject();
         try{
-            $viewObject->attachPartial('body', $this->_view->partial( $this->_staticView, $viewObject ));
+            //$viewObject->attachPartial('body', View::partialsFactory( $this->_staticView, $viewObject ));
+            $this->_view->attachPartial('body',$this->_staticView);
             $this->_view->render();
         }
         catch(\Exception $e) {
