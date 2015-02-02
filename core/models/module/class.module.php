@@ -34,5 +34,18 @@ namespace LibreMVC\Models {
         public function getStaticDir() {
             return $this->_path->getBaseDir("static_views");
         }
+        public function getAssetsDir() {
+            return $this->_path->getBaseDir("assets");
+        }
+        public function getJsDir() {
+            return $this->_path->getBaseDir("js");
+        }
+        public function getCssDir() {
+            return $this->_path->getBaseDir("css");
+        }
+        public function getConfig() {
+            return $this->_path->getBaseDir("config");
+        }
+
     }
 }
