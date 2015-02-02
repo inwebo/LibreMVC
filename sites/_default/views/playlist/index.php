@@ -1,7 +1,5 @@
 <h2>Playlist</h2>
 <?php
-
-
     $songs = $this->Playlist->getSongs();
     while($songs->valid()){
         echo $songs->current()->title . '<br>';
