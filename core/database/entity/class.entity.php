@@ -6,8 +6,7 @@ namespace LibreMVC\Database {
     use LibreMVC\Database\Entity\IModelable;
     use LibreMVC\Database\Entity\EntityConfiguration;
 
-    abstract class Entity implements IModelable
-    {
+    abstract class Entity implements IModelable {
 
         const SQL_LOAD ='Select * from `%s` WHERE %s=? LIMIT 1';
         const SQL_DELETE ='Delete from `%s` WHERE %s=? LIMIT 1';
@@ -48,6 +47,12 @@ namespace LibreMVC\Database {
             static::$_entityConfiguration = $conf;
         }
 
+        static public function getBoundDriver() {
+            if( !is_null(static::$_entityConfiguration) ) {
+                return static::$_entityConfiguration->driver;
+            }
+        }
+
         public function save(){
             $conf = static::$_entityConfiguration;
             $toBind = $this->getValues();
@@ -81,12 +86,13 @@ namespace LibreMVC\Database {
             $sqlDelete =sprintf(self::SQL_DELETE_MULTIPLE, $conf->table,$conf->primaryKey,$conf->aggregateCols($array));
         }
 
-        static public function load($id) {
+        static public function load($id, $by = null) {
             $conf = static::$_entityConfiguration;
             // Est-il configuré ?
             if (!is_null($conf)) {
                 $conf->driver->toObject(get_called_class());
-                $sqlSelect =  sprintf(self::SQL_LOAD,$conf->table,$conf->primaryKey);
+                $by = (is_null($by)) ? $conf->primaryKey : $by;
+                $sqlSelect =  sprintf(self::SQL_LOAD,$conf->table,$by);
                 $obj = $conf->driver->query($sqlSelect,array($id))->first();
                 if( !is_null($obj) ) {
                     $obj->setLoaded(true);
