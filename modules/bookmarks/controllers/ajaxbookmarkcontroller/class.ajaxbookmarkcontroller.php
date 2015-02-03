@@ -22,7 +22,8 @@ use LibreMVC\View;
 class AjaxBookmarkController extends AjaxController{
 
     public function indexAction(){
-
+        echo __CLASS__ ;
+        var_dump($this->_reply);
     }
 
 }
