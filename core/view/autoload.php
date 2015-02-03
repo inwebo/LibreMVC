@@ -21,4 +21,4 @@ include('task/taskscollection/comparaisons/class.compararisons.php');
 include('task/taskscollection/basetags/class.basetags.php');
 include('class.view.php');
 include('template/class.template.php');
-include('template/templatefromstring/class.templatefromfile.php');
+include('template/templatefromstring/class.templatefromstring.php');

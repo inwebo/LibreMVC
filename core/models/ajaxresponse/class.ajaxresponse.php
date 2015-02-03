@@ -23,7 +23,7 @@ class AjaxResponse {
     public $error = null;
 
     public function __construct($data=null) {
-        $this->data = "nope";
+        $this->data = $data;
         return $this;
     }
 

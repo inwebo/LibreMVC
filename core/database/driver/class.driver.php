@@ -20,7 +20,8 @@ namespace LibreMVC\Database {
                     $pdoStatement->execute();
             }
             catch(\Exception $e) {
-                var_dump($e);
+                //var_dump($e);
+                echo $e->getMessage();
             }
             return new Results($pdoStatement);
         }

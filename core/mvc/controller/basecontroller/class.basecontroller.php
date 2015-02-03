@@ -88,10 +88,6 @@ namespace LibreMVC\Mvc\Controller {
             }
         }
 
-        public function setEmptyLayout(){
-
-        }
-
         public function changePartial($name,$layout) {
             try  {
                 $this->getView()->attachPartial($name,$layout);

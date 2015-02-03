@@ -2,5 +2,6 @@
 include('icontroller/class.icontroller.php');
 include('basecontroller/class.basecontroller.php');
 include('class.controller.php');
-include('pagecontroller/class.pagecontroller.php');
-include('restcontroller/class.restcontroller.php');
+include('ajaxcontroller/class.ajaxcontroller.php');
+include('ajaxcontroller/privateajaxcontroller/class.privateajaxcontroller.php');
+include('ajaxcontroller/privateajaxcontroller/restcontroller/class.restcontroller.php');

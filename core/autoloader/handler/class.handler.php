@@ -4,6 +4,9 @@ namespace LibreMVC\Autoloader {
 
     class Handler implements IAutoloadable{
 
+        /**
+         * @var ClassInfos
+         */
         protected $_classInfos;
 
         static protected $_decorators = array();
