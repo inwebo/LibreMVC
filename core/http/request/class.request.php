@@ -49,8 +49,8 @@ namespace LibreMVC\Http {
             return $o;
         }
 
-        static function isRestRequest() {
-
+        public function getVerb() {
+            return $this->getUrl()->getVerb();
         }
 
     }
