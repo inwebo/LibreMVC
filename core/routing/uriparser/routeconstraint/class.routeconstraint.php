@@ -47,9 +47,7 @@ namespace LibreMVC\Routing\UriParser {
 
             $j = 0;
             foreach($routeSegments as $routeSegment) {
-
                 if( $routeSegment->isMandatory() ) {
-
                     if( isset( $uriSegments[$j] ) ) {
                         $uriSegment = $uriSegments[$j];
                         $constraint = new $segmentConstraint( $uriSegment, $routeSegment );

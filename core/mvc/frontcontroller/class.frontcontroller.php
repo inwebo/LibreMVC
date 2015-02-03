@@ -7,6 +7,7 @@ use LibreMVC\Mvc\Controller;
 use LibreMVC\Routing\Route;
 use LibreMVC\View;
 use LibreMVC\System;
+use LibreMVC\Mvc\Controller\AjaxController;
 
 class DispatcherUnknownController extends \Exception {};
 class DispatcherUnknownActionController extends \Exception {};
