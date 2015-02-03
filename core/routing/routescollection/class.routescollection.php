@@ -47,6 +47,10 @@ namespace LibreMVC\Routing {
             }
         }
 
+        public function count(){
+            return $this->routes->count();
+        }
+
         public function reset() {
             $this->routes = new \SplStack();
         }

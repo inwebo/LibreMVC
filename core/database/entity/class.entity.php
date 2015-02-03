@@ -25,6 +25,7 @@ namespace LibreMVC\Database {
         static public $_entityConfiguration;
 
         public function __construct(){
+            $this->_loaded = true;
             $this->init();
         }
 
@@ -64,7 +65,13 @@ namespace LibreMVC\Database {
                 // Update
                 $sqlUpdateQuery = sprintf(self::SQL_UPDATE, $conf->table,$conf->toUpdate($toBindKeys),$conf->primaryKey);
                 $toInject = array_merge($toBindValues, array($this->id));
-                $conf->driver->query($sqlUpdateQuery,$toInject);
+                try {
+                    $conf->driver->query($sqlUpdateQuery,$toInject);
+                }
+                catch(\Exception $e) {
+                    var_dump($e);
+                }
+
                 //var_dump($sqlKeys,$sqlValues,$sqlUpdateQuery);
                 //var_dump($conf->toColsName($toBindKeys));
                 //var_dump($toInject);
@@ -72,7 +79,7 @@ namespace LibreMVC\Database {
             else {
                 // Insert
                 $sqlInsertQuery = sprintf(self::SQL_INSERT, $conf->table, $sqlKeys, $tokens);
-                //$conf->driver->query($sqlInsertQuery, $toBindValues);
+                $conf->driver->query($sqlInsertQuery, $toBindValues);
             }
         }
 

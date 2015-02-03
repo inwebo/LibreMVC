@@ -14,11 +14,6 @@ class AjaxController extends BaseController{
      * @var AjaxResponse L'objet de réponse
      */
     protected $_reply;
-    /**
-     * @var string To set
-     * @todo TO SET to prod
-     */
-    protected $_salt = "salt";
 
     public $_inputs;
 
@@ -35,7 +30,7 @@ class AjaxController extends BaseController{
     }
 
     protected function initInputs() {
-        if( isset($_GET) ) {
+        if( isset($_GET) && !empty($_GET) ) {
             $this->_inputs = $_GET;
         }
         else {
