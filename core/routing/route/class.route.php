@@ -28,7 +28,6 @@ namespace LibreMVC\Routing {
             $this->action       = $action;
             $this->params       = (is_null($params)) ? array() : $params;
             $this->name         = $name;
-
             $this->_segments    = $this->toSegments();
         }
 
@@ -105,7 +104,7 @@ namespace LibreMVC\Routing {
             $buffer = array();
             $segments = $this->toArray();
             foreach($segments as $segment) {
-                $buffer[] = new Segment($segment, "");
+                $buffer[] = new Segment($segment);
             }
             return $buffer;
         }
