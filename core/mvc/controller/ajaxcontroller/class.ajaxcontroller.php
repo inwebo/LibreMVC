@@ -13,12 +13,14 @@ class AjaxController extends BaseController{
     /**
      * @var AjaxResponse L'objet de réponse
      */
-    protected $_reply;
-
+    protected $_ajaxResponse;
+    /**
+     * @var array
+     */
     public $_inputs;
 
     public function init() {
-        $this->_reply = new AjaxResponse();
+        $this->_ajaxResponse = new AjaxResponse();
         // Réponse est elle cachable ?
         if( !$this->_cachable ) {
             Header::noCache();
@@ -64,20 +66,20 @@ class AjaxController extends BaseController{
         switch($this->getRequest()->getHeader('Accept')) {
 
             case 'application/json':
-                echo $this->_reply->toJson();
+                echo $this->_ajaxResponse->toJson();
                 break;
 
             case 'text/xml':
-                echo $this->_reply->toXml();
+                echo $this->_ajaxResponse->toXml();
                 break;
 
             case 'text/html':
-                echo $this->_reply->toHtml();
+                echo $this->_ajaxResponse->toHtml();
                 break;
 
             default:
             case 'text/plain':
-                echo $this->_reply->toString();
+                echo $this->_ajaxResponse->toString();
                 break;
         }
     }
