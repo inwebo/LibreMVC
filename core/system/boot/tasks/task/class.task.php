@@ -3,7 +3,13 @@
 namespace LibreMVC\System\Boot\Tasks {
 
     use LibreMVC\Files\Config;
+    use LibreMVC\Http\Request;
     use LibreMVC\Patterns\Observer\Observable;
+    use LibreMVC\Routing\Route;
+    use LibreMVC\System\Boot\Tasks\Task\Instance;
+    use LibreMVC\System\Boot\Tasks\Task\Paths;
+    use LibreMVC\View;
+    use LibreMVC\View\ViewObject;
 
     abstract class Task extends Observable {
 
@@ -13,15 +19,45 @@ namespace LibreMVC\System\Boot\Tasks {
          */
         protected $_statement;
 
+        /**
+         * @var Request
+         */
         static protected $_request;
+        /**
+         * @var Paths
+         */
         static protected $_basePaths;
+        /**
+         * @var Paths
+         */
         static protected $_appPaths;
+        /**
+         * @var Instance
+         */
         static protected $_instance;
+        /**
+         * @var Paths
+         */
         static protected $_instancePaths;
+        /**
+         * @var \AdjustablePriorityQueue
+         */
+        static protected $_modulesQueue;
+        /**
+         * @var array[Modules]
+         */
         static protected $_modules;
-        static protected $modules;
+        /**
+         * @var ViewObject
+         */
         static protected $_viewObject;
+        /**
+         * @var View
+         */
         static protected $_layout;
+        /**
+         * @var Route
+         */
         static protected $_routed;
         /**
          * @var Config
