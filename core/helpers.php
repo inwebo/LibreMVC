@@ -2,9 +2,25 @@
 
 use LibreMVC\Autoloader\Handler;
 use LibreMVC\Autoloader\Decorators;
+use LibreMVC\Http\Url;
+use LibreMVC\System;
+use LibreMVC\Routing\Route;
+use LibreMVC\Routing\RoutesCollection;
+
+function htmlBase() {
+    echo Url::get()->getServer(true,false) . System::this()->instance->getBaseUri();
+}
+
+/**
+ * @return User
+ */
 function user() {
     return (isset($_SESSION['User'])) ? $_SESSION['User'] : null;
 }
+
+/**
+ * @return bool
+ */
 function isDefaultUser(){
     if(isset($_SESSION['User'])) {
         return ( user()->isDefault() );
@@ -14,36 +30,41 @@ function isDefaultUser(){
     }
 }
 function addRoute($pattern, $controller, $action, $collection="default"){
-    $uri = \LibreMVC\System::this()->instance->getBaseUri();
-    $route = new \LibreMVC\Routing\Route(
+    $uri = System::this()->instance->getBaseUri();
+    $route = new Route(
         $uri .= $pattern,
         $controller,
         $action
     );
-    \LibreMVC\Routing\RoutesCollection::get($collection)->addRoute($route);
+    RoutesCollection::get($collection)->addRoute($route);
 }
 function addStaticRoute($pattern){
-    $uri = \LibreMVC\System::this()->instance->getBaseUri();
-    $route = new \LibreMVC\Routing\Route(
+    $uri = System::this()->instance->getBaseUri();
+    $route = new Route(
         $uri .= $pattern,
         '\\LibreMVC\\Mvc\\Controller\\StaticController',
         ''
     );
-    \LibreMVC\Routing\RoutesCollection::get('default')->addRoute($route);
+    RoutesCollection::get('default')->addRoute($route);
 }
 function registerModule(){
     Handler::addDecorator(new Decorators(getcwd()));
 }
 function registerInstance(){
-    $path = \LibreMVC\System::this()->instance->getRealPath();
+    $path = System::this()->instance->getRealPath();
     Handler::addDecorator(new Decorators($path));
 }
 function getBaseUrl(){
-    return \LibreMVC\System::this()->basePaths->getBaseUrl();
+    return System::this()->basePaths->getBaseUrl();
 }
 function getModules(){
-    return \LibreMVC\System::this()->modules;
+    return System::this()->modules;
 }
+
+/**
+ * @param $name
+ * @return \LibreMVC\Models\Module
+ */
 function getModule($name){
-    return \LibreMVC\System::this()->modules[$name];
+    return System::this()->modules[$name];
 }
