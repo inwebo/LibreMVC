@@ -8,6 +8,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
     use LibreMVC\Mvc\FrontController as BaseFrontController;
     use LibreMVC\View\Template;
     use LibreMVC\View;
+    use LibreMVC\Routing\RoutesCollection;
 
     class FrontController extends Task{
 
@@ -29,7 +30,9 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 $front->invoker();
             }
             catch(\Exception $e) {
-                var_dump($e);
+                $default = RoutesCollection::get(('error'))->getDefaultRoute();
+                $front->attachDefaultRoute($default);
+                $front->invoker();
             }
         }
 
