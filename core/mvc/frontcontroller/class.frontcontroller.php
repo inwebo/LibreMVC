@@ -29,15 +29,15 @@ class FrontController {
     const ACTION_SUFFIX = "Action";
 
     /**
-     * @var \LibreMVC\Http\Request
+     * @var Request
      */
     protected $_request;
     /**
-     * @var \LibreMVC\Routing\Route
+     * @var Route
      */
     protected $_route;
     /**
-     * @var \LibreMVC\View
+     * @var View
      */
     protected $_view;
     /**
@@ -48,6 +48,10 @@ class FrontController {
      * @var System
      */
     protected $_system;
+    /**
+     * @var Route
+     */
+    protected $_defaultRoute;
 
     public function __construct( Request $request, System $system ) {
         $this->_request             = $request;
@@ -106,9 +110,21 @@ class FrontController {
                     $this->_actionController->$action($this->_route->params);
                 }
                 else {
-                    throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists !' );
-                }
+                    header('HTTP/1.1 404 Not Found');
+                    if($this->gotDefaultRoute()) {
+                        $this->_system->routed = $this->_defaultRoute;
+                        try {
+                            (new self($this->_request,$this->_system))->invoker();
+                        }
+                        catch(\Exception $e) {
+                            throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists, and no default route' );
+                        }
+                    }
+                    else {
+                        throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists !' );
+                    }
 
+                }
             }
         }
         // Controller inconnu.
@@ -117,12 +133,15 @@ class FrontController {
         }
     }
 
-    public function reRoute(Route $route){
-        $this->_route               = $route;
-        $this->_actionController    = $this->actionControllerFactory();
+    public function getDefaultRoute() {
+        return $this->_defaultRoute;
     }
-    public function reLayout(View $view){
-        $this->_view                = $view;
-        $this->_actionController    = $this->actionControllerFactory();
+
+    public function attachDefaultRoute(Route $route){
+        $this->_defaultRoute = $route;
+    }
+
+    public function gotDefaultRoute() {
+        return isset($this->_defaultRoute);
     }
 }
