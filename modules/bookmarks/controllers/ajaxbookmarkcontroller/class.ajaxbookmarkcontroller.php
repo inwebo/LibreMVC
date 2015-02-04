@@ -1,29 +1,37 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inwebo
- * Date: 24/01/15
- * Time: 20:08
- */
-
 namespace LibreMVC\Modules\Bookmarks\Controllers;
 
-
-use LibreMVC\Files\Config;
-use LibreMVC\Helpers\Pagination;
+use LibreMVC\Modules\Bookmarks\Models\Bookmark;
 use LibreMVC\Modules\Bookmarks\Models\Tags;
-use LibreMVC\Mvc\Controller\AjaxController;
-use LibreMVC\Mvc\Controller\BaseController;
+use LibreMVC\Mvc\Controller\AjaxController\PrivateAjaxController;
 use LibreMVC\System;
-use LibreMVC\Database\Drivers;
-use LibreMVC\Database\Driver\MySql;
 use LibreMVC\View;
+use LibreMVC\View\Template;
 
-class AjaxBookmarkController extends AjaxController{
+class AjaxBookmarkController extends PrivateAjaxController{
+
+    const FORM = "form.php";
 
     public function indexAction(){
-        echo __CLASS__ ;
-        var_dump($this->_reply);
+        $this->_ajaxResponse->data = "<div><h1>Démo</h1><p>Yo</p>";
+    }
+
+    public function formAction(){
+        // Chargement du formulaire d'ajout
+        $template = $this->_system->getModuleBaseDirs('bookmarks','static_views') . self::FORM;
+        $view = new View(
+            new Template($template),
+            $this->_vo
+        );
+        $bookmark = new \StdClass();
+        $bookmark->id = $this->_inputs['id'];
+        $view->getViewObject()->bookmark =$bookmark;
+        $view->setAutoRender(false);
+        $this->_ajaxResponse->data = $view->render();
+    }
+
+    public function bookmarkFactory() {
+
     }
 
 }
