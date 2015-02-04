@@ -7,7 +7,6 @@
                     &#8595;<br>
                     <a id="#widget-template" href="<?php $this->partial( 'bookmarklet' )->render(); ?>" class="btn btn-default col-sm-12 alert alert-success">&hearts;</a>
                 </p>
-
             </div>
         </div>
     </div>

@@ -14,8 +14,6 @@ namespace LibreMVC\Modules\Login\Controllers {
         protected function init() {
             parent::init();
             // Change body
-            var_dump($this->_system->getModule('login')->getStaticDir());
-            var_dump($this->getControllerName());
             $viewsPath = $this->_system->this()->getModuleBaseDirs('login','static_views');
             $viewsPath = $viewsPath . 'login' . '.php';
             $this->changePartial('body',$viewsPath);

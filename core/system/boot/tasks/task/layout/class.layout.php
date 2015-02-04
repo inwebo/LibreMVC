@@ -26,9 +26,6 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
         protected function layout(){
             try {
-                // Goo v
-                //$layout = self::$_instancePaths->getBaseDir('index');
-
                 $layout = self::$_instancePaths->getBaseDir('index');
 
                 $layout = new View(

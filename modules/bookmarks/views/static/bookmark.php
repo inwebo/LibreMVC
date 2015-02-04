@@ -1,4 +1,3 @@
-<?php //vd($this); ?>
 <div class="bookmarks-list" data-bookmark-id="<?php echo md5( $this->url) ?>" data-bookmark-dt="<?php echo $this->dt ?>" data-bookmark-id-category="<?php echo $this->category ?>" contenteditable="false">
     <dt>
         <?php if($_SESSION['User']->login !== 'guest') { ?>

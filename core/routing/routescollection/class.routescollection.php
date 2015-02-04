@@ -76,8 +76,6 @@ namespace LibreMVC\Routing {
                 $return .=$j . " : ";
                 $return .= $this->routes->current()->controller . ', ';
                 $return .= $this->routes->current()->action;
-                //$return .= $this->routes->current()->controller;
-
                 $return .="<hr>";
                 $j++;
                 $this->routes->next();

@@ -40,30 +40,30 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 }
             }
 
-            self::$_modules = $_modules;
+            self::$_modulesQueue = $_modules;
 
         }
         protected function modules() {
             $array = array();
-            self::$_modules->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
-            while(self::$_modules->valid()) {
+            self::$_modulesQueue->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
+            while(self::$_modulesQueue->valid()) {
                 $path = new Path(
                     Paths::getBasePaths("modules"),
-                    self::getModuleBaseUrl(self::$_modules->current()['data']),
-                    self::getModuleBaseDir(self::$_modules->current()['data'])
+                    self::getModuleBaseUrl(self::$_modulesQueue->current()['data']),
+                    self::getModuleBaseDir(self::$_modulesQueue->current()['data'])
                 );
 
-                $module = new Module(self::$_modules->current()['data'],$path);
-                $array[self::$_modules->current()['data']] = $module;
+                $module = new Module(self::$_modulesQueue->current()['data'],$path);
+                $array[self::$_modulesQueue->current()['data']] = $module;
 
-                self::$_modules->next();
+                self::$_modulesQueue->next();
             }
 
-            self::$modules = $array;
-            return self::$modules;
+            self::$_modules = $array;
+            return self::$_modules;
         }
         protected function modulesAutoload() {
-            foreach( self::$modules as $module ) {
+            foreach( self::$_modules as $module ) {
                 if( is_file($module->getPath()->getBaseDir()['autoload']) ) {
                     include($module->getPath()->getBaseDir()['autoload']);
                 }

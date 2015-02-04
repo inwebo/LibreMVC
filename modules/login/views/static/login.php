@@ -1,5 +1,3 @@
-<?php  var_dump($_SESSION['User']->is('Root')) ?>
-<?php  var_dump($_SESSION['User']->has('write')) ?>
 <?php if(isDefaultUser()) {?>
     <form class="form-signin" method="post" action="login/">
         <h2 class="form-signin-heading">Please sign in</h2>

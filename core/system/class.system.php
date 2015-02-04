@@ -109,7 +109,6 @@ class System {
     }
 
     public function getPaths($wich) {
-
         switch($wich) {
             case "base":
                 return $this->basePaths;
@@ -153,5 +152,7 @@ class System {
     public function getModuleBaseUrl($module, $el = null){
         return $this->getModule($module)->getBaseUrl($el);
     }
+
+
 
 }

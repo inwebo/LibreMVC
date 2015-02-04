@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
-    <base href="http://www.inwebo.dev/">
+    <base href="<?php htmlBase() ?>/">
 </head>
 <body>
 <h1>www.libre.dev</h1>
