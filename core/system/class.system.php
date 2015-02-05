@@ -64,9 +64,14 @@ class System {
     public $routed;
 
     /**
-     * @var array[Module]
+     * @var array[LibreModule]
      */
     public $modules = array();
+
+    /**
+     * @var array[Theme]
+     */
+    public $themes = array();
 
     /**
      * @var AuthUser
@@ -100,12 +105,24 @@ class System {
         }
     }
 
+    /**
+     * @param $name
+     * @return Path\BasePath\AppPath\InstancePath\Module
+     */
     public function getModule($name){
         return (isset($this->modules[$name])) ? $this->modules[$name] : null;
     }
 
     public function getModules(){
         return $this->modules;
+    }
+
+    public function getTheme($name){
+        return (isset($this->themes[$name])) ? $this->themes[$name] : null;
+    }
+
+    public function getThemes(){
+        return $this->themes;
     }
 
     public function getPaths($wich) {
@@ -151,6 +168,14 @@ class System {
 
     public function getModuleBaseUrl($module, $el = null){
         return $this->getModule($module)->getBaseUrl($el);
+    }
+
+    public function getThemeBaseUrl($name, $el = null){
+        return $this->getModule($name)->getBaseUrl($el);
+    }
+
+    public function getThemeBaseDir($name, $el = null){
+        return $this->getModule($name)->getBaseUrl($el);
     }
 
 
