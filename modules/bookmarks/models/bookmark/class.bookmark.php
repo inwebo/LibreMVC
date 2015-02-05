@@ -35,6 +35,11 @@ namespace LibreMVC\Modules\Bookmarks\Models {
             return $bookmark;
         }
 
+        public function getTags() {
+            $tags = new Tags($this->tags);
+            return $tags->toArray();
+        }
+
         public function dateUnix() {
             $date = new \DateTime( $this->dt );
             return $date->format('U');
