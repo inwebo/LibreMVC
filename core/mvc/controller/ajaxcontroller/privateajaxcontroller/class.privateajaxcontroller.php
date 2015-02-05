@@ -19,7 +19,7 @@ namespace LibreMVC\Mvc\Controller\AjaxController {
         /**
          * @var bool
          */
-        protected $_public = true;
+        protected $_public = false;
         /**
          * @var AjaxUser
          */
