@@ -6,8 +6,11 @@ namespace LibreMVC\System\Boot\Tasks\Task {
     use LibreMVC\Http\Url;
     use LibreMVC\System\Hooks;
     use LibreMVC\Web\Instance\PathsFactory\Path;
+    use LibreMVC\Web\Instance\PathsFactory\Path\BasePath\AppPath;
+    use LibreMVC\Web\Instance\PathsFactory\Path\BasePath;
 
     class Paths extends Task{
+
 
         public function __construct(){
             parent::__construct();
@@ -18,49 +21,57 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             parent::start();
         }
 
+        protected function tokens() {
+            self::$_tokens = self::getFilesFromConfig(self::$_config);
+        }
+
         protected function basePaths(){
             $basePaths = self::getBasePaths("base");
-            $path = new Path( $basePaths, Url::get()->getUrl(), getcwd() . '/');
+            $path = new BasePath( $basePaths, Url::get()->getUrl(), getcwd() . '/', self::$_tokens);
             self::$_basePaths = $path;
             return self::$_basePaths;
         }
 
         protected function appPaths(){
             $basePaths = self::getBasePaths("app");
-            $path = new Path( $basePaths, Url::get()->getUrl(), getcwd() . '/');
+            $tokens = self::getFilesFromConfig(self::$_config);
+            $path = new AppPath( $basePaths, Url::get()->getUrl(), getcwd() . '/', $tokens);
             self::$_appPaths = $path;
             return self::$_appPaths;
         }
 
         #region Helpers
+        /**
+         * @param $pattern
+         * @todo Vraie factory
+         * @return array
+         */
         static public function getBasePaths( $pattern ){
-            $basePattern = (array)self::$_config->Pattern;
-            $appPattern =  array_merge($basePattern, self::$_config->Root);
-            $instancePattern =array_merge($appPattern, self::$_config->Instances);
-            $modulesPattern = array_merge($basePattern, self::$_config->Instances);
-
-            $array= array();
-            $tokens = (array)self::$_config->Tokens;
-
+            $basePattern        = (array)self::$_config->Pattern;
+            $appPattern         =  array_merge($basePattern, self::$_config->Root);
+            $instancePattern    = array_merge($appPattern, self::$_config->Instances);
+            $modulesPattern     = $instancePattern;
+            $themesPattern      = $basePattern;
+            $array              = array();
+            $tokens             = (array)self::$_config->Tokens;
             switch($pattern) {
                 case "base":
                     $array = $basePattern;
                     break;
-
                 case "app":
                     $array = $appPattern;
                     break;
-
                 case "instance":
                     $array = $instancePattern;
                     break;
-
                 case 'modules':
                     $array = $modulesPattern;
+                    break;
+                case 'themes':
+                    $array = $themesPattern;
+                    break;
             }
-
             return (array)Path::processPattern($array,$tokens);
-
         }
 
         /**
@@ -77,8 +88,14 @@ namespace LibreMVC\System\Boot\Tasks\Task {
         static public function getModuleBaseUrl($name) {
             return  self::mu('modules') . $name . "/";
         }
+        static public function getThemeBaseUrl($name) {
+            return  self::mu('themes') . $name . "/";
+        }
+        static public function getThemeBaseDir($name) {
+            return self::$_instancePaths->getBaseDir()['themes'] . $name . "/";
+        }
         static public function getModuleBaseDir($name) {
-            return  self::$_instancePaths->getBaseDir()['modules'] . $name . "/";
+            return self::$_instancePaths->getBaseDir()['modules'] . $name . "/";
         }
 
         static public function getModuleConfigPath($name) {
@@ -90,12 +107,9 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             return self::id('modules') . $name . "/". $basePaths['autoload'];
         }
 
+
+
         #endregion
-
-
-        protected function themesPaths() {
-            $dir = self::getBasePaths("app")['themes'];
-        }
 
         protected function end() {
             parent::end();

@@ -51,7 +51,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
             //var_dump(getcwd(),$baseUrl,$baseDir);
 
-            $path = new Path( $basePaths, $baseUrl, $baseDir );
+            $path = new Path( $basePaths, $baseUrl, $baseDir, self::$_tokens );
 
             self::$_instancePaths = $path;
             return self::$_instancePaths;

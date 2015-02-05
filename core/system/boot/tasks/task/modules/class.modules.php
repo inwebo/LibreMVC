@@ -11,12 +11,11 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
     class Modules extends Task{
 
-
+        protected $_conf = array();
 
         public function __construct(){
             parent::__construct();
             $this->_name ='Modules';
-
         }
 
         protected function start() {
@@ -36,36 +35,40 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                             (int) $conf->Module['priority']
                         );
                     }
-
                 }
             }
 
-            self::$_modulesQueue = $_modules;
+            self::$_themesQueue = $_modules;
 
         }
         protected function modules() {
             $array = array();
-            self::$_modulesQueue->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
-            while(self::$_modulesQueue->valid()) {
-                $path = new Path(
+            self::$_themesQueue->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
+            while(self::$_themesQueue->valid()) {
+                $moduleName = self::$_themesQueue->current()['data'];
+                $modulePriority = self::$_themesQueue->current()['priority'];
+
+                $module = new Path\BasePath\AppPath\InstancePath\Module(
+                    $modulePriority,
+                    $moduleName,
                     Paths::getBasePaths("modules"),
-                    self::getModuleBaseUrl(self::$_modulesQueue->current()['data']),
-                    self::getModuleBaseDir(self::$_modulesQueue->current()['data'])
+                    self::getModuleBaseUrl($moduleName),
+                    self::getModuleBaseDir($moduleName),
+                    self::$_tokens
                 );
 
-                $module = new Module(self::$_modulesQueue->current()['data'],$path);
-                $array[self::$_modulesQueue->current()['data']] = $module;
-
-                self::$_modulesQueue->next();
+                $array[$moduleName] = $module;
+                self::$_themesQueue->next();
             }
 
             self::$_modules = $array;
+
             return self::$_modules;
         }
         protected function modulesAutoload() {
             foreach( self::$_modules as $module ) {
-                if( is_file($module->getPath()->getBaseDir()['autoload']) ) {
-                    include($module->getPath()->getBaseDir()['autoload']);
+                if( is_file($module->getAutoload('dir')) ) {
+                    include($module->getAutoload('dir'));
                 }
             }
         }
