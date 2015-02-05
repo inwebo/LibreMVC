@@ -63,8 +63,39 @@ function getModules(){
 
 /**
  * @param $name
- * @return \LibreMVC\Models\Module
+ * @return \LibreMVC\Web\Instance\PathsFactory\Path\BasePath\AppPath\InstancePath\Module
  */
 function getModule($name){
     return System::this()->modules[$name];
+}
+
+function collectCss() {
+    $css = array();
+    foreach(System::this()->getThemes() as $theme) {
+        $css = array_merge($css,$theme->getCssUrls());
+    }
+    return $css;
+}
+function collectJs() {
+    $js = array();
+    foreach(System::this()->getThemes() as $theme) {
+        $js = array_merge($js,$theme->getJsUrls());
+    }
+    return $js;
+}
+function getHtmlJsScriptTags() {
+    $js = collectJs();
+    $buffer = "";
+    foreach($js as $v) {
+        $buffer .= '<script src="'.$v .'"></script>'. "\n";
+    }
+    return $buffer;
+}
+function getHtmlCssScriptTags() {
+    $js = collectCss();
+    $buffer = "";
+    foreach($js as $v) {
+        $buffer .= '<link type="text/css" href="'.$v .'"/>'. "\n";
+    }
+    return $buffer;
 }
