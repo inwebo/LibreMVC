@@ -163,7 +163,7 @@ class System {
     }
 
     public function getModuleBaseDirs($module, $el = null){
-        return $this->getModule($module)->getPath()->getBaseDir($el);
+        return $this->getModule($module)->getBaseDir($el);
     }
 
     public function getModuleBaseUrl($module, $el = null){

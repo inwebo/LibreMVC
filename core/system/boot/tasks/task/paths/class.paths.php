@@ -2,6 +2,7 @@
 
 namespace LibreMVC\System\Boot\Tasks\Task {
 
+    use LibreMVC\System;
     use LibreMVC\System\Boot\Tasks\Task;
     use LibreMVC\Http\Url;
     use LibreMVC\System\Hooks;
@@ -27,7 +28,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
         protected function basePaths(){
             $basePaths = self::getBasePaths("base");
-            $path = new BasePath( $basePaths, Url::get()->getUrl(), getcwd() . '/', self::$_tokens);
+            $path = new BasePath( $basePaths, Url::getServer(true,true), getcwd() . '/', self::$_tokens);
             self::$_basePaths = $path;
             return self::$_basePaths;
         }
@@ -35,7 +36,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
         protected function appPaths(){
             $basePaths = self::getBasePaths("app");
             $tokens = self::getFilesFromConfig(self::$_config);
-            $path = new AppPath( $basePaths, Url::get()->getUrl(), getcwd() . '/', $tokens);
+            $path = new AppPath( $basePaths, Url::getServer(true,true), getcwd() . '/', $tokens);
             self::$_appPaths = $path;
             return self::$_appPaths;
         }
@@ -48,7 +49,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
          */
         static public function getBasePaths( $pattern ){
             $basePattern        = (array)self::$_config->Pattern;
-            $appPattern         =  array_merge($basePattern, self::$_config->Root);
+            $appPattern         = array_merge($basePattern, self::$_config->Root);
             $instancePattern    = array_merge($appPattern, self::$_config->Instances);
             $modulesPattern     = $instancePattern;
             $themesPattern      = $basePattern;
