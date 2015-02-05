@@ -43,7 +43,7 @@ class FrontController {
     /**
      * @var mixed
      */
-    protected $_actionController;
+    protected $_controller;
     /**
      * @var System
      */
@@ -55,21 +55,10 @@ class FrontController {
 
     public function __construct( Request $request, System $system ) {
         $this->_request             = $request;
-        $this->_system = $system;
-        $this->_view    = $this->_system->this()->layout;
+        $this->_system              = $system;
+        $this->_view                = $this->_system->this()->layout;
         $this->_route               = $this->_system->this()->routed;
-        $this->_actionController    = $this->actionControllerFactory();
-    }
-
-    /**
-     * Doit instancier le controller requis depuis la route courante.
-     * @return mixed une instance du controller si il existe sinon null
-     * @throws DispatcherUnknownController
-     */
-    protected function actionControllerFactory() {
-        if( $this->isRegistered() ) {
-            return new $this->_route->controller( $this->_request, $this->_system );
-        }
+        $this->_controller          = $this->actionControllerFactory();
     }
 
     /**
@@ -78,6 +67,20 @@ class FrontController {
      */
     protected function isRegistered() {
         return class_exists( $this->_route->controller, true );
+    }
+
+    /**
+     * @return mixed une instance du controller si il existe sinon null
+     * @throws DispatcherUnknownController
+     */
+    protected function actionControllerFactory() {
+        if( $this->isRegistered() ) {
+            $controller = $this->_route->controller;
+            return new $controller( $this->_request, $this->_system );
+        }
+    }
+
+    protected function factory() {
     }
 
     /**
@@ -95,19 +98,19 @@ class FrontController {
         // Le controller est-il une classe déjà connues.
         if( $this->isRegistered() ) {
             // Le controller possede t il la method demandée
-            if( method_exists( $this->_actionController, $action ) ) {
-                $actionController = new \ReflectionMethod( $this->_actionController, $action );
+            if( method_exists( $this->_controller, $action ) ) {
+                $actionController = new \ReflectionMethod( $this->_controller, $action );
                 return $actionController->invokeArgs(
-                    $this->_actionController,
+                    $this->_controller,
                     $this->_route->params
                 );
             }
             // Sinon
             else {
                 // Route static
-                if(is_callable(array($this->_actionController, $action)) ) {
+                if(is_callable(array($this->_controller, $action)) ) {
                     $action = str_replace(self::ACTION_SUFFIX,'',$action);
-                    $this->_actionController->$action($this->_route->params);
+                    $this->_controller->$action($this->_route->params);
                 }
                 else {
                     header('HTTP/1.1 404 Not Found');
