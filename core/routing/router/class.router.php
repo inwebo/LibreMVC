@@ -32,16 +32,14 @@ namespace LibreMVC\Routing {
         public function dispatch() {
             $this->_routesCollection->routes->rewind();
             while($this->_routesCollection->routes->valid()) {
+                $route = $this->_routesCollection->routes->current();
                 $routeConstraint = $this->routeConstraintFactory( $this->_routesCollection->routes->current() );
-
                 // Est une route nommée.
                 if( $routeConstraint->isNamedRoute() ) {
-                    return $this->_routesCollection->routes->current();
+                    return $route;
                 }
-
                 // Est une uri qui valide un pattern de route.
                 if( $routeConstraint->isValidUri("LibreMVC\\Routing\\UriParser\\SegmentConstraint") ) {
-
                     // UriIsGreaterThanRoute
                     if( $routeConstraint->isUriSegmentsGreaterThanRouteSegments() === false ) {
                         $parser = new UriParser( $this->_uri, $this->_routesCollection->routes->current() );
@@ -54,9 +52,9 @@ namespace LibreMVC\Routing {
                             return $this->_defaultRoute;
                         }
                         else {
-
                             throw new RouterExceptionError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
                         }
+                        throw new RouterExceptionError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
                     }
                 }
 
