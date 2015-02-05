@@ -11,7 +11,7 @@ namespace LibreMVC\Modules\Bookmarks\Controllers;
 
 use LibreMVC\Files\Config;
 use LibreMVC\Helpers\Pagination;
-use LibreMVC\Modules\Bookmarks\Models\Tags;
+use LibreMVC\Modules\Bookmarks\Models\Bookmark;
 use LibreMVC\Mvc\Controller\BaseController;
 use LibreMVC\System;
 use LibreMVC\Database\Drivers;
@@ -21,7 +21,7 @@ use LibreMVC\View;
 class BookmarksController extends BaseController{
 
     const BOOKMARKLET_FILE = "bookmarklet.js";
-
+    const BOOKMARK_MODEL = '\\LibreMVC\\Modules\\Bookmarks\Models\\Bookmark';
     /**
      * @var Config
      */
@@ -30,33 +30,28 @@ class BookmarksController extends BaseController{
      * @var Drivers
      */
     protected $_db;
-
     /**
      * @var string
      */
     protected $_table;
-
     /**
      * @var int
      */
     protected $_total;
-
     /**
      * @var int
      */
     protected $_pagination;
-
+    /**
+     * @var string
+     */
     protected $_uriRestService;
 
     public function init(){
-        $config = System::this()->instancePaths->getBaseDir()['config'];
-        $this->_config = Config::load($config);
-        $this->_pagination = $this->_config->Bookmarks['pagination'];
-
-        // Local config
-        $c = $this->_system->getModule('bookmarks')->getConfig();
-        $c = Config::load($c);
-        $this->_uriRestService = $c->Rest['service'];
+        $c = $this->_system->getModule('bookmarks')->getConfig("dir");
+        $this->_config          = Config::load($c);
+        $this->_pagination      = $this->_config->Bookmarks['pagination'];
+        $this->_uriRestService  = $this->_config->Rest['service'];
 
         // Prépare les accès bdd.
         try{
@@ -72,7 +67,8 @@ class BookmarksController extends BaseController{
             $this->_db->toStdClass();
             $this->_total = $this->_db->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total;
             $this->toView('total',$this->_total);
-
+            $bookmark_tpl = $this->_system->getModule('bookmarks')->getStaticViews('dir') . "bookmark.php";
+            $this->toView('template',$bookmark_tpl);
         }
         catch(\Exception $e) {
             var_dump($e);
@@ -83,6 +79,7 @@ class BookmarksController extends BaseController{
         $limits = Pagination::sqlLimit($this->_total, $page, $this->_pagination);
         $pagination = Pagination::dummyPagination($this->_total,$page,$this->_pagination);
         $this->toView("pagination",$pagination);
+        $this->_db->toObject(self::BOOKMARK_MODEL);
         $bookmarks = $this->_db->query("SELECT * FROM " . $this->_table . " ORDER BY dt desc LIMIT " . $limits['start'] . ", " . $this->_pagination)->all();
         $this->toView("bookmarks",$bookmarks);
         $this->_view->render();
@@ -94,7 +91,7 @@ class BookmarksController extends BaseController{
         foreach($tags as $tag) {
             $stringTagInput .= $tag->tags;
         }
-        $tags = new Tags($stringTagInput);
+        $tags = new Bookmark\Tags($stringTagInput);
         $this->toView("tags",$tags->toArray());
         $this->toView("total",$tags->count());
         $this->_view->render();
@@ -114,8 +111,8 @@ class BookmarksController extends BaseController{
         $this->toView('user', user()->login);
         $this->toView('publicKey', user()->publicKey);
         $this->toView('restService', $this->_uriRestService );
-        $view = View::partialsFactory($bookmarklet,$this->_vo);
-        $this->_vo->attachPartial('bookmarklet',$view);
+        //$view = View::partialsFactory($bookmarklet,$this->_vo);
+        //$this->_vo->attachPartial('bookmarklet',$view);
         $this->render();
     }
 
