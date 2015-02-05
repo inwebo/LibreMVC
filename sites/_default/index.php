@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title></title>
     <base href="<?php htmlBase() ?>">
+    <?php
+    echo(getHtmlJsScriptTags());
+    echo(getHtmlCssScriptTags());
+    ?>
 </head>
 <body>
 <h1><a href="<?php htmlBase() ?>">Default site</a></h1>
@@ -14,7 +18,3 @@
 <?php $this->renderPartial('body'); ?>
 </body>
 </html>
-<?php
-    echo(getHtmlJsScriptTags());
-    echo(getHtmlCssScriptTags());
-?>
