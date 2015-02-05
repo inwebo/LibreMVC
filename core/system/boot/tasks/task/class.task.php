@@ -6,10 +6,12 @@ namespace LibreMVC\System\Boot\Tasks {
     use LibreMVC\Http\Request;
     use LibreMVC\Patterns\Observer\Observable;
     use LibreMVC\Routing\Route;
-    use LibreMVC\System\Boot\Tasks\Task\Instance;
-    use LibreMVC\System\Boot\Tasks\Task\Paths;
+    //use LibreMVC\System\Boot\Tasks\Task\Instance;
+    //use LibreMVC\System\Boot\Tasks\Task\Paths;
     use LibreMVC\View;
     use LibreMVC\View\ViewObject;
+    use LibreMVC\Web\Instance\PathsFactory\Path;
+    use LibreMVC\Web\Instance;
 
     abstract class Task extends Observable {
 
@@ -24,11 +26,11 @@ namespace LibreMVC\System\Boot\Tasks {
          */
         static protected $_request;
         /**
-         * @var Paths
+         * @var Path
          */
         static protected $_basePaths;
         /**
-         * @var Paths
+         * @var Path
          */
         static protected $_appPaths;
         /**
@@ -36,17 +38,21 @@ namespace LibreMVC\System\Boot\Tasks {
          */
         static protected $_instance;
         /**
-         * @var Paths
+         * @var Path
          */
         static protected $_instancePaths;
         /**
          * @var \AdjustablePriorityQueue
          */
-        static protected $_modulesQueue;
+        static protected $_themesQueue;
         /**
-         * @var array[Modules]
+         * @var array[LibreModule]
          */
         static protected $_modules;
+        /**
+         * @var array[Theme]
+         */
+        static protected $_themes;
         /**
          * @var ViewObject
          */
@@ -63,6 +69,12 @@ namespace LibreMVC\System\Boot\Tasks {
          * @var Config
          */
         static protected $_config;
+
+        /**
+         * @var Retourne les fichiers par default.
+         */
+        static protected $_tokens;
+
 
         function __construct($_name="Task") {
             parent::__construct();
@@ -82,6 +94,15 @@ namespace LibreMVC\System\Boot\Tasks {
         protected function start(){
             $this->_statement ="started";
             $this->notify();
+        }
+
+        static public function getFilesFromConfig($conf) {
+            $buffer = array();
+            $buffer['autoload'] = $conf->Tokens['%autoload%'];
+            $buffer['index'] = $conf->Tokens['%index%'];
+            $buffer['config'] = $conf->Tokens['%config%'];
+            $buffer['configDir'] = $conf->Tokens['%dir_config%'];
+            return $buffer;
         }
 
         protected function end(){
