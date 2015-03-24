@@ -55,12 +55,11 @@ namespace LibreMVC\Helpers {
          * @param int $limit
          */
         public function __construct( $subject, $index = 1 , $limit = 25) {
-            $this->subject = $subject;
-            $this->index=  $index;
-            $this->limite = $limit ;
-
-            $this->min = $this->setMin();
-            $this->max = $this->setMax();
+            $this->subject  = $subject;
+            $this->index    =  $index;
+            $this->limite   = $limit ;
+            $this->min      = $this->setMin();
+            $this->max      = $this->setMax();
         }
 
         /**
@@ -116,7 +115,9 @@ namespace LibreMVC\Helpers {
         public function last() {
             if( $this->max !== -1 ) {
                 $this->index = $this->total();
-                return $this->chunk[$this->total()];
+                if( isset($this->chunk) ) {
+                    return $this->chunk[$this->total()];
+                }
             }
         }
 
@@ -194,7 +195,8 @@ namespace LibreMVC\Helpers {
         static public function sqlLimit($items, $limit, $page) {
             $totalPage= ceil($items/$limit);
             if($page > $totalPage) {
-                $_limit = null;
+                $_limit['start'] = 1;
+                $_limit['end'] = 1;
             }
             else {
                 $_limit['start'] = $limit * $page - $limit;
@@ -245,8 +247,6 @@ namespace LibreMVC\Helpers {
 
             if( $index <= $pages ) {
                 // Borne moins en dehors
-
-
                 if( $index - $interval <= 0 ) {
                     $start = 1;
                     $end = $plage + $start;
