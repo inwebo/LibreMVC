@@ -22,6 +22,11 @@ namespace LibreMVC\System\Boot\Tasks {
         protected $_statement;
 
         /**
+         * @var bool
+         */
+        static protected $_debug;
+
+        /**
          * @var Request
          */
         static protected $_request;
@@ -75,6 +80,7 @@ namespace LibreMVC\System\Boot\Tasks {
          */
         static protected $_tokens;
 
+        static protected $_exceptions=array();
 
         function __construct($_name="Task") {
             parent::__construct();
@@ -103,6 +109,10 @@ namespace LibreMVC\System\Boot\Tasks {
             $buffer['config'] = $conf->Tokens['%config%'];
             $buffer['configDir'] = $conf->Tokens['%dir_config%'];
             return $buffer;
+        }
+
+        static public function exceptionsCaught() {
+            return (count(self::$_exceptions)>0);
         }
 
         protected function end(){
