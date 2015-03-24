@@ -1,20 +1,12 @@
 <?php
 namespace LibreMVC\Controllers {
 
-    use LibreMVC\Mvc\Controller\BaseController;
-    use LibreMVC\System;
+    use LibreMVC\Mvc\Controller\ActionController;
 
-    class HomeController extends BaseController{
+    class HomeController extends ActionController{
 
-        /**
-         * Custom constructor
-         */
-        public function init(){
-
-        }
-
-        public function indexAction(){
-            $this->render();
+        public function getFile(){
+            return __FILE__;
         }
     }
 }
