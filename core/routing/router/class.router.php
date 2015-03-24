@@ -1,7 +1,7 @@
 <?php
 namespace LibreMVC\Routing {
 
-    class RouterExceptionError404 extends \Exception {};
+    class RouterError404 extends \Exception {};
 
     use LibreMVC\Http\Header;
     use LibreMVC\Routing\UriParser\RouteConstraint;
@@ -26,7 +26,7 @@ namespace LibreMVC\Routing {
         }
 
         public function routeConstraintFactory(Route $route){
-            return new RouteConstraint($this->_uri, $route );
+            return new RouteConstraint($this->_uri, $route);
         }
 
         public function dispatch() {
@@ -48,13 +48,12 @@ namespace LibreMVC\Routing {
                     // Uri invalide 404
                     else {
                         if( !is_null($this->_defaultRoute) ) {
-                            Header::notFound();
                             return $this->_defaultRoute;
                         }
                         else {
-                            throw new RouterExceptionError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
+                            throw new RouterError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
                         }
-                        throw new RouterExceptionError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
+                        throw new RouterError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
                     }
                 }
 
@@ -63,6 +62,11 @@ namespace LibreMVC\Routing {
             // Si on arrive ici est une route inconnue.
             //throw new RouterExceptionError404('Router : route 404 Not found');
             return false;
+        }
+
+        public function reRoute(Route $route) {
+            $this->attachDefaultRoute($route);
+            $this->dispatch();
         }
 
         public function attachDefaultRoute(Route $route){
