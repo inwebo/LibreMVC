@@ -1,37 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inwebo
- * Date: 02/08/14
- * Time: 15:41
- */
+namespace LibreMVC\Mvc\Controller {
 
-namespace LibreMVC\Mvc\Controller;
+    use LibreMVC\Http\Request;
+    use LibreMVC\Mvc\Controller;
+    use LibreMVC\System;
+    use LibreMVC\View;
+    use LibreMVC\View\Template;
 
-use LibreMVC\Http\Header;
-use LibreMVC\System;
-use LibreMVC\View\Template;
+    class StaticController extends Controller {
 
-class StaticController extends BaseController{
+        use Controller\Traits\StaticView;
 
-    protected $_staticView;
-
-    public function init(){
-        $this->_staticView = System::this()->instancePaths->getBaseDir('static_views');
-    }
-
-    public function __call( $name, $arguments ) {
-        $partial = $this->_staticView . $name.'.php';
-
-        if( is_file($partial) ) {
-            $this->_view->attachPartial('body',$partial);
-            $this->_view->render();
-        }
-        else {
-            Header::error(404);
-            // Manque le fichier template, affichage du nom attendus.
-            //echo 'Static file to : ' . $partial;
+        public function __construct(Request $request, View $view, $baseDir) {
+            parent::__construct($request,$view);
+            $this->_baseDir = $baseDir;
         }
     }
-
-} 
+}
