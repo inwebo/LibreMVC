@@ -1,25 +1,30 @@
-<div class="bookmarks-list" data-bookmark-id="<?php echo md5( $this->url) ?>" data-bookmark-dt="<?php echo $this->dt ?>" data-bookmark-id-category="<?php echo $this->category ?>" contenteditable="false">
-    <dt>
-        <?php if($_SESSION['User']->login !== 'guest') { ?>
-            <div class="bookmark-editor">
-                <button type="button" class="bookmark-edit btn btn-warning btn-xs">E</button>
-                <button type="button" class="bookmark-delete btn btn-danger btn-xs">X</button>
-            </div>
+<li
+    data-id="<?php echo $this->bookmark->id ?>"
+    data-hash="<?php echo $this->bookmark->hash ?>"
+    data-dt="<?php echo $this->bookmark->dt ?>"
+    contenteditable="false"
+>
+    <h2  contenteditable="false">
+        <?php if(user()->is('Root')) { ?>
+        <span class="bookmark-editor">
+            <button data-type="edit" type="button">E</button>
+            <button data-type="delete" type="button">X</button>
+        </span>
+
         <?php } ?>
-        <h2><a href="<?php echo $this->url ?>"><?php echo stripslashes($this->title) ?></a><p><small>Ajouté le <?php echo $this->dt; ?></small></p></h2>
-    </dt>
-    <dd>
-        <p>
-        <?php echo $this->description ?>
-            <?php
-                $tags = new \LibreMVC\Modules\Bookmarks\Models\Bookmark\Tags($this->tags);
-                $tags = $tags->toArray();
-            ?>
-        </p>
-        <ul>
-            <?php foreach($tags as $tag) {?>
-                <li><span class="label label-primary"><a href="tag/<?php echo( $tag )?>"><?php echo( $tag )?></a></span></li>
-            <?php } ?>
-        </ul>
-    </dd>
-</div>
+        <a href="<?php echo $this->bookmark->url ?>" target="_blank"><?php echo $this->bookmark->title ?></a>
+    </h2>
+    <p contenteditable="false">
+        <?php echo $this->bookmark->description ?>
+    </p>
+    <ul data-tags="<?php echo $this->bookmark->tags ?>" contenteditable="false">
+        <?php $tags = $this->bookmark->getTags(); ?>
+        <?php foreach($tags as $tag) {?>
+            <li><a href="tag/<?php echo( $tag )?>"><?php echo( $tag )?></a></li>
+        <?php } ?>
+    </ul>
+</li>
+<?php
+    // If loaded === false -> post
+    // if loaded === true   -> update
+?>

@@ -11,16 +11,20 @@ namespace LibreMVC\Modules\Bookmarks\Controllers;
 
 use LibreMVC\Files\Config;
 use LibreMVC\Helpers\Pagination;
+use LibreMVC\Http\Header;
 use LibreMVC\Modules\Bookmarks\Models\Bookmark;
+use LibreMVC\Mvc\Controller\ActionController;
 use LibreMVC\Mvc\Controller\BaseController;
+use LibreMVC\Mvc\Controller\Traits\DataBase;
 use LibreMVC\System;
 use LibreMVC\Database\Drivers;
 use LibreMVC\Database\Driver\MySql;
 use LibreMVC\View;
 
-class BookmarksController extends BaseController{
+class BookmarksController extends ActionController{
 
-    const BOOKMARKLET_FILE = "bookmarklet.js";
+    use DataBase;
+
     const BOOKMARK_MODEL = '\\LibreMVC\\Modules\\Bookmarks\Models\\Bookmark';
     /**
      * @var Config
@@ -48,6 +52,20 @@ class BookmarksController extends BaseController{
     protected $_uriRestService;
 
     public function init(){
+        /*
+        $config = Config::load(System::this()->getModule('bookmarks')->getConfig("dir"));
+        $this->setDbDriver(new MySql(
+            $config->Bookmarks['server'],
+            $config->Bookmarks['database'],
+            $config->Bookmarks['user'],
+            $config->Bookmarks['password']
+        ));
+        $this->_table = $config->Bookmarks['table'];
+        $this->getDbDriver()->toStdClass();
+        $this->toView('total', $this->getDbDriver()->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total);
+        $this->toView('template', System::this()->getModule('bookmarks')->getStaticViews('dir') . "bookmark.php");
+        */
+        $this->_system = System::this();
         $c = $this->_system->getModule('bookmarks')->getConfig("dir");
         $this->_config          = Config::load($c);
         $this->_pagination      = $this->_config->Bookmarks['pagination'];
@@ -62,27 +80,30 @@ class BookmarksController extends BaseController{
                     $this->_config->Bookmarks['user'],
                     $this->_config->Bookmarks['password']
             ));
-            $this->_table = $this->_config->Bookmarks['tablePrefix'] . $this->_config->Bookmarks['table'];
+            $this->_table =  $this->_config->Bookmarks['table'];
             $this->_db = Drivers::get('bookmarks');
             $this->_db->toStdClass();
             $this->_total = $this->_db->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total;
             $this->toView('total',$this->_total);
             $bookmark_tpl = $this->_system->getModule('bookmarks')->getStaticViews('dir') . "bookmark.php";
             $this->toView('template',$bookmark_tpl);
+            $this->toView('user',user()->login);
+            $this->toView('publicKey',user()->publicKey);
         }
         catch(\Exception $e) {
             var_dump($e);
         }
+
     }
 
     public function indexAction($page=1){
-        $limits = Pagination::sqlLimit($this->_total, $page, $this->_pagination);
-        $pagination = Pagination::dummyPagination($this->_total,$page,$this->_pagination);
-        $this->toView("pagination",$pagination);
-        $this->_db->toObject(self::BOOKMARK_MODEL);
-        $bookmarks = $this->_db->query("SELECT * FROM " . $this->_table . " ORDER BY dt desc LIMIT " . $limits['start'] . ", " . $this->_pagination)->all();
-        $this->toView("bookmarks",$bookmarks);
-        $this->_view->render();
+        //$limits = Pagination::sqlLimit($this->_total, $page, $this->_pagination);
+        //$pagination = Pagination::dummyPagination($this->_total,$page,$this->_pagination);
+        //$this->toView("pagination",$pagination);
+        //$this->_db->toObject(self::BOOKMARK_MODEL);
+        //$bookmarks = $this->_db->query("SELECT * FROM " . $this->_table . " ORDER BY dt desc LIMIT " . $limits['start'] . ", " . $this->_pagination)->all();
+        //$this->toView("bookmarks",$bookmarks);
+        $this->render();
     }
 
     public function tagsAction(){
@@ -97,23 +118,17 @@ class BookmarksController extends BaseController{
         $this->_view->render();
     }
 
+    public function search($tag) {
+        $this->tagAction($tag);
+    }
+
     public function tagAction($tag){
+        $this->_db->toObject(self::BOOKMARK_MODEL);
         $tags = $this->_db->query('SELECT * FROM ' . $this->_table . ' WHERE tags LIKE "%' . $tag . '%" ORDER BY dt desc', array($tag))->all();
+        $this->toView('total',count($tags));
         $this->toView("bookmarks",$tags);
         $this->toView("tag",$tag);
         $this->_view->render();
-    }
-
-    public function bookmarkletAction() {
-        $body = System::this()->getModule('bookmarks')->getStaticDir() . $this->_system->routed->action . '.php';
-        $this->changePartial('body',$body);
-        $bookmarklet = $this->_system->getModule('bookmarks')->getJsDir() . self::BOOKMARKLET_FILE;
-        $this->toView('user', user()->login);
-        $this->toView('publicKey', user()->publicKey);
-        $this->toView('restService', $this->_uriRestService );
-        //$view = View::partialsFactory($bookmarklet,$this->_vo);
-        //$this->_vo->attachPartial('bookmarklet',$view);
-        $this->render();
     }
 
 }

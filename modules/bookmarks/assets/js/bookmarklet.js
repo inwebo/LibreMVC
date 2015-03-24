@@ -1,16 +1,18 @@
 javascript:(function(){
 
-    var user, publicKey, restService, bookmark, xpathFavicon, metas;
+    var user, publicKey, restService, bookmark, xpathFavicon, metas, timestamp;
 
     user            = '<?php echo $this->user ?>';
     publicKey       = '<?php echo $this->publicKey ?>';
-    restService     = '<?php echo $this->restService ?>';
+    restService     = '<?php echo $this->form ?>';
     xpathFavicon    = document.evaluate('//*[contains(@rel,\'shortcut icon\')]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
+    timestamp       = Date.now();
     bookmark        = {
         url:null,
         title:null,
-        favicon:null
+        description:null,
+        favicon:null,
+        tags:null
     } ;
     bookmark.url    = encodeURIComponent(location.href);
     bookmark.title  = encodeURIComponent(document.title);
@@ -25,8 +27,20 @@ javascript:(function(){
             bookmark.description = encodeURIComponent(metas[x].content);
         }
         if (metas[x].name.toLowerCase() == 'keywords') {
-            bookmark.keywords = encodeURIComponent(metas[x].content);
+            bookmark.tags = encodeURIComponent(metas[x].content);
         }
     }
-    window.open(restService+'?user='+user+'&publicKey='+publicKey+'&url='+bookmark.url+'&title='+bookmark.title+'&description='+'&keywords='+bookmark.keywords+'&favicon='+bookmark.favicon,'Save me !','location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0').focus();
+    window.open(
+        restService +
+        '?User=' + user +
+        '&Key=' + publicKey +
+        '&Timestamp=' + timestamp +
+        '&url=' + bookmark.url +
+        '&title=' + bookmark.title +
+        '&description=' + bookmark.description +
+        '&tags=' + bookmark.tags +
+        '&favicon='+bookmark.favicon,
+            'Save me !',
+            'location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0'
+    ).focus();
 })();

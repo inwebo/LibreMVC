@@ -5,7 +5,7 @@
                 <p>
                     Please drag and drop to your toolbar.<br>
                     &#8595;<br>
-                    <a id="#widget-template" href="<?php $this->partial( 'bookmarklet' )->render(); ?>" class="btn btn-default col-sm-12 alert alert-success">&hearts;</a>
+                    <a id="#widget-template" href="<?php $this->renderPartial('bookmarklet'); ?>" class="btn btn-default col-sm-12 alert alert-success">&hearts;</a>
                 </p>
             </div>
         </div>

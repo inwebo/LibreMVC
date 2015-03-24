@@ -16,18 +16,19 @@ namespace LibreMVC\Modules\Bookmarks\Models {
         public $url;
         public $title;
         public $tags;
+        protected $_tags;
         public $description;
         public $dt;
-        public $id_user = 1;
-        public $public = 1;
+        public $id_user;
+        public $public;
 
         static public function build($idUser, $url, $title , $tags, $description, $public=true){
             $bookmark = new Bookmark();
             $bookmark->hash = md5($url);
             $bookmark->url = $url;
             $bookmark->title = $title;
-            $tags = new Tags($tags);
-            $bookmark->tags = $tags->toString();
+            $bookmark->_tags = new Tags($tags);
+            $bookmark->tags = $bookmark->_tags->toString();
             $bookmark->description = $description;
             $bookmark->dt = $_SERVER['REQUEST_TIME'];
             $bookmark->id_user = $idUser;
