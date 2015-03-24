@@ -3,18 +3,23 @@
 namespace LibreMVC\Modules\Login\Controllers {
 
     use LibreMVC\Http\Header;
+    use LibreMVC\Mvc\Controller\ActionController;
     use LibreMVC\Mvc\Controller\BaseController;
     use LibreMVC\Session;
     use LibreMVC\Modules\AuthUser\Models\AuthUser;
+    use LibreMVC\System;
 
-    class LoginController extends BaseController {
+    class LoginController extends ActionController {
+
+        use \LibreMVC\Mvc\Controller\Traits\System;
 
         protected $_body;
 
         protected function init() {
             parent::init();
             // Change body
-            $viewsPath = $this->_system->this()->getModuleBaseDirs('login','static_views');
+            $this->setSystem(System::this());
+            $viewsPath = System::this()->getModuleBaseDirs('login','static_views');
             $viewsPath = $viewsPath . 'login' . '.php';
             $this->changePartial('body',$viewsPath);
         }
