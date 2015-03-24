@@ -37,6 +37,8 @@ class Parser {
             $this->dataProvider = $dataProvider;
             $this->autoRender = $autoRender;
         } catch (\Exception $e) {
+            //@todo : What the duck ????
+            //throw $e;
             var_dump($e);
         }
         $this->tasksCollection = new BaseTags( $this->dataProvider );
