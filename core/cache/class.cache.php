@@ -31,7 +31,7 @@ namespace LibreMVC {
                 $this->_death = $this->_birth + $this->_life;
             }
             catch(\Exception $e) {
-                var_dump($e);
+                throw $e;
             }
         }
 

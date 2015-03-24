@@ -57,7 +57,7 @@ namespace LibreMVC\Database\Driver {
                 return $this->driver;
 
             } catch (\Exception $e) {
-                var_dump($e);
+                throw $e;
             }
         }
 

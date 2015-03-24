@@ -70,7 +70,7 @@ class IO {
                 \RecursiveIteratorIterator::SELF_FIRST);
         }
         catch(\Exception $e ) {
-            var_dump($e);
+            throw $e;
         }
 
         foreach($iterator as $item) {

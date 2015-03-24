@@ -24,6 +24,8 @@ namespace LibreMVC\System {
          */
         protected $_dataProvider;
 
+        protected $_exceptions;
+
         public function __construct(\SplObserver $_observer, IStepable $_tasks, $_dataProvider) {
             $this->_dataProvider = $_dataProvider;
             $this->_observer = $_observer;
@@ -61,7 +63,10 @@ namespace LibreMVC\System {
                             $this->_dataProvider->this()->$name = $result;
                         }
                     } catch (\Exception $e) {
-                        var_dump($e);
+                        //var_dump(__FILE__);
+                        //var_dump($e);
+                        // exception MVC
+                        throw $e;
                     }
                     $methods->next();
                 }

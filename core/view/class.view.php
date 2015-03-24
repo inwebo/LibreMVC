@@ -141,7 +141,7 @@ namespace LibreMVC {
                 return $parser;
             }
             catch(\Exception $e) {
-                var_dump($e);
+                throw $e;
             }
         }
 
@@ -153,7 +153,6 @@ namespace LibreMVC {
             catch(\Exception $e) {
                 $template = new TemplateFromString("");
                 return $template;
-                var_dump($e);
             }
         }
 

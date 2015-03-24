@@ -20,8 +20,14 @@ namespace LibreMVC\Database {
                     $pdoStatement->execute();
             }
             catch(\Exception $e) {
-                //var_dump($e);
-                echo $e->getMessage();
+                //return $e;
+                /*switch($e->getCode()) {
+                    case '23000':
+                        throw new \Exception('Inegirty violation');
+                        break;
+                }*/
+                throw $e;
+                //echo $e->getMessage();
             }
             return new Results($pdoStatement);
         }
