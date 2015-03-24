@@ -15,9 +15,6 @@ use LibreMVC\View;
  * @version    $Id:$
  * @link       https://github.com/inwebo/Template
  * @since      File available since Beta
- * @static
+ * @staticcontroller
  */
-class ViewObject extends StdClass implements IViewObject {
-
-
-}
+class ViewObject extends StdClass implements IViewObject {}
