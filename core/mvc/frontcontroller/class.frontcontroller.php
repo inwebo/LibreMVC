@@ -1,150 +1,161 @@
 <?php
-namespace LibreMVC\Mvc;
+namespace LibreMVC\Mvc {
 
-use LibreMVC\ClassNamespace;
-use LibreMVC\Http\Request;
-use LibreMVC\Mvc\Controller;
-use LibreMVC\Routing\Route;
-use LibreMVC\View;
-use LibreMVC\System;
-use LibreMVC\Mvc\Controller\AjaxController;
+    use LibreMVC\ClassNamespace;
+    use LibreMVC\Http\Request;
+    use LibreMVC\Mvc\Controller\ActionController;
+    use LibreMVC\Mvc\Controller\StaticController;
+    use LibreMVC\Mvc\FrontController\Decorator;
+    use LibreMVC\Mvc\FrontController\Filter;
+    use LibreMVC\Routing\Route;
+    use LibreMVC\View;
+    use LibreMVC\System;
+    use LibreMVC\Mvc\Controller\AjaxController;
+    use LibreMVC\Exception;
 
-class DispatcherUnknownController extends \Exception {};
-class DispatcherUnknownActionController extends \Exception {};
+    class FrontControllerUnknownController extends Exception {
+        const MSG = 'Action, %s->%s() not found, add method : <cite>public function %s()&#123;&#125;</cite> to %s controller.';
+    };
 
-/**
- * Class Dispatcher (Distributeur)
- *
- * Recoit un objet Http\Request, une routes déjà routée ainsi qu'une vue, le frontcontroller doit permettre
- * l'instaciation de l'ActionController, appel de la methode d'action correspondante avec les bon paramètres.
- *
- * @todo : Devrait gérér les plugins.
- *
- * @package LibreMVC\Mvc
- */
-
-class FrontController {
-
-    const DEFAULT_ACTION = "index";
-    const ACTION_SUFFIX = "Action";
+    class FrontControllerUnknownAction extends Exception {
+        const MSG = 'Action, %s->%s() not found, add method : <cite>public function %s()&#123;&#125;</cite> in %s file.';
+    };
 
     /**
-     * @var Request
+     * Class Dispatcher (Distributeur)
+     *
+     * Recoit un objet Http\Request, une routes déjà routée ainsi qu'une vue, le frontcontroller doit permettre
+     * l'instaciation de l'ActionController, appel de la methode d'action correspondante avec les bon paramètres.
+     *
+     * @todo : Devrait gérér les plugins.
+     *
+     * @package LibreMVC\Mvc
      */
-    protected $_request;
-    /**
-     * @var Route
-     */
-    protected $_route;
-    /**
-     * @var View
-     */
-    protected $_view;
-    /**
-     * @var mixed
-     */
-    protected $_controller;
-    /**
-     * @var System
-     */
-    protected $_system;
-    /**
-     * @var Route
-     */
-    protected $_defaultRoute;
 
-    public function __construct( Request $request, System $system ) {
-        $this->_request             = $request;
-        $this->_system              = $system;
-        $this->_view                = $this->_system->this()->layout;
-        $this->_route               = $this->_system->this()->routed;
-        $this->_controller          = $this->actionControllerFactory();
-    }
+    class FrontController {
 
-    /**
-     * La classe est elle accessible ?
-     * @return bool
-     */
-    protected function isRegistered() {
-        return class_exists( $this->_route->controller, true );
-    }
+        const DEFAULT_ACTION = "index";
+        const ACTION_SUFFIX = "Action";
 
-    /**
-     * @return mixed une instance du controller si il existe sinon null
-     * @throws DispatcherUnknownController
-     */
-    protected function actionControllerFactory() {
-        if( $this->isRegistered() ) {
-            $controller = $this->_route->controller;
-            return new $controller( $this->_request, $this->_system );
+        //const CONTROLLER_TYPE_ACTION = 'LibreMVC\Mvc\Controller\ActionController';
+        //const CONTROLLER_TYPE_ACTION = ActionController::getCalledClass();
+        //const CONTROLLER_TYPE_ACTION_NAME = 'ActionController';
+        //const CONTROLLER_TYPE_STATIC = 'LibreMVC\Mvc\Controller\StaticController';
+        //const CONTROLLER_TYPE_STATIC_NAME = 'StaticController';
+
+        /**
+         * @var Request
+         */
+        protected $_request;
+        /**
+         * @var Route
+         */
+        protected $_route;
+        /**
+         * @var View
+         */
+        protected $_view;
+        /**
+         * @var mixed
+         */
+        protected $_controller;
+        /**
+         * @var System
+         */
+        protected $_system;
+        /**
+         * @var Route
+         */
+        protected $_defaultRoute;
+        /**
+         * @var \SplStack
+         */
+        protected $_controllerDecorators;
+
+        public function __construct( Request $request, System $system ) {
+            $this->_request             = $request;
+            $this->_system              = $system;
+            $this->_view                = $this->_system->this()->layout;
+            $this->_route               = $this->_system->this()->routed;
+            $this->_controllerDecorators= new \SplStack();
         }
-    }
+        #region Helpers
+        public function getAction() {
+            return $this->_route->action . self::ACTION_SUFFIX;
+        }
+        public function getParams() {
+            return $this->_route->params;
+        }
+        public function pushDecorator(Decorator $decorator) {
+            $this->_controllerDecorators->push($decorator);
+        }
+        public function getControllerDecorators() {
+            $this->_controllerDecorators->rewind();
+            return $this->_controllerDecorators;
+        }
+        #endregion
 
-    protected function factory() {
-    }
-
-    /**
-     * Distribution
-     *
-     * La distribution doit permettre l'instanciation du controller avec la méthode souhaitée ainsi que les bons arguments.
-     *
-     * @return mixed
-     * @throws DispatcherUnknownActionController Si l'action demandée n'existe pas.
-     * @throws DispatcherUnknownController Si le controller n'existe pas
-     */
-    public function invoker() {
-        // Action souhaitée
-        $action =  $this->_route->action . self::ACTION_SUFFIX;
-        // Le controller est-il une classe déjà connues.
-        if( $this->isRegistered() ) {
-            // Le controller possede t il la method demandée
-            if( method_exists( $this->_controller, $action ) ) {
-                $actionController = new \ReflectionMethod( $this->_controller, $action );
-                return $actionController->invokeArgs(
-                    $this->_controller,
-                    $this->_route->params
-                );
-            }
-            // Sinon
-            else {
-                // Route static
-                if(is_callable(array($this->_controller, $action)) ) {
-                    $action = str_replace(self::ACTION_SUFFIX,'',$action);
-                    $this->_controller->$action($this->_route->params);
-                }
-                else {
-                    header('HTTP/1.1 404 Not Found');
-                    if($this->gotDefaultRoute()) {
-                        $this->_system->routed = $this->_defaultRoute;
-                        try {
-                            (new self($this->_request,$this->_system))->invoker();
+        public function invoker() {
+            $decorators = $this->getControllerDecorators();
+            $decorated  = null;
+            while($decorators->valid()) {
+                $decorator = $decorators->current();
+                if( $decorator->isTyped() ) {
+                    if( $decorator->isValidController() ) {
+                        if( $decorator->isValidAction() ) {
+                            $decorated = $decorator;
+                            //echo 'Valid action';
                         }
-                        catch(\Exception $e) {
-                            throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists, and no default route' );
+                        else {
+                            // Action inconnues
+                            //echo "Action inconnus";
+                            //return;
                         }
+                        //echo 'Valid controller';
                     }
                     else {
-                        throw new DispatcherUnknownActionController( $this->_route->controller .'->'. $action.'() : ' .  ' method doesn\'t exists !' );
+                        // Controller inconnus
+                        //echo "Controller inconnus";
+                        //return;
                     }
+                    //echo "Type connus";
+                }
+                else {
+                    // Type inconnus
+                    //echo "Type inconnus";
+                    //return;
+                }
+
+                $decorators->next();
+            }
+            try {
+                if (!is_null($decorated)) {
+                    switch ($decorated->getType()) {
+                        case ActionController::getShortCalledClass():
+                            return $decorated->factory(array(
+                                System::this()->request,
+                                System::this()->layout
+                            ));
+                            break;
+
+                        case StaticController::getShortCalledClass():
+                                return $decorated->factory(array(
+                                    System::this()->request,
+                                    System::this()->layout,
+                                    $this->_system->instancePaths->getBaseDir('static_views')
+                                ));
+                            break;
+                    }
+
+
+                } else {
 
                 }
             }
+            catch(\Exception $e ) {
+                var_dump($e);
+                throw $e;
+            }
         }
-        // Controller inconnu.
-        else {
-            throw new DispatcherUnknownController( 'Class : "' . $this->controller .  '" is not registered, register it !' );
-        }
-    }
-
-    public function getDefaultRoute() {
-        return $this->_defaultRoute;
-    }
-
-    public function attachDefaultRoute(Route $route){
-        $this->_defaultRoute = $route;
-    }
-
-    public function gotDefaultRoute() {
-        return isset($this->_defaultRoute);
     }
 }
