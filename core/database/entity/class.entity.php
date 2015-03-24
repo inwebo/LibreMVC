@@ -30,7 +30,14 @@ namespace LibreMVC\Database {
         }
 
         protected function init() {
-            $this->_loaded = false;
+            $pk = static::$_entityConfiguration->primaryKey;
+            if( !is_null($this->$pk) ) {
+                $this->_loaded = true;
+            }
+            else {
+                $this->_loaded = false;
+            }
+
         }
 
         /**
@@ -38,6 +45,10 @@ namespace LibreMVC\Database {
          */
         protected function setLoaded($statement) {
             $this->_loaded = $statement;
+        }
+
+        public function isLoaded() {
+            return $this->_loaded;
         }
 
         static public function binder(IDriver $iDriver, $primaryKey = null, $tableName = null, $tableDesc = null){
@@ -69,7 +80,7 @@ namespace LibreMVC\Database {
                     $conf->driver->query($sqlUpdateQuery,$toInject);
                 }
                 catch(\Exception $e) {
-                    var_dump($e);
+                    throw $e;
                 }
 
                 //var_dump($sqlKeys,$sqlValues,$sqlUpdateQuery);
@@ -79,7 +90,12 @@ namespace LibreMVC\Database {
             else {
                 // Insert
                 $sqlInsertQuery = sprintf(self::SQL_INSERT, $conf->table, $sqlKeys, $tokens);
-                $conf->driver->query($sqlInsertQuery, $toBindValues);
+                try {
+                    $conf->driver->query($sqlInsertQuery, $toBindValues);
+                }
+                catch(\Exception $e) {
+                    throw $e;
+                }
             }
         }
 
