@@ -9,7 +9,7 @@ namespace LibreMVC\Http {
         public $verb;
         public $server;
 
-        protected function __construct($url,$uri, $verb, $server){
+        protected function __construct($url, $uri, $verb, $server){
             $this->url = $url;
             $this->uri = $uri;
             $this->verb = $verb;

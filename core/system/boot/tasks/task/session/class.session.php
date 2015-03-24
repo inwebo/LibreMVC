@@ -14,7 +14,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
         public function __construct(){
             parent::__construct();
-            $this->_name ='Router';
+            $this->_name ='Session';
         }
 
         protected function start() {

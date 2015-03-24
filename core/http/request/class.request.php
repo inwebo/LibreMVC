@@ -15,9 +15,9 @@ namespace LibreMVC\Http {
 
         private function __clone(){}
 
-        static public function this ( Url $http ) {
+        static public function this ( Url $url ) {
             if( is_null( self::$_this ) ) {
-                self::$_this = new self($http);
+                self::$_this = new self($url);
                 return self::$_this;
             }
             return self::$_this;

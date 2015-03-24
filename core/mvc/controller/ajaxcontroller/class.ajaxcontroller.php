@@ -38,8 +38,6 @@ class AjaxController extends BaseController{
         else {
             parse_str(file_get_contents('php://input'), $this->_inputs);
         }
-
-
     }
 
     protected function negotiateHttpContentType() {

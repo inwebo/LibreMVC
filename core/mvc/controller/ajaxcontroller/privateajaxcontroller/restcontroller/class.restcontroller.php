@@ -3,7 +3,6 @@
 namespace LibreMVC\Mvc\Controller\AjaxController\PrivateAjaxController {
 
     use LibreMVC\Models\User;
-    use LibreMVC\Mvc\Controller;
     use LibreMVC\Mvc\Controller\AjaxController\PrivateAjaxController;
 
     /**
