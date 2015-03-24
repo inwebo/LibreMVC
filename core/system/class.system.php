@@ -19,6 +19,11 @@ class System {
     protected $readOnly = false;
 
     /**
+     * @var bool
+     */
+    public $debug;
+
+    /**
      * @var Request
      */
     public $request;
