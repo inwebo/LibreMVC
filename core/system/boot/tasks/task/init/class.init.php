@@ -2,6 +2,7 @@
 
 namespace LibreMVC\System\Boot\Tasks\Task {
 
+    use LibreMVC\System;
     use LibreMVC\System\Boot\Tasks\Task;
     use LibreMVC\Files\Config;
     use LibreMVC\Http\Request;
@@ -28,6 +29,10 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
         protected function config() {
             return self::$_config;
+        }
+
+        protected function debug() {
+            return (bool)self::$_config->Debug['debug'];
         }
 
         protected function hooks(){
