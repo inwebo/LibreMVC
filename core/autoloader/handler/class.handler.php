@@ -35,7 +35,8 @@ namespace LibreMVC\Autoloader {
                 $c = new ClassInfos($class);
             }
             catch(\Exception $e) {
-                var_dump($e);
+                var_dump(__FILE__);
+
             }
             return new self($c);
         }
