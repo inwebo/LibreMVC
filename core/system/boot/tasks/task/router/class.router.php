@@ -29,15 +29,13 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 RoutesCollection::get('default'),
                 self::ROUTE_CONSTRAINT
             );
-            $default = RoutesCollection::get(('error'))->getDefaultRoute();
-            //var_dump($default);
-            $router->attachDefaultRoute($default);
+
             try {
-                self::$_routed = $router->dispatch();
+                $routed = $router->dispatch();
+                self::$_routed = $routed;
             }
             catch(\Exception $e) {
                 self::$_exceptions[] = $e;
-                //throw $e;
             }
             return self::$_routed;
         }
@@ -47,11 +45,10 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 // Est un controller valide
                 if( !class_exists(self::$_routed->controller) ) {
                     self::$_exceptions[] = new RouterError404("Unknown controller " . self::$_routed->controller . ", check typo or create the needed file.");
-                    //throw new RouterError404("Unknown controller " . self::$_routed->controller . ", check typo or create the needed file.");
                 }
             }
             else {
-                //throw new RouterError404();
+                self::$_exceptions[] = new RouterError404("Unknown route, check typo or create the needed file.");
             }
         }
 
