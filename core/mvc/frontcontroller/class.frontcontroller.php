@@ -9,18 +9,24 @@ namespace LibreMVC\Mvc {
     use LibreMVC\Mvc\FrontController\Decorator;
     use LibreMVC\Mvc\FrontController\Filter;
     use LibreMVC\Routing\Route;
-    use LibreMVC\Routing\RouterError404;
     use LibreMVC\View;
     use LibreMVC\System;
     use LibreMVC\Mvc\Controller\AjaxController;
-    use LibreMVC\Exception;
 
-    class FrontControllerUnknownController extends Exception {
+
+    class FrontControllerUnknownController extends \Exception {
+        protected $code = 500;
         const MSG = 'Action, %s->%s() not found, add method : <cite>public function %s()&#123;&#125;</cite> to %s controller.';
     };
 
-    class FrontControllerUnknownAction extends Exception {
+    class FrontControllerUnknownAction extends \Exception {
+        protected $code = 500;
         const MSG = 'Action, %s->%s() not found, add method : <cite>public function %s()&#123;&#125;</cite> in %s file.';
+    };
+
+    class FrontControllerException extends \Exception {
+        protected $code = 500;
+        protected $message = 'FrontController decorators <cite>(filters)</cite> unknow, controller or action not found.';
     };
 
     /**
@@ -36,8 +42,8 @@ namespace LibreMVC\Mvc {
 
     class FrontController {
 
-        const DEFAULT_ACTION = "index";
-        const ACTION_SUFFIX = "Action";
+        const DEFAULT_ACTION    = "index";
+        const ACTION_SUFFIX     = "Action";
 
         /**
          * @var Request
@@ -133,7 +139,7 @@ namespace LibreMVC\Mvc {
                  * Aucun controllers ne correspond
                  */
                 else {
-                    throw new RouterError404('Unknown route');
+                    throw new FrontControllerException();
                 }
             }
             catch(\Exception $e ) {
