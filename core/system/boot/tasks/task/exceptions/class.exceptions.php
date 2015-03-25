@@ -2,6 +2,8 @@
 
 namespace LibreMVC\System\Boot\Tasks\Task {
 
+    use LibreMVC\Http\Header;
+    use LibreMVC\System;
     use LibreMVC\System\Boot\Tasks\Task;
     use LibreMVC\System\Hooks;
     use LibreMVC\View\Template;
@@ -20,11 +22,11 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
         protected function exceptions() {
             if( count(self::$_exceptions) > 0 ) {
-                // Changer body pour celui des exceptions
-                //throw self::$_exceptions[0];
-                // Check type exceptions
-                //var_dump(self::$_exceptions[0]);
-
+                Header::notFound();
+                self::$_viewObject->exception = self::$_exceptions[0];
+                self::$_viewObject->debug = self::$_debug;
+                self::$_layout->attachPartial('body', System::this()->getInstanceBaseDirs('static_views') . 'error.php');
+                self::$_layout->render();
             }
         }
 
