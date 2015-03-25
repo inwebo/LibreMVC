@@ -3,6 +3,7 @@
 namespace LibreMVC\Mvc\Controller\Traits {
 
     class StaticViewException extends \Exception {
+        protected $code = 500;
         const ERROR_STRING = 'Partial view \'body\' => %s not found';
     }
 
