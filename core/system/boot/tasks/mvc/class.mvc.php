@@ -34,7 +34,6 @@ namespace LibreMVC\System\Boot\Tasks {
             $this->attach(new Layout());
             $this->attach(new Router());
             $this->attach(new Body());
-            $this->attach(new Exceptions());
             $this->attach(new FrontController());
             $this->attach(new Exceptions());
         }
