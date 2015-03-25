@@ -15,7 +15,8 @@ namespace LibreMVC\System\Boot\Tasks\Task {
         public function __construct($config){
             parent::__construct();
             $this->_name ='Ini';
-            self::$_config = Config::load($config);
+            self::$_config  = Config::load($config);
+            self::$_debug   = (bool)self::$_config->Debug['debug'];
         }
 
         protected function start() {
