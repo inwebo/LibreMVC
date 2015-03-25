@@ -1,9 +1,11 @@
 <?php
 namespace LibreMVC\Routing {
 
-    class RouterError404 extends \Exception {};
+    class RouterError404 extends \Exception {
+        protected $code = 404;
+        const MSG       = 'Uri : %s is not a valid uri.';
+    };
 
-    use LibreMVC\Http\Header;
     use LibreMVC\Routing\UriParser\RouteConstraint;
 
     /**
@@ -51,9 +53,9 @@ namespace LibreMVC\Routing {
                             return $this->_defaultRoute;
                         }
                         else {
-                            throw new RouterError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
+                            throw new RouterError404(sprintf(RouterError404::MSG,$this->_uri->value));
                         }
-                        throw new RouterError404('Uri : ' . $this->_uri->value . ' is not a valid uri.');
+                        throw new RouterError404(sprintf(RouterError404::MSG,$this->_uri->value));
                     }
                 }
 
