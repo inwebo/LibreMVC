@@ -2,7 +2,6 @@
 
 namespace LibreMVC\System\Boot\Tasks\Task {
 
-    use LibreMVC\Controllers\HomeController;
     use LibreMVC\Mvc\Controller;
     use LibreMVC\System;
     use LibreMVC\System\Boot\Tasks\Task;
@@ -12,7 +11,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
     use LibreMVC\View;
     use LibreMVC\Mvc\FrontController\Decorator;
 
-    class FrontController extends Task{
+    class FrontController extends Task {
 
         public function __construct(){
             parent::__construct();
@@ -23,25 +22,24 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             parent::start();
         }
 
+        static private function getRoutedAction() {
+            return self::$_routed->action . Controller::SUFFIX_ACTION;
+        }
+
         protected function frontController(){
             try {
                 $front = new BaseFrontController(
                     self::$_request,
                     System::this()
                 );
-                // Peupler les Decorator du FrontController
-                //if(!is_null(self::$_routed)) {
-                //echo HomeController::getCalledClass();
-                //echo HomeController::getControllerName();
-                    $front->pushDecorator(new Decorator\StaticController(self::$_routed->controller, self::$_routed->action . Controller::SUFFIX_ACTION, Controller\StaticController::getShortCalledClass(), self::$_routed->params));
-                    $front->pushDecorator(new Decorator\ActionController(self::$_routed->controller, self::$_routed->action . Controller::SUFFIX_ACTION, Controller\ActionController::getShortCalledClass(), self::$_routed->params));
+                if( count(self::$_exceptions) === 0 ) {
+                    $front->pushDecorator(new Decorator\StaticController(self::$_routed->controller, self::getRoutedAction(), Controller\StaticController::getCalledClass(), self::$_routed->params));
+                    $front->pushDecorator(new Decorator\ActionController(self::$_routed->controller, self::getRoutedAction(), Controller\ActionController::getCalledClass(), self::$_routed->params));
                     $front->invoker();
-                //}
-
+                }
             }
             catch(\Exception $e) {
                 self::$_exceptions[] = $e;
-                //throw $e;
             }
         }
 
