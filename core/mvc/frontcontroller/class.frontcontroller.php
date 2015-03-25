@@ -3,11 +3,13 @@ namespace LibreMVC\Mvc {
 
     use LibreMVC\ClassNamespace;
     use LibreMVC\Http\Request;
+    use LibreMVC\Modules\Error\Controllers\ErrorController;
     use LibreMVC\Mvc\Controller\ActionController;
     use LibreMVC\Mvc\Controller\StaticController;
     use LibreMVC\Mvc\FrontController\Decorator;
     use LibreMVC\Mvc\FrontController\Filter;
     use LibreMVC\Routing\Route;
+    use LibreMVC\Routing\RouterError404;
     use LibreMVC\View;
     use LibreMVC\System;
     use LibreMVC\Mvc\Controller\AjaxController;
@@ -36,12 +38,6 @@ namespace LibreMVC\Mvc {
 
         const DEFAULT_ACTION = "index";
         const ACTION_SUFFIX = "Action";
-
-        //const CONTROLLER_TYPE_ACTION = 'LibreMVC\Mvc\Controller\ActionController';
-        //const CONTROLLER_TYPE_ACTION = ActionController::getCalledClass();
-        //const CONTROLLER_TYPE_ACTION_NAME = 'ActionController';
-        //const CONTROLLER_TYPE_STATIC = 'LibreMVC\Mvc\Controller\StaticController';
-        //const CONTROLLER_TYPE_STATIC_NAME = 'StaticController';
 
         /**
          * @var Request
@@ -79,6 +75,7 @@ namespace LibreMVC\Mvc {
             $this->_route               = $this->_system->this()->routed;
             $this->_controllerDecorators= new \SplStack();
         }
+
         #region Helpers
         public function getAction() {
             return $this->_route->action . self::ACTION_SUFFIX;
@@ -95,65 +92,51 @@ namespace LibreMVC\Mvc {
         }
         #endregion
 
-        public function invoker() {
+        public function decoratorsFilter() {
             $decorators = $this->getControllerDecorators();
-            $decorated  = null;
             while($decorators->valid()) {
                 $decorator = $decorators->current();
                 if( $decorator->isTyped() ) {
                     if( $decorator->isValidController() ) {
                         if( $decorator->isValidAction() ) {
-                            $decorated = $decorator;
-                            //echo 'Valid action';
+                            return $decorator;
                         }
-                        else {
-                            // Action inconnues
-                            //echo "Action inconnus";
-                            //return;
-                        }
-                        //echo 'Valid controller';
                     }
-                    else {
-                        // Controller inconnus
-                        //echo "Controller inconnus";
-                        //return;
-                    }
-                    //echo "Type connus";
                 }
-                else {
-                    // Type inconnus
-                    //echo "Type inconnus";
-                    //return;
-                }
-
                 $decorators->next();
             }
+        }
+
+        public function invoker() {
+            $decorated  = $this->decoratorsFilter();
             try {
                 if (!is_null($decorated)) {
                     switch ($decorated->getType()) {
-                        case ActionController::getShortCalledClass():
+                        case ActionController::getCalledClass():
                             return $decorated->factory(array(
                                 System::this()->request,
                                 System::this()->layout
                             ));
                             break;
 
-                        case StaticController::getShortCalledClass():
+                        case StaticController::getCalledClass():
                                 return $decorated->factory(array(
                                     System::this()->request,
                                     System::this()->layout,
                                     $this->_system->instancePaths->getBaseDir('static_views')
                                 ));
                             break;
+
                     }
-
-
-                } else {
-
+                }
+                /**
+                 * Aucun controllers ne correspond
+                 */
+                else {
+                    throw new RouterError404('Unknown route');
                 }
             }
             catch(\Exception $e ) {
-                var_dump($e);
                 throw $e;
             }
         }
