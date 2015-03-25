@@ -25,19 +25,8 @@ try {
         System::this()
     );
     $boot->start();
-    //var_dump(System::this());
 
 }
 catch (\Exception $e) {
-    try {
-        // Last chance to display exception
-        $vo = new ViewObject();
-        $vo->exception = $e;
-        $view = new View(new Template('exception.php'), $vo);
-        $view->render();
-
-    }
-    catch(\Exception $e) {
-        var_dump($e);
-    }
+    
 }
