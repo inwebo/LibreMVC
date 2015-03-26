@@ -22,7 +22,17 @@ namespace LibreMVC\System\Boot\Tasks\Task {
 
         protected function exceptions() {
             if( count(self::$_exceptions) > 0 ) {
-                Header::notFound();
+                switch(self::$_exceptions[0]->getCode()) {
+                    case 401:
+                        Header::unauthorized();
+                        break;
+                    case 404:
+                        Header::notFound();
+                        break;
+                    case 500:
+                        Header::badRequest();
+                        break;
+                }
                 self::$_viewObject->exception = self::$_exceptions[0];
                 self::$_viewObject->debug = self::$_debug;
                 self::$_layout->attachPartial('body', System::this()->getInstanceBaseDirs('static_views') . 'error.php');
