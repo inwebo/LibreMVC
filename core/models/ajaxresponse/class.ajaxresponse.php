@@ -6,54 +6,75 @@
  * Time: 20:07
  */
 
-namespace LibreMVC\Models;
+namespace LibreMVC\Models {
 
 
-class AjaxResponse {
-    /**
-     * @var bool
-     */
-    public $valid = true;
+    class AjaxResponse {
 
-    /**
-     * @var mixed
-     */
-    public $data;
+        /**
+         * @var int
+         */
+        protected $_httpStatusCode;
 
-    public $error = null;
+        /**
+         * @var mixed
+         */
+        protected $_data;
 
-    public function __construct($data=null) {
-        $this->data = $data;
-        return $this;
-    }
+        /**
+         * @return int
+         */
+        public function getHttpStatusCode()
+        {
+            return $this->_httpStatusCode;
+        }
 
-    public function toJson() {
-        return json_encode( $this );
-    }
+        /**
+         * @param int $httpStatusCode
+         */
+        public function setHttpStatusCode($httpStatusCode)
+        {
+            $this->_httpStatusCode = $httpStatusCode;
+        }
 
-    public function toXml() {
-        $dom               = new \DOMDocument('1.0','UTF-8');
-        $dom->formatOutput = true;
-        $reply             = $dom->createElement("reply");
+        /**
+         * @return mixed
+         */
+        public function getData()
+        {
+            return $this->_data;
+        }
 
-        $msg       = $dom->createElement( "valid", $this->valid );
-        $error      = $dom->createElement( "error", $this->error );
-        $data      = $dom->createElement( "data", $this->data );
+        /**
+         * @param mixed $data
+         */
+        public function setData($data)
+        {
+            $this->_data = $data;
+        }
 
+        public function __construct($data=null) {
+            $this->_data = $data;
+        }
 
-        $reply->appendChild( $msg );
-        $reply->appendChild( $error );
-        $reply->appendChild( $data );
+        public function toJson() {
+            return json_encode( $this->_data );
+        }
 
-        $dom->appendChild( $reply );
-        return $dom->saveXML();
-    }
+        public function toXml() {
+            $dom               = new \DOMDocument('1.0','UTF-8');
+            $dom->formatOutput = true;
+            $reply             = $dom->createElement("reply");
+            $dom->appendChild( $reply );
+            return $dom->saveXML();
+        }
 
-    public function toHtml() {
-        return $this->data;
-    }
+        public function toHtml() {
+            return $this->_data;
+        }
 
-    public function toString() {
-        return $this->data;
+        public function toString() {
+            return $this->_data;
+        }
     }
 }
