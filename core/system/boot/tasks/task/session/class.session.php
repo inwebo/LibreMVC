@@ -23,10 +23,17 @@ namespace LibreMVC\System\Boot\Tasks\Task {
         }
 
         protected function defaultUser() {
-            $aUser = new AuthUser('guest','salut@copain.fr','','');
-            $aUser = $aUser->hidden();
-            self::$_defaultUser=$aUser;
-            return $aUser;
+            //if( !isset($_SESSION['User']) ) {
+                //$aUser = AuthUser::build('guest', 'salut@copain.fr', 'guest', 'guest');
+                //var_dump($aUser);
+                //$aUser = $aUser->toPublicUser();
+                //self::$_defaultUser = $aUser;
+                //return $aUser;
+                $defaultUser = AuthUser::load(2);
+                //var_dump($defaultUser);
+                self::$_defaultUser = $defaultUser;
+                return $defaultUser;
+            //}
         }
 
         protected function user() {
