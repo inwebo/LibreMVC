@@ -3,8 +3,8 @@ namespace LibreMVC\Mvc {
 
     use LibreMVC\ClassNamespace;
     use LibreMVC\Http\Request;
-    use LibreMVC\Modules\Error\Controllers\ErrorController;
     use LibreMVC\Mvc\Controller\ActionController;
+    use LibreMVC\Mvc\Controller\AuthController;
     use LibreMVC\Mvc\Controller\StaticController;
     use LibreMVC\Mvc\FrontController\Decorator;
     use LibreMVC\Mvc\FrontController\Filter;
@@ -12,7 +12,6 @@ namespace LibreMVC\Mvc {
     use LibreMVC\View;
     use LibreMVC\System;
     use LibreMVC\Mvc\Controller\AjaxController;
-
 
     class FrontControllerUnknownController extends \Exception {
         protected $code = 500;
@@ -25,8 +24,8 @@ namespace LibreMVC\Mvc {
     };
 
     class FrontControllerException extends \Exception {
-        protected $code = 500;
-        protected $message = 'FrontController decorators <cite>(filters)</cite> unknow, controller or action not found.';
+        protected $code     = 500;
+        protected $message  = 'FrontController decorators <cite>(filters)</cite> unknow, controller or action not found.';
     };
 
     /**
@@ -98,6 +97,9 @@ namespace LibreMVC\Mvc {
         }
         #endregion
 
+        /**
+         * @return Decorator
+         */
         public function decoratorsFilter() {
             $decorators = $this->getControllerDecorators();
             while($decorators->valid()) {
@@ -130,6 +132,24 @@ namespace LibreMVC\Mvc {
                                     System::this()->request,
                                     System::this()->layout,
                                     $this->_system->instancePaths->getBaseDir('static_views')
+                                ));
+                            break;
+
+                        case AuthController::getCalledClass():
+                                return $decorated->factory(array(
+                                    System::this()->request,
+                                    System::this()->layout,
+                                    $_SESSION['User'],
+                                    System::this()
+                                ));
+                            break;
+
+                        case AjaxController::getCalledClass():
+                                return $decorated->factory(array(
+                                    System::this()->request,
+                                    System::this()->layout,
+                                    $_SESSION['User'],
+                                    System::this()
                                 ));
                             break;
 
