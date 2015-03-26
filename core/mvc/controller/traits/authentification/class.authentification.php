@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inwebo
- * Date: 12/03/15
- * Time: 17:26
- */
 
 namespace LibreMVC\Mvc\Controller\Traits {
 
+    use LibreMVC\Modules\AuthUser\Models\AuthUser;
 
     trait Authentification
     {
@@ -15,7 +10,8 @@ namespace LibreMVC\Mvc\Controller\Traits {
         /**
          * @var AuthUser
          */
-        protected $_sessionUser;
+        protected $_authUser;
+
         /**
          * @var array Nom des roles autorisés, null si tous
          */
@@ -25,6 +21,53 @@ namespace LibreMVC\Mvc\Controller\Traits {
          */
         protected $_permissions;
 
+        /**
+         * @return array
+         */
+        public function getPermissions()
+        {
+            return $this->_permissions;
+        }
+
+        /**
+         * @param array $permissions
+         */
+        public function setPermissions($permissions)
+        {
+            $this->_permissions = $permissions;
+        }
+
+        /**
+         * @return array
+         */
+        public function getRoles()
+        {
+            return $this->_roles;
+        }
+
+        /**
+         * @param array $roles
+         */
+        public function setRoles($roles)
+        {
+            $this->_roles = $roles;
+        }
+
+        /**
+         * @return AuthUser
+         */
+        public function getAuthUser()
+        {
+            return $this->_authUser;
+        }
+
+        /**
+         * @param AuthUser $authUser
+         */
+        public function setAuthUser($authUser)
+        {
+            $this->_authUser = $authUser;
+        }
 
         protected function validateRequest()
         {
@@ -40,12 +83,12 @@ namespace LibreMVC\Mvc\Controller\Traits {
 
         protected function validateRoles()
         {
-            if (is_null($this->_roles)) {
+            if (is_null($this->getRoles())) {
                 return true;
-            } elseif (is_array($this->_roles)) {
+            } elseif (is_array($this->getRoles())) {
                 $valid = true;
-                foreach ($this->_roles as $role) {
-                    $valid = $valid & $this->_sessionUser->is($role);
+                foreach ($this->getRoles() as $role) {
+                    $valid = $valid & $this->getAuthUser()->is($role);
                 }
                 return $valid;
             }
@@ -53,12 +96,12 @@ namespace LibreMVC\Mvc\Controller\Traits {
 
         protected function validatePerms()
         {
-            if (is_null($this->_permissions)) {
+            if (is_null($this->getPermissions())) {
                 return true;
-            } elseif (is_array($this->_permissions)) {
+            } elseif (is_array($this->getPermissions())) {
                 $valid = true;
-                foreach ($this->_permissions as $perm) {
-                    $valid =& $this->_sessionUser->hasPermission($perm);
+                foreach ($this->getPermissions() as $perm) {
+                    $valid =& $this->getAuthUser()->hasPermission($perm);
                 }
                 return $valid;
             }
