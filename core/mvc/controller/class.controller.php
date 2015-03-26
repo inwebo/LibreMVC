@@ -104,6 +104,10 @@ namespace LibreMVC\Mvc {
             return explode(self::SUFFIX_ACTION,$name)[0];
         }
 
+        /**
+         * @return mixed
+         * @todo
+         */
         public function getViewFilePath() {
             return str_replace(
                 array(
