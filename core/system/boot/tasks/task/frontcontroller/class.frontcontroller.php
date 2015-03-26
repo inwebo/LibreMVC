@@ -35,6 +35,8 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 if( count(self::$_exceptions) === 0 ) {
                     $front->pushDecorator(new Decorator\StaticController(self::$_routed->controller, self::getRoutedAction(), Controller\StaticController::getCalledClass(), self::$_routed->params));
                     $front->pushDecorator(new Decorator\ActionController(self::$_routed->controller, self::getRoutedAction(), Controller\ActionController::getCalledClass(), self::$_routed->params));
+                    $front->pushDecorator(new Decorator\AuthController(self::$_routed->controller, self::getRoutedAction(), Controller\AuthController::getCalledClass(), self::$_routed->params));
+                    $front->pushDecorator(new Decorator\AjaxController(self::$_routed->controller, self::getRoutedAction(), Controller\AjaxController::getCalledClass(), self::$_routed->params));
                     $front->invoker();
                 }
             }
