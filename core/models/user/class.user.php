@@ -65,10 +65,12 @@ namespace LibreMVC\Models {
         }
 
         public function isDefault() {
-            return (is_null($this->id));
+            // @todo
+            return $this->login === 'guest';
+            //return (is_null($this->id));
         }
 
-        public function hidden() {
+        public function toPublicUser() {
             $clone = clone $this;
             unset($clone->privateKey);
             unset($clone->password);
