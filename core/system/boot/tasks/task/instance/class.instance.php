@@ -26,7 +26,9 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             $instance = $factory->search();
 
             if( is_null($instance) ) {
+                // Est une redirection
                 self::$_instance = new WebInstance(self::$_appPaths->getBaseDir()['siteDefault']);
+                // Change body par fichier static
             }
             else {
                 self::$_instance = $instance;
