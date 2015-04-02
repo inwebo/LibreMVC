@@ -6,6 +6,7 @@ namespace LibreMVC\Routing {
         const MSG       = 'Uri : %s is not a valid uri.';
     };
 
+    use LibreMVC\Exception;
     use LibreMVC\Routing\UriParser\RouteConstraint;
 
     /**
@@ -44,8 +45,14 @@ namespace LibreMVC\Routing {
                 if( $routeConstraint->isValidUri("LibreMVC\\Routing\\UriParser\\SegmentConstraint") ) {
                     // UriIsGreaterThanRoute
                     if( $routeConstraint->isUriSegmentsGreaterThanRouteSegments() === false ) {
-                        $parser = new UriParser( $this->_uri, $this->_routesCollection->routes->current() );
-                        return $parser->processPattern();
+                        try {
+                            $parser = new UriParser( $this->_uri, $this->_routesCollection->routes->current() );
+                            return $parser->processPattern();
+                        }
+                        catch(\Exception $e) {
+                            throw $e;
+                        }
+
                     }
                     // Uri invalide 404
                     else {
