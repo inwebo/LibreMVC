@@ -83,20 +83,31 @@ function collectJs() {
     }
     return $js;
 }
-function getHtmlJsScriptTags($nocache = true) {
+function getHtmlJsScriptTags($nocache = true, $echo = false) {
     $js = collectJs();
     $buffer = "";
     $cache = ($nocache) ? '?t='. time() : '';
     foreach($js as $v) {
         $buffer .= '<script src="'.$v .$cache.'"></script>'. "\n";
     }
-    return $buffer;
+    if($echo) {
+        echo $buffer;
+    }
+    else {
+        return $buffer;
+    }
 }
-function getHtmlCssScriptTags() {
+function getHtmlCssScriptTags($nocache = true, $echo = false) {
     $js = collectCss();
     $buffer = "";
+    $cache = ($nocache) ? '?t='. time() : '';
     foreach($js as $v) {
-        $buffer .= '<link type="text/css" href="'.$v .'"/>'. "\n";
+        $buffer .= '<link type="text/css" href="'.$v . $cache .'"/>'. "\n";
     }
-    return $buffer;
+    if($echo) {
+        echo $buffer;
+    }
+    else {
+        return $buffer;
+    }
 }
