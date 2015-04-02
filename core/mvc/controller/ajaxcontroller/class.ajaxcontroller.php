@@ -27,8 +27,10 @@ class AjaxController extends ActionController{
 
     protected function init() {
         $this->setResponse(new AjaxResponse());
-        $this->initInputs();
-        $this->getView()->setEmptyLayout();
+        /**
+         * @todo : Empty layout ?
+         */
+        //$this->getView()->setEmptyLayout();
         $this->getResponse()->setData($this->getVo());
     }
 
