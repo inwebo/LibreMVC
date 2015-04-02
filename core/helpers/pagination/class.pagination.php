@@ -70,6 +70,22 @@ namespace LibreMVC\Helpers {
         }
 
         /**
+         * @return int
+         */
+        public function getMax()
+        {
+            return $this->max;
+        }
+
+        /**
+         * @return int
+         */
+        public function getMin()
+        {
+            return $this->min;
+        }
+
+        /**
          * Si le sujet est paginable retourne le nombre de page total sinon -1.
          * @return int
          */
@@ -83,6 +99,14 @@ namespace LibreMVC\Helpers {
          */
         public function next() {
             return (isset($this->chunk[$this->index+1])) ? true : false;
+        }
+
+        public function getNextIndex() {
+            return ($this->next()) ? $this->next() + 1 : $this->current();
+        }
+
+        public function getPrevIndex() {
+            return ($this->prev()) ? $this->prev() - 1 : $this->current();
         }
 
         /**
