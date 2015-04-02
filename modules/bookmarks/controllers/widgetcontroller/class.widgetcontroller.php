@@ -14,7 +14,6 @@ namespace LibreMVC\Modules\Bookmarks\Controllers {
         }
 
         public function bookmarkletAction() {
-            var_dump(Url::getServer(true,true) . 'form/');
             $body = $this->getSystem()->getModule('bookmarks')->getStaticViews('dir') . self::getActionShortName('bookmarkletAction') . '.php';
             $bookmarklet = $this->getSystem()->getModule('bookmarks')->getJs("dir") . self::getActionShortName('bookmarkletAction') . '.js';
             $this->changePartial('body',$body);
