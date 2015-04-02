@@ -22,9 +22,7 @@ trait DataBase {
     {
         return $this->_driver;
     }
-    public function query($queryString, $args){
 
-    }
     /**
      * @param mixed $driver
      */
