@@ -21,10 +21,9 @@
             plugin.title = title;
             plugin.description = description;
             plugin.tags = tags;
-            plugin.isPublic = isPublic;
+            plugin.isPublic = (isPublic === "on") ? "1" : "0";
             if(plugin.url === null || plugin.url === "null") {
-                //console.log(plugin.url, plugin.title);
-                //throw new DOMException('Not a bookmark');
+                throw new DOMException('Not a bookmark');
             }
         };
 
@@ -58,17 +57,17 @@
 
         plugin.toObject = function(user){
             return {
-                id      : plugin.id,
-                url     : plugin.url,
-                hash    : plugin.hash,
-                dt      : plugin.dt,
-                title   : plugin.title,
-                description:plugin.description,
-                tags:plugin.tags,
-                isPublic:plugin.isPublic,
-                User:user.login,
-                Key:user.publicKey,
-                Timestamp:Date.now()
+                id          : plugin.id,
+                url         : plugin.url,
+                hash        : plugin.hash,
+                dt          : plugin.dt,
+                title       : plugin.title,
+                description : plugin.description,
+                tags        : plugin.tags,
+                isPublic    : plugin.isPublic,
+                User        : user.login,
+                Key         : user.publicKey,
+                Timestamp   : Date.now()
             };
         };
 
@@ -77,26 +76,11 @@
                 'location=0,titlebar=0,toolbar=0,menubar=0,resizable=0,width=300,height=550,left=0,top=0');
         };
 
-        //region Helpers
-        plugin.save = function(callback){
-
-        };
-        plugin.edit = function(callback){
-
-        };
-        plugin.delete = function(callback){
-
-        };
-        plugin.getHTML = function(callback){
-
-        };
-        //endregion Helpers
-
         init(id,url,hash,dt,title,description,tags,isPublic);
     };
 
-    window.LibreJs.Plugins.Bookmark.prototype.factory = function(id,url,hash,dt,title,description,isPublic) {
-        return new Bookmark(id,url,hash,dt,title,description,isPublic);
+    window.LibreJs.Plugins.Bookmark.prototype.factory = function(id,url,hash,dt,title,description,tags,isPublic) {
+        return new Bookmark(id,url,hash,dt,title,description,tags,isPublic);
     };
 
     window.LibreJs.Plugins.Bookmark.prototype.loadByListItemNode = function(node) {
@@ -108,7 +92,7 @@
             encodeURIComponent(node.getAttribute('data-title')),
             encodeURIComponent(node.getAttribute('data-desc')),
             encodeURIComponent(node.getAttribute('data-tags')),
-            node.getAttribute('data-public')
+            node.getAttribute('data-isPublic')
         );
     };
 
@@ -121,8 +105,8 @@
         for (i;i<j;i++) {
             var current = _array[i];
             buffer[current.name] = current.value;
-
         }
+
         return Bookmark.prototype.factory(
             buffer['id'],
             buffer['url'],
@@ -130,7 +114,8 @@
             buffer['dt'],
             buffer['title'],
             buffer['description'],
-            buffer['tags']
+            buffer['tags'],
+            buffer['isPublic']
         );
     };
 
