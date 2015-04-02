@@ -43,6 +43,10 @@ namespace LibreMVC\System\Boot\Tasks {
          */
         static protected $_instance;
         /**
+         * @var Config
+         */
+        static protected $_instanceConfig;
+        /**
          * @var Path
          */
         static protected $_instancePaths;
