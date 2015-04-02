@@ -9,99 +9,120 @@ use LibreMVC\System;
 use LibreMVC\View;
 use LibreMVC\View\Template;
 use LibreMVC\Mvc\Controller\AjaxController\PrivateAjaxController\RestController;
-use LibreMVC\Files\Config;
-use LibreMVC\Database\Drivers;
 use LibreMVC\Database\Driver\MySql;
+use LibreMVC\Mvc\Controller\Traits\System as Sys;
+use LibreMVC\Mvc\Controller\Traits\DataBase;
 
 class AjaxBookmarkController extends RestController{
 
-    const FORM = "form.php";
+    use Sys;
+    use DataBase;
 
-    protected $_new;
+    const TEMPLATE_FORM = "form.php";
 
-    protected $_form;
+    /**
+     * @var Bookmark
+     */
+    protected $_bookmark;
+
+    //region Getters
+    /**
+     * @return Bookmark
+     */
+    public function getBookmark()
+    {
+        return $this->_bookmark;
+    }
+
+    //endregion Getters
 
     public function init() {
         parent::init();
-        $c = $this->_system->getModule('bookmarks')->getConfig("dir");
-        $this->_config          = Config::load($c);
-        $this->_pagination      = $this->_config->Bookmarks['pagination'];
-        $this->_uriRestService  = $this->_config->Rest['service'];
+        $this->setSystem(System::this());
+        $config = $this->getModuleConfig('bookmarks')->DataBase;
+        $this->setDbDriver(new MySql(
+            $config['server'],
+            $config['database'],
+            $config['user'],
+            $config['password']
+        ));
+        Bookmark::binder($this->getDbDriver(),'id',$config['table']);
+        $formPath = $this->getSystem()->getModuleBaseDirs('bookmarks','static_views') . self::TEMPLATE_FORM;
+        $this->getView()->attachPartial('body',$formPath);
 
-        // Prépare les accès bdd.
+        if( $this->isNewBookmark() ) {
+            echo 'new';
+            // New
+            $this->_bookmark = self::bookmarkFactory();
+        }
+        else {
+            echo 'loaded';
+            // Loaded
+            $this->_bookmark = Bookmark::load($this->getSystem()->getRoute()->params['bookmarkId']);
 
-            Drivers::add( "bookmarks",
-                new MySql(
-                    $this->_config->Bookmarks['server'],
-                    $this->_config->Bookmarks['database'],
-                    $this->_config->Bookmarks['user'],
-                    $this->_config->Bookmarks['password']
-                ));
-        Bookmark::binder(Drivers::get('bookmarks'));
-        $form = $this->_system->getModuleBaseDirs('bookmarks','static_views') . self::FORM;
-        $contentEditable = $this->_system->getModule('bookmarks')->getStaticViews('dir') . "bookmark.php";
-        $bookmark = $this->bookmarkFactory();
-        $this->toView('bookmark',$bookmark);
-        $this->toView('contentEditable',$contentEditable);
-        $this->toView('user',$this->_trustedUser->login);
-        $this->toView('publicKey',$this->_trustedUser->publicKey);
-        $this->toView('verb',($bookmark->isLoaded()) ? 'UPDATE' : 'PUT');
-        $this->_form = new View(
-            new Template($form),
-            $this->_vo
-        );
-        $this->_form->attachPartial('body', $contentEditable);
-        //$this->_form->getPartial('form-content')->toView('bookmark', $this->bookmarkFactory());
-        $this->_form->setAutoRender(false);
-        $this->_ajaxResponse->data = $this->_form->render();
-        $this->_new = $this->isNewBookmark();
+        }
 
+        $this->bookmarkToView();
     }
 
-    public function initByVerb() {}
-
-    public function update() {
-        $bookmark = $this->bookmarkFactory();
-        $bookmark->save();
+    //region Helpers
+    private function bookmarkToView() {
+        $this->toView('bookmark', $this->_bookmark);
     }
-    public function put() {
-        $bookmark = $this->bookmarkFactory();
+    protected function isNewBookmark() {
+        return !isset($this->getSystem()->getRoute()->params['bookmarkId']);
+    }
+    //endregion Helpers
+
+    /**
+     * Affiche le formulaire pré-remplis
+     */
+    public function get() {
+        $this->render();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function post() {
         try {
-            $bookmark->save();
-            $this->_ajaxResponse->data = "Done";
+            $this->getBookmark()->save();
         }
         catch(\Exception $e) {
             Header::badRequest();
-            $this->_ajaxResponse->error = $e->getCode();
-            $this->_ajaxResponse->data = $e->getMessage();
+            throw $e;
         }
-
     }
 
-    public function get() {
-        //var_dump($this->bookmarkFactory());
-    }
-
+    /**
+     *
+     */
     public function delete() {
-        if(!$this->isNewBookmark()) {
-            $bookmark = Bookmark::load($this->_inputs['id']);
-            $bookmark->delete();
-        }
+        $this->getBookmark()->delete();
+    }
+    public function update() {
+        $inputs = (object)$this->getRequest()->getInputs();
+        $this->_bookmark->title=urldecode($inputs->title);
+        $this->_bookmark->description =urldecode($inputs->description);
+        $this->getBookmark()->tags = urldecode($inputs->tags);
+        $this->_bookmark->save();
     }
 
-    protected function isNewBookmark() {
-        return !(isset($this->_inputs['id']));
-    }
-
+    /**
+     * Tout ce qui arrive est url encodé !
+     * @return Bookmark
+     */
     public function bookmarkFactory() {
-        $in = $this->_inputs;
-        $id = $this->_trustedUser->id;
-        $url = (!is_null($in['url']))  ? $in['url'] : "";
-        $title = (!is_null($in['title']))  ? $in['title'] : "";
-        $tags = (!is_null($in['tags']))  ? $in['tags'] : "";
-        $description = (!is_null($in['description']))  ? $in['description'] : "";
-        $bookmark = Bookmark::build($id,$url,$title,$tags,$description);
-        return $bookmark;
+        $inputs = (object)$this->getRequest()->getInputs();
+        $url = urldecode($inputs->url);
+        $title = urldecode($inputs->title);
+        $tags = urldecode($inputs->tags);
+        $description = urldecode($inputs->description);
+        $isPublic= $inputs->tags;
+        return Bookmark::build($url,$title,$tags,$description,$tags) ;
+
     }
+
+    public function __destruct() {}
 
 }
