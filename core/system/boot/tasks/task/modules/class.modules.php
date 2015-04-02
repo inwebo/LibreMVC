@@ -72,6 +72,17 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 }
             }
         }
+        protected function modulesAutoloadConfig() {
+
+            foreach( self::$_modules as $module ) {
+                /* @var $module Path\BasePath\AppPath\InstancePath\Module */
+                if( is_file($module->getConfig('dir')) ) {
+                    $config = Config::load($module->getConfig('dir'));
+                    $module->setConfig($config);
+
+                }
+            }
+        }
         #region Helper
         static public function getModuleBaseUrl($name) {
             return  self::mu('modules') . $name . "/";
