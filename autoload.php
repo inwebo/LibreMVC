@@ -25,7 +25,6 @@ try {
         System::this()
     );
     $boot->start();
-
 }
 catch (\Exception $e) {
 

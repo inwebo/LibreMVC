@@ -105,8 +105,8 @@ namespace LibreMVC\Helpers {
         }
 
         public function fileFactory($index=0){
-            $file = null;
-            $input = $this->_files[$this->_formInputName];
+            $file   = null;
+            $input  = $this->_files[$this->_formInputName];
 
             if( $this->isMultiUpload() ) {
                 if( isset($input['name'][$index]) && $input['name'][$index] !== "") {
@@ -117,7 +117,6 @@ namespace LibreMVC\Helpers {
                         $input['error'][$index],
                         $input['size'][$index]
                     );
-
                 }
             }
             else {
@@ -128,7 +127,6 @@ namespace LibreMVC\Helpers {
                     $input['error'],
                     $input['size']
                 );
-
             }
             return $file;
         }

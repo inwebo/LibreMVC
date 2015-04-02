@@ -4,12 +4,21 @@ namespace LibreMVC\Models {
 
     class AjaxUser {
 
+        /**
+         * @var string
+         */
         public $user;
+        /**
+         * @var string
+         */
         public $publicKey;
+        /**
+         * @var string
+         */
         public $timeStamp;
 
         public function __construct($user,$publicKey,$timeStamp) {
-            $this->user = $user;
+            $this->user      = $user;
             $this->publicKey = $publicKey;
             $this->timeStamp = $timeStamp;
         }

@@ -115,7 +115,7 @@ class File {
      * @return string|null
      */
     public function getMimeType() {
-        $mimetype = finfo_file($finfo = finfo_open(FILEINFO_MIME_TYPE), $this->_tmp_name);
+        $mimetype = finfo_file($finfo = finfo_open(\FILEINFO_MIME_TYPE), $this->_tmp_name);
         finfo_close($finfo);
         return $mimetype;
     }
