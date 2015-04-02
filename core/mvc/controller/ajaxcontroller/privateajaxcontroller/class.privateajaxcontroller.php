@@ -5,7 +5,9 @@ namespace LibreMVC\Mvc\Controller\AjaxController {
     use LibreMVC\Mvc\Controller\AjaxController;
     use LibreMVC\Models\AjaxUser;
 
-    class PrivateAjaxControllerException extends \Exception {}
+    class PrivateAjaxControllerException extends \Exception {
+        protected $code = 401;
+    }
 
     /**
      * Class PrivateAjaxController
@@ -29,22 +31,33 @@ namespace LibreMVC\Mvc\Controller\AjaxController {
          */
         protected $_trustedUser;
 
+        /**
+         * @return AjaxUser
+         */
+        public function getAjaxUser()
+        {
+            return $this->_ajaxUser;
+        }
+
         public function init(){
             parent::init();
             // Est privée.
             if(! $this->_public ) {
                 // Fingerprinted
                 if( $this->isFingerPrintedRequest() ) {
+                    $user = $this->getRequest()->getInputs('User');
+                    $key = $this->getRequest()->getInputs('Key');
+                    $timestamp = $this->getRequest()->getInputs('Timestamp');
                     // Prépare une AjaxUser
-                    $this->_ajaxUser = self::ajaxUserFactory($this->_inputs['User'], $this->_inputs['Key'],$this->_inputs['Timestamp']);
+                    $this->_ajaxUser = self::ajaxUserFactory($user, $key,$timestamp);
                     // Charge un utilisateur par sa clef
-                    $this->_trustedUser = User::load($this->_inputs['User'],'login');
+                    $this->_trustedUser = User::load($user,'login');
                     // Si trusted client exists
                     if( !is_null($this->_trustedUser) ) {
                         // Comparaison timestamp
                         if(
-                            AjaxUser::hashTimestamp($this->_ajaxUser->publicKey,$this->_ajaxUser->timeStamp) ===
-                            AjaxUser::hashTimestamp($this->_trustedUser->publicKey,$this->_ajaxUser->timeStamp)
+                            AjaxUser::hashTimestamp($this->_ajaxUser->publicKey, $this->_ajaxUser->timeStamp) ===
+                            AjaxUser::hashTimestamp($this->_trustedUser->publicKey, $this->_ajaxUser->timeStamp)
                         ) {
                             // Clefs privées invalide
                             if( $this->comparePrivateKeys() === false) {
@@ -60,7 +73,9 @@ namespace LibreMVC\Mvc\Controller\AjaxController {
                     }
                 }
                 else {
-                    throw new PrivateAjaxControllerException('Private');
+                    $exception = new PrivateAjaxControllerException('Private, try to register first.');
+                    $this->getVo()->error = $exception->getMessage();
+                    throw $exception;
                 }
             }
         }
@@ -78,22 +93,12 @@ namespace LibreMVC\Mvc\Controller\AjaxController {
             return new AjaxUser($user,$key,$timestamp);
         }
 
-        public function indexAction(){
-            var_dump(__METHOD__);
-        }
-
-        protected function isPublic() {
-            return $this->_public;
-        }
-
         protected function isFingerPrintedRequest() {
-            return ( isset( $this->_inputs['User'] ) && isset( $this->_inputs['Key'] ) && isset( $this->_inputs['Timestamp'] ) );
-        }
 
-        protected function unauthorized() {
-            header('HTTP/1.1 401 Unauthorized');
-            $this->_ajaxResponse->msg ="Unauthorized acces";
-            exit;
+            $user = $this->getRequest()->getInputs('User');
+            $key = $this->getRequest()->getInputs('Key');
+            $timestamp = $this->getRequest()->getInputs('Timestamp');
+            return ( isset( $user ) && isset( $key ) && isset( $timestamp ) );
         }
 
     }
