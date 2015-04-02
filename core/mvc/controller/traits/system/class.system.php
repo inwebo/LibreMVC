@@ -27,5 +27,9 @@ namespace LibreMVC\Mvc\Controller\Traits {
             $this->_system = $system;
         }
 
+        public function getModuleConfig($name) {
+            return $this->getSystem()->getModule($name)->getLoadedConfig();
+        }
+
     }
 }
