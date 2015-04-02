@@ -83,6 +83,11 @@ class System {
      */
     public $defaultUser;
 
+    /**
+     * @var Config Instance config
+     */
+    public $instanceConfig;
+
     private function __construct() {}
 
     public function readOnly($bool) {
@@ -108,6 +113,13 @@ class System {
         if (isset($this->$key)) {
             return $this->$key;
         }
+    }
+
+    /**
+     * @return Config
+     */
+    public function getInstanceConfig() {
+        return $this->instanceConfig;
     }
 
     /**
