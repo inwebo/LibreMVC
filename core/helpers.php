@@ -83,11 +83,12 @@ function collectJs() {
     }
     return $js;
 }
-function getHtmlJsScriptTags() {
+function getHtmlJsScriptTags($nocache = true) {
     $js = collectJs();
     $buffer = "";
+    $cache = ($nocache) ? '?t='. time() : '';
     foreach($js as $v) {
-        $buffer .= '<script src="'.$v .'"></script>'. "\n";
+        $buffer .= '<script src="'.$v .$cache.'"></script>'. "\n";
     }
     return $buffer;
 }
