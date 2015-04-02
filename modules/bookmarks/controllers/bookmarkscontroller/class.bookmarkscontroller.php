@@ -1,18 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: inwebo
- * Date: 24/01/15
- * Time: 20:08
- */
-
 namespace LibreMVC\Modules\Bookmarks\Controllers;
 
-
 use LibreMVC\Files\Config;
-use LibreMVC\Helpers\Pagination;
-use LibreMVC\Http\Header;
 use LibreMVC\Modules\Bookmarks\Models\Bookmark;
+use LibreMVC\Modules\Bookmarks\Models\ViewObjects\Page;
 use LibreMVC\Mvc\Controller\ActionController;
 use LibreMVC\Mvc\Controller\BaseController;
 use LibreMVC\Mvc\Controller\Traits\DataBase;
@@ -20,20 +11,16 @@ use LibreMVC\System;
 use LibreMVC\Database\Drivers;
 use LibreMVC\Database\Driver\MySql;
 use LibreMVC\View;
+use LibreMVC\Helpers\Pagination;
+use LibreMVC\Mvc\Controller\Traits\System as SystemTrait;
 
 class BookmarksController extends ActionController{
 
     use DataBase;
+    use SystemTrait;
 
-    const BOOKMARK_MODEL = '\\LibreMVC\\Modules\\Bookmarks\Models\\Bookmark';
-    /**
-     * @var Config
-     */
-    protected $_config;
-    /**
-     * @var Drivers
-     */
-    protected $_db;
+
+    const BOOKMARK_MODEL = '\\LibreMVC\\Modules\\Bookmarks\\Models\\Bookmark';
     /**
      * @var string
      */
@@ -52,62 +39,42 @@ class BookmarksController extends ActionController{
     protected $_uriRestService;
 
     public function init(){
-        /*
-        $config = Config::load(System::this()->getModule('bookmarks')->getConfig("dir"));
-        $this->setDbDriver(new MySql(
-            $config->Bookmarks['server'],
-            $config->Bookmarks['database'],
-            $config->Bookmarks['user'],
-            $config->Bookmarks['password']
-        ));
-        $this->_table = $config->Bookmarks['table'];
-        $this->getDbDriver()->toStdClass();
-        $this->toView('total', $this->getDbDriver()->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total);
-        $this->toView('template', System::this()->getModule('bookmarks')->getStaticViews('dir') . "bookmark.php");
-        */
-        $this->_system = System::this();
-        $c = $this->_system->getModule('bookmarks')->getConfig("dir");
-        $this->_config          = Config::load($c);
-        $this->_pagination      = $this->_config->Bookmarks['pagination'];
-        $this->_uriRestService  = $this->_config->Rest['service'];
-
-        // Prépare les accès bdd.
-        try{
-            Drivers::add( "bookmarks",
-                new MySql(
-                    $this->_config->Bookmarks['server'],
-                    $this->_config->Bookmarks['database'],
-                    $this->_config->Bookmarks['user'],
-                    $this->_config->Bookmarks['password']
+        try {
+            $this->setSystem(System::this());
+            $config = $this->getModuleConfig('bookmarks')->DataBase;
+            $this->setDbDriver(new MySql(
+                $config['server'],
+                $config['database'],
+                $config['user'],
+                $config['password']
             ));
-            $this->_table =  $this->_config->Bookmarks['table'];
-            $this->_db = Drivers::get('bookmarks');
-            $this->_db->toStdClass();
-            $this->_total = $this->_db->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total;
+            $this->getDbDriver()->toStdClass();
+            $this->_table       = $config['table'];
+            $this->_pagination  = $config['pagination'];
+            $this->_total       = $this->getDbDriver()->query("SELECT COUNT( * ) as total FROM " . $this->_table)->first()->total;
+
+            $this->toView('pagination',$this->_pagination);
             $this->toView('total',$this->_total);
-            $bookmark_tpl = $this->_system->getModule('bookmarks')->getStaticViews('dir') . "bookmark.php";
-            $this->toView('template',$bookmark_tpl);
-            $this->toView('user',user()->login);
-            $this->toView('publicKey',user()->publicKey);
+            $this->toView('template', $this->getSystem()->getModule('bookmarks')->getStaticViews('dir') . "bookmark.php");
         }
         catch(\Exception $e) {
-            var_dump($e);
+            throw $e;
         }
 
     }
 
     public function indexAction($page=1){
-        //$limits = Pagination::sqlLimit($this->_total, $page, $this->_pagination);
-        //$pagination = Pagination::dummyPagination($this->_total,$page,$this->_pagination);
-        //$this->toView("pagination",$pagination);
-        //$this->_db->toObject(self::BOOKMARK_MODEL);
-        //$bookmarks = $this->_db->query("SELECT * FROM " . $this->_table . " ORDER BY dt desc LIMIT " . $limits['start'] . ", " . $this->_pagination)->all();
-        //$this->toView("bookmarks",$bookmarks);
+        $limits = Pagination::sqlLimit($this->_total, $page, $this->_pagination);
+        $pagination = Pagination::dummyPagination($this->_total,$page,$this->_pagination);
+        $this->getDbDriver()->toObject(self::BOOKMARK_MODEL);
+        $bookmarks = $this->getDbDriver()->query("SELECT * FROM " . $this->_table . " ORDER BY dt desc LIMIT " . $limits['start'] . ", " . $this->_pagination)->all();
+        $this->toView('pagination',$pagination);
+        $this->toView('bookmarks',$bookmarks);
         $this->render();
     }
 
     public function tagsAction(){
-        $tags = $this->_db->query('SELECT tags FROM '. $this->_table . " GROUP BY tags ORDER BY dt desc")->all();
+        $tags = $this->getDbDriver()->query('SELECT tags FROM '. $this->_table . " GROUP BY tags ORDER BY dt desc")->all();
         $stringTagInput = "";
         foreach($tags as $tag) {
             $stringTagInput .= $tag->tags;
@@ -115,7 +82,7 @@ class BookmarksController extends ActionController{
         $tags = new Bookmark\Tags($stringTagInput);
         $this->toView("tags",$tags->toArray());
         $this->toView("total",$tags->count());
-        $this->_view->render();
+        $this->render();
     }
 
     public function search($tag) {
@@ -123,12 +90,12 @@ class BookmarksController extends ActionController{
     }
 
     public function tagAction($tag){
-        $this->_db->toObject(self::BOOKMARK_MODEL);
-        $tags = $this->_db->query('SELECT * FROM ' . $this->_table . ' WHERE tags LIKE "%' . $tag . '%" ORDER BY dt desc', array($tag))->all();
+        $this->getDbDriver()->toObject(self::BOOKMARK_MODEL);
+        $tags = $this->getDbDriver()->query('SELECT * FROM ' . $this->_table . ' WHERE tags LIKE "%' . $tag . '%" ORDER BY dt desc', array($tag))->all();
         $this->toView('total',count($tags));
         $this->toView("bookmarks",$tags);
         $this->toView("tag",$tag);
-        $this->_view->render();
+        $this->render();
     }
 
 }
