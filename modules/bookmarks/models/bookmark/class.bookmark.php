@@ -20,7 +20,7 @@ namespace LibreMVC\Modules\Bookmarks\Models {
         public $description;
         public $dt;
         //public $id_user;
-        public $public;
+        public $isPublic;
 
         //static public function build($idUser, $url, $title , $tags, $description, $public=true){
         static public function build($url, $title , $tags, $description, $public=true){
@@ -32,9 +32,12 @@ namespace LibreMVC\Modules\Bookmarks\Models {
             $bookmark->tags = $bookmark->_tags->toString();
             $bookmark->description = $description;
             $bookmark->dt = $_SERVER['REQUEST_TIME'];
-            //$bookmark->id_user = $idUser;
-            $bookmark->public = $public;
+            $bookmark->isPublic = ($public) ? "1" : "0";
             return $bookmark;
+        }
+
+        public function isPublic(){
+            return ($this->isPublic==="1") ? true:false;
         }
 
         public function isNew() {
