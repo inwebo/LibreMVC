@@ -37,6 +37,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                     $front->pushDecorator(new Decorator\ActionController(self::$_routed->controller, self::getRoutedAction(), Controller\ActionController::getCalledClass(), self::$_routed->params));
                     $front->pushDecorator(new Decorator\AuthController(self::$_routed->controller, self::getRoutedAction(), Controller\AuthController::getCalledClass(), self::$_routed->params));
                     $front->pushDecorator(new Decorator\AjaxController(self::$_routed->controller, self::getRoutedAction(), Controller\AjaxController::getCalledClass(), self::$_routed->params));
+                    $front->pushDecorator(new Decorator\PrivateAjaxController(self::$_routed->controller,self::getRoutedAction(),Controller\AjaxController\PrivateAjaxController::getCalledClass(),self::$_routed->params));
                     $front->invoker();
                 }
             }
