@@ -5,9 +5,9 @@
     data-hash="<?php echo $this->bookmark->hash ?>"
     data-dt="<?php echo $this->bookmark->dt ?>"
     data-title="<?php echo $this->bookmark->title ?>"
-    data-desc="<?php echo $this->bookmark->description ?>"
+    data-desc="<?php echo htmlentities($this->bookmark->description) ?>"
     data-tags="<?php echo $this->bookmark->tags ?>"
-    data-public="<?php echo $this->bookmark->public ?>"
+    data-isPublic="<?php echo $this->bookmark->isPublic ?>"
 >
     <h2>
         <?php if(user()->is('Root')) { ?>
@@ -16,7 +16,7 @@
             <button data-type="delete" type="button">X</button>
         </span>
         <?php } ?>
-        <a href="<?php echo $this->bookmark->url ?>" target="_blank"><?php echo $this->bookmark->title ?></a>
+        <a href="<?php echo $this->bookmark->url ?>" target="_blank"><?php echo urldecode($this->bookmark->title) ?></a>
     </h2>
     <p>
         <?php echo $this->bookmark->description ?>
