@@ -2,6 +2,7 @@
 namespace LibreMVC\Mvc {
 
     use LibreMVC\ClassNamespace;
+    use LibreMVC\Exception;
     use LibreMVC\Http\Request;
     use LibreMVC\Mvc\Controller\ActionController;
     use LibreMVC\Mvc\Controller\AuthController;
@@ -12,6 +13,7 @@ namespace LibreMVC\Mvc {
     use LibreMVC\View;
     use LibreMVC\System;
     use LibreMVC\Mvc\Controller\AjaxController;
+    use LibreMVC\Mvc\Controller\AjaxController\PrivateAjaxController;
 
     class FrontControllerUnknownController extends \Exception {
         protected $code = 500;
@@ -152,6 +154,24 @@ namespace LibreMVC\Mvc {
                                     System::this()
                                 ));
                             break;
+
+                        case PrivateAjaxController::getCalledClass():
+                            try {
+                                return $decorated->factory(array(
+                                    System::this()->request,
+                                    System::this()->layout,
+                                    $_SESSION['User'],
+                                    System::this()
+                                ));
+                            }
+                            catch(\Exception $e) {
+                                throw $e;
+                            }
+                            break;
+
+
+                        default:
+                            throw new Exception('!');
 
                     }
                 }
