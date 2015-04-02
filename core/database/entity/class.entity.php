@@ -79,7 +79,6 @@ namespace LibreMVC\Database {
             if($this->isLoaded()) {
                 // Update
                 $sqlUpdateQuery = sprintf(self::SQL_UPDATE, $conf->table,$conf->toUpdate($toBindKeys),$conf->primaryKey);
-
                 $toInject = array_merge($toBindValues, array($this->id));
                 try {
                     $conf->driver->query($sqlUpdateQuery,$toInject);
