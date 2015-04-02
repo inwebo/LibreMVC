@@ -68,12 +68,16 @@ namespace LibreMVC\Mvc\Controller\Traits {
             $this->_inputs = $inputs;
         }
 
+        /**
+         * @todo moved to request
+         */
         protected function initInputs() {
             if( isset($_GET) && !empty($_GET) ) {
                 $this->_inputs = $_GET;
             }
             else {
-                parse_str(file_get_contents('php://input'), $this->getInputs());
+                /*By reference ------------------------------------v      */
+                parse_str(file_get_contents('php://input'), $this->_inputs);
             }
         }
 
@@ -101,22 +105,23 @@ namespace LibreMVC\Mvc\Controller\Traits {
             $this->negotiateHttpContentType();
             //@todo Header error
             //@todo Converter XML/HTML/PLAIN
+
             switch($this->getRequest()->getHeader('Accept')) {
+                default:
                 case 'application/json':
-                    echo $this->getResponse()->toJson();
+                    //echo $this->getResponse()->toJson();
                     break;
 
                 case 'text/xml':
-                    echo $this->getResponse()->toXml();
+                    //echo $this->getResponse()->toXml();
                     break;
 
                 case 'text/html':
-                    echo $this->getResponse()->toHtml();
+                    //echo $this->getResponse()->toHtml();
                     break;
 
-                default:
                 case 'text/plain':
-                    echo $this->getResponse()->toString();
+                    //echo $this->getResponse()->toString();
                     break;
             }
         }
