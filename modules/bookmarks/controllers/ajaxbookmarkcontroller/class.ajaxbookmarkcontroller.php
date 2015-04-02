@@ -51,12 +51,10 @@ class AjaxBookmarkController extends RestController{
         $this->getView()->attachPartial('body',$formPath);
 
         if( $this->isNewBookmark() ) {
-            echo 'new';
             // New
             $this->_bookmark = self::bookmarkFactory();
         }
         else {
-            echo 'loaded';
             // Loaded
             $this->_bookmark = Bookmark::load($this->getSystem()->getRoute()->params['bookmarkId']);
 
@@ -104,7 +102,8 @@ class AjaxBookmarkController extends RestController{
         $inputs = (object)$this->getRequest()->getInputs();
         $this->_bookmark->title=urldecode($inputs->title);
         $this->_bookmark->description =urldecode($inputs->description);
-        $this->getBookmark()->tags = urldecode($inputs->tags);
+        $this->_bookmark->tags = urldecode($inputs->tags);
+        $this->_bookmark->isPublic = (int)$inputs->isPublic;
         $this->_bookmark->save();
     }
 
@@ -118,8 +117,8 @@ class AjaxBookmarkController extends RestController{
         $title = urldecode($inputs->title);
         $tags = urldecode($inputs->tags);
         $description = urldecode($inputs->description);
-        $isPublic= $inputs->tags;
-        return Bookmark::build($url,$title,$tags,$description,$tags) ;
+        $isPublic= (isset($inputs->isPublic)) ? $inputs->isPublic : "1";
+        return Bookmark::build($url,$title,$tags,$description,$tags, $isPublic) ;
 
     }
 
