@@ -25,7 +25,7 @@ namespace LibreMVC\Database {
         static public $_entityConfiguration;
 
         public function __construct(){
-            $this->_loaded = true;
+            //$this->_loaded = true;
             $this->init();
         }
 
@@ -37,14 +37,13 @@ namespace LibreMVC\Database {
             else {
                 $this->_loaded = false;
             }
-
         }
 
         /**
-         * @param bool $statement
+         * @param bool $bool
          */
-        protected function setLoaded($statement) {
-            $this->_loaded = $statement;
+        protected function setLoaded($bool) {
+            $this->_loaded = $bool;
         }
 
         public function isLoaded() {
@@ -65,16 +64,22 @@ namespace LibreMVC\Database {
             }
         }
 
+        public function update() {
+
+        }
+
         public function save(){
-            $conf = static::$_entityConfiguration;
-            $toBind = $this->getValues();
+            $conf       = static::$_entityConfiguration;
+            $toBind     = $this->getValues();
             $toBindKeys = array_keys($toBind);
-            $toBindValues = array_values($toBind);
-            $sqlKeys = $conf->aggregateCols($toBindKeys);
-            $tokens = $conf->aggregateCols($conf->getTokens(count($toBindKeys)));
-            if($this->_loaded) {
+            $toBindValues   = array_values($toBind);
+            $sqlKeys        = $conf->aggregateCols($toBindKeys);
+            $tokens         = $conf->aggregateCols($conf->getTokens(count($toBindKeys)));
+
+            if($this->isLoaded()) {
                 // Update
                 $sqlUpdateQuery = sprintf(self::SQL_UPDATE, $conf->table,$conf->toUpdate($toBindKeys),$conf->primaryKey);
+
                 $toInject = array_merge($toBindValues, array($this->id));
                 try {
                     $conf->driver->query($sqlUpdateQuery,$toInject);
