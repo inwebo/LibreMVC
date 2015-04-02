@@ -2,8 +2,10 @@
 <a href="http://www.inwebo.dev/tests/router.php/testaction">Default route, action testaction</a><br>
 <?php
 ini_set('display_errors', 'on');
+include('../core/exception/class.exception.php');
 include('../core/routing/autoload.php');
 include('../core/mvc/autoload.php');
+
 
 use LibreMVC\Routing\Uri;
 use LibreMVC\Routing\Route;

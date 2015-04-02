@@ -189,3 +189,4 @@ echo $dir->count();
 
 $v = parse_ini_file('./demo/config2.ini',true);
 var_dump($v);
+copy('http://img.youtube.com/vi/Rz8KW4Tveps/1.jpg', 'demo/test.jpg');
