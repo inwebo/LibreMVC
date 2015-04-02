@@ -8,7 +8,6 @@ $(function(){
         var edit    = $(this).find('button[data-type=edit]');
         var del     = $(this).find('button[data-type=delete]');
         var li      = $(this);
-        console.log(li);
         // Ajax affichage formulaire
         edit.on('click',function(){
             bookmark.showPopupForm(uri, user);
