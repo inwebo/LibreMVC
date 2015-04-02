@@ -3,17 +3,52 @@ namespace LibreMVC\Http {
 
     class Request {
 
+        /**
+         * @var Request
+         */
         static protected $_this;
-
+        /**
+         * @var Url
+         */
         protected $_url;
+        /**
+         * @var array
+         */
         protected $_headers;
+        /**
+         * @var array
+         */
+        protected $_inputs;
 
         private function __construct( Url $url) {
-            $this->_url = $url;
+            $this->_url     = $url;
             $this->_headers = self::getAllHeaders();
+            $this->initInputs();
         }
 
         private function __clone(){}
+
+        protected function initInputs() {
+            if( isset($_GET) && !empty($_GET) ) {
+                $this->_inputs = $_GET;
+            }
+            else {
+                parse_str(file_get_contents('php://input'), $this->_inputs);
+            }
+        }
+
+        public function getInputs($key=null) {
+            if( is_null($key) ) {
+                return $this->_inputs;
+            }
+            elseif(isset($this->_inputs[$key])) {
+                return $this->_inputs[$key];
+            }
+            else {
+                return null;
+            }
+
+        }
 
         static public function this ( Url $url ) {
             if( is_null( self::$_this ) ) {
