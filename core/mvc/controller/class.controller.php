@@ -32,6 +32,10 @@ namespace LibreMVC\Mvc {
             $this->init();
         }
 
+        public function getInputs() {
+            return $this->getRequest()->getInputs();
+        }
+
         /**
          * @return string
          */
