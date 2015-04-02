@@ -18,7 +18,6 @@ namespace LibreMVC\Helpers {
      */
     class Pagination {
 
-
         /**
          * L'objet à paginer.
          * @var mixed
@@ -56,8 +55,8 @@ namespace LibreMVC\Helpers {
          */
         public function __construct( $subject, $index = 1 , $limit = 25) {
             $this->subject  = $subject;
-            $this->index    =  $index;
-            $this->limite   = $limit ;
+            $this->index    = $index;
+            $this->limite   = (int)$limit ;
             $this->min      = $this->setMin();
             $this->max      = $this->setMax();
         }
