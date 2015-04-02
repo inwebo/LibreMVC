@@ -24,13 +24,14 @@ namespace LibreMVC\System\Boot\Tasks\Task {
         }
 
         protected function routed(){
-            $router = new RoutesRouter(
-                Uri::this(),
-                RoutesCollection::get('default'),
-                self::ROUTE_CONSTRAINT
-            );
 
             try {
+                $router = new RoutesRouter(
+                    Uri::this(),
+                    RoutesCollection::get('default'),
+                    self::ROUTE_CONSTRAINT
+                );
+
                 $routed = $router->dispatch();
                 self::$_routed = $routed;
             }
@@ -39,7 +40,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             }
             return self::$_routed;
         }
-
+/*
         protected function validateRouteController() {
             if( !is_null(self::$_routed) ) {
                 // Est un controller valide
@@ -51,7 +52,7 @@ namespace LibreMVC\System\Boot\Tasks\Task {
                 self::$_exceptions[] = new RouterError404("Unknown route, check typo or create the needed file.");
             }
         }
-
+*/
         protected function end() {
             parent::end();
         }
