@@ -2,6 +2,8 @@
 
 namespace LibreMVC\System\Boot\Tasks\Task {
 
+    use LibreMVC\Files\Config;
+    use LibreMVC\System;
     use LibreMVC\System\Boot\Tasks\Task;
     use LibreMVC\Http\Url;
     use LibreMVC\System\Hooks;
@@ -63,6 +65,12 @@ namespace LibreMVC\System\Boot\Tasks\Task {
             if(is_file(self::$_instancePaths->getBaseDir()['autoload'])) {
                 include(self::$_instancePaths->getBaseDir()['autoload']);
             }
+        }
+
+        protected function autoloadConfig() {
+            $config = self::$_instancePaths->getConfig('dir');
+            System::this()->instanceConfig = Config::load($config);
+            return self::$_instanceConfig;
         }
 
         protected function end() {
