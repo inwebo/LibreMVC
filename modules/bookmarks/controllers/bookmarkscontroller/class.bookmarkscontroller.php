@@ -67,7 +67,13 @@ class BookmarksController extends ActionController{
         $limits = Pagination::sqlLimit($this->_total, $page, $this->_pagination);
         $pagination = Pagination::dummyPagination($this->_total,$page,$this->_pagination);
         $this->getDbDriver()->toObject(self::BOOKMARK_MODEL);
-        $bookmarks = $this->getDbDriver()->query("SELECT * FROM " . $this->_table . " ORDER BY dt desc LIMIT " . $limits['start'] . ", " . $this->_pagination)->all();
+        if(user()->is('Root')) {
+            $bookmarks = $this->getDbDriver()->query("SELECT * FROM " . $this->_table . " ORDER BY dt desc LIMIT " . 0 . ", " . $this->_pagination)->all();
+        }
+        else {
+            $bookmarks = $this->getDbDriver()->query("SELECT * FROM " . $this->_table . " WHERE isPublic='1' ORDER BY dt desc LIMIT " . 0 . ", " . $this->_pagination)->all();
+        }
+
         $this->toView('pagination',$pagination);
         $this->toView('bookmarks',$bookmarks);
         $this->render();
@@ -75,11 +81,11 @@ class BookmarksController extends ActionController{
 
     public function tagsAction(){
         $tags = $this->getDbDriver()->query('SELECT tags FROM '. $this->_table . " GROUP BY tags ORDER BY dt desc")->all();
-        $stringTagInput = "";
+        $arrayTags = array();
         foreach($tags as $tag) {
-            $stringTagInput .= $tag->tags;
+            $arrayTags[]= $tag->tags;
         }
-        $tags = new Bookmark\Tags($stringTagInput);
+        $tags = new Bookmark\Tags(implode(' ', $arrayTags));
         $this->toView("tags",$tags->toArray());
         $this->toView("total",$tags->count());
         $this->render();
