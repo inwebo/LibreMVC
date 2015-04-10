@@ -8,13 +8,23 @@
     echo(getHtmlJsScriptTags());
     echo(getHtmlCssScriptTags());
     ?>
+    <style>
+        body {
+            background: url(../sites/_default/assets/img/logo.svg) no-repeat center center fixed;
+            background-color: #101010;
+        }
+        body * {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<h1><a href="<?php htmlBase() ?>">Default site</a></h1>
+<h1><a href="<?php htmlBase() ?>">inwebo veritas</a></h1>
 <ul>
     <?php if(user()->is('Root')){ ?><li><a href="admin/">Admin</a></li><?php } ?>
     <li><a href="login/">Login</a></li>
 </ul>
 <?php $this->renderPartial('body'); ?>
+
 </body>
 </html>
