@@ -1,3 +1,4 @@
+/core/mvc/controller.bak.zip
 /sites/bookmarks.inwebo.dev/autoload.php
 /sites/bookmarks.inwebo.dev/config/config.ini
 /sites/bookmarks.inwebo.dev/controllers/homecontroller/class.homecontroller.php
@@ -33,3 +34,4 @@
 /tests/demo/up/jool (copie).jpg
 /tests/demo/up/jool.jpg
 .idea/*
+sites/bookmarks.inwebo.dev/config/prod.config.ini
