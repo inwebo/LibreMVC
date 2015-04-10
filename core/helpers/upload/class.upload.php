@@ -49,6 +49,11 @@ namespace LibreMVC\Helpers {
 
     }
 
+    /**
+     * Class Upload
+     * @todo: $destination disponible en écriture validator
+     * @package LibreMVC\Helpers
+     */
     class Upload {
 
         protected $_formInputName;
@@ -58,17 +63,31 @@ namespace LibreMVC\Helpers {
         protected $_filteredFiles;
         protected $_iterator;
 
-        public function __construct($formInputName, $files, $destination, $filter=array()) {
+        /**
+         * @todo : $formInputName est inutile, $files également
+         * @todo : Ajouter une configuration Singleton
+         * @todo : Affinner les erreurs
+         *
+         * @param $formInputName
+         * @param $files
+         * @param $destination
+         * @param array $filter
+         * @throws UploadException
+         */
+        public function __construct($formInputName, $files, $destination, $filter = array()) {
             $this->_formInputName = $formInputName;
             $this->_files = $files;
             $this->_destination = $destination;
+            if(!is_writable($this->_destination)) {
+                throw new UploadException(UPLOAD_ERR_CANT_WRITE);
+            }
             $this->_statement = 'init';
             $this->_iterator = $this->iteratorFactory();
             $this->_filteredFiles = new Filter($this->_iterator->getIterator(),$filter);
         }
 
         public function getUploadedFiles($statement) {
-            $filtered = new Filter\Uploaded($this->_iterator->getIterator(),$statement);
+            $filtered = new Filter\Uploaded($this->_iterator->getIterator(), $statement);
             $filtered->rewind();
             return $filtered;
         }
@@ -76,6 +95,7 @@ namespace LibreMVC\Helpers {
         public function send() {
             $this->_filteredFiles->rewind();
             while($this->_filteredFiles->valid()) {
+                /* @var \LibreMVC\Helpers\Upload\File $file */
                 $file = $this->_filteredFiles->current();
                 if( $file->isValid() ) {
                     $file->move();
