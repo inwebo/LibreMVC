@@ -27,5 +27,5 @@ try {
     $boot->start();
 }
 catch (\Exception $e) {
-
+    var_dump($e);
 }
