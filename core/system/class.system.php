@@ -195,6 +195,4 @@ class System {
         return $this->getModule($name)->getBaseUrl($el);
     }
 
-
-
 }

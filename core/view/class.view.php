@@ -6,8 +6,9 @@ namespace LibreMVC {
     use LibreMVC\View\Template;
     use LibreMVC\View\ViewObject;
     use LibreMVC\View\Parser;
+    use LibreMVC\View\Interfaces\IRenderable;
 
-    class View {
+    class View implements IRenderable{
 
         /**
          * @var ViewObject
@@ -128,13 +129,7 @@ namespace LibreMVC {
             }
         }
 
-        public function renderPartial($name){
-            if( !is_null($this->getPartial($name) && is_string($name)) ) {
-                //@todo if type of View
-                $this->getPartial($name)->render();
-            }
-        }
-
+        //region Factories
         protected function parserFactory() {
             try{
                 $parser = new Parser($this->_template, $this->_vo);
@@ -155,20 +150,18 @@ namespace LibreMVC {
                 return $template;
             }
         }
+        //endregion
 
+        //region Layout
         public function changeLayout(Template $template){
             $this->_template = $template;
         }
-
         public function setEmptyLayout(){
             $this->_template = new TemplateFromString('');
         }
+        //endregion
 
-        /**
-         * @param $path
-         * @param ViewObject $viewObject
-         * @return View
-         */
+        //region Patrial
         static public function partialsFactory( $path, ViewObject &$viewObject = null ) {
             $template = self::templateFactory($path);
             $vo = (is_null($viewObject)) ? new ViewObject() : $viewObject;
@@ -188,6 +181,14 @@ namespace LibreMVC {
                 unset($this->_partials[$name]);
             }
         }
+
+        public function renderPartial($name){
+            if( !is_null($this->getPartial($name) && is_string($name)) ) {
+                //@todo if type of View
+                $this->getPartial($name)->render();
+            }
+        }
+        //endregion
 
         public function setContext() {
             $content = $this->strongTypedView($this->getTemplate()->getFilePath());
