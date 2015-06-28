@@ -70,6 +70,118 @@ namespace LibreMVC\Helpers {
         protected $memory;
 
         /**
+         * @return int
+         */
+        public function getIterations()
+        {
+            return $this->iterations;
+        }
+
+        /**
+         * @param int $iterations
+         */
+        public function setIterations($iterations)
+        {
+            $this->iterations = $iterations;
+        }
+
+        /**
+         * @return callable
+         */
+        public function getCallback()
+        {
+            return $this->callback;
+        }
+
+        /**
+         * @param callable $callback
+         */
+        public function setCallback($callback)
+        {
+            $this->callback = $callback;
+        }
+
+        /**
+         * @return float
+         */
+        public function getTimeStart()
+        {
+            return $this->timeStart;
+        }
+
+        /**
+         * @param float $timeStart
+         */
+        public function setTimeStart($timeStart)
+        {
+            $this->timeStart = $timeStart;
+        }
+
+        /**
+         * @return float
+         */
+        public function getTimeEnd()
+        {
+            return $this->timeEnd;
+        }
+
+        /**
+         * @param float $timeEnd
+         */
+        public function setTimeEnd($timeEnd)
+        {
+            $this->timeEnd = $timeEnd;
+        }
+
+        /**
+         * @return float
+         */
+        public function getElapsedTime()
+        {
+            return $this->elapsedTime;
+        }
+
+        /**
+         * @param float $elapsedTime
+         */
+        public function setElapsedTime($elapsedTime)
+        {
+            $this->elapsedTime = $elapsedTime;
+        }
+
+        /**
+         * @return int
+         */
+        public function getMemoryStart()
+        {
+            return $this->memoryStart;
+        }
+
+        /**
+         * @param int $memoryStart
+         */
+        public function setMemoryStart($memoryStart)
+        {
+            $this->memoryStart = $memoryStart;
+        }
+
+        /**
+         * @return int
+         */
+        public function getMemory()
+        {
+            return $this->memory;
+        }
+
+        /**
+         * @param int $memory
+         */
+        public function setMemory($memory)
+        {
+            $this->memory = $memory;
+        }
+
+        /**
          * @param $iterations int Nombre d'itération du benchmark
          * @param $callback \Closure Une fonction anonyme avec comme corps de function le code à tester
          * @throws \BenchmarkCallBackException Si le callback n'est pas une closure valide.
@@ -78,7 +190,7 @@ namespace LibreMVC\Helpers {
             $this->memoryStart = memory_get_usage();
             $this->iterations = $iterations;
             $this->callback   = $callback;
-            $this->timeStart = self::getCleanMicrotime();
+            $this->timeStart = microtime(true);
             // Est une closure valide.
             if( is_object($this->callback) && ($this->callback instanceof \Closure)){
                 $this->start();
@@ -86,31 +198,6 @@ namespace LibreMVC\Helpers {
             else {
                 throw new \BenchmarkCallBackException('Callback is not a closure.');
             }
-        }
-
-        /**
-         * @return float Secondes sans la timestamp.
-         */
-        static protected function getCleanMicrotime() {
-            return explode(' ', microtime())[0];
-        }
-
-        protected function nanoSecondesToSeconde( $floatToString = true ) {
-            $result = $this->elapsedTime;
-            // Est un exposant
-            if(strpos($result,'E') && $floatToString) {
-                $buffer = explode('E', $result);
-                /*
-                 * Se lit de droite a gauche
-                 * Récupération de la valeur absolue de l'exposant auquel on ajout 1 ( pour le futur point), on peuple un tableau
-                 * avec des char 0. Puis le retourne sous forme de chaine de caractères.
-                 */
-                $return = implode('', array_fill(0,abs($buffer[1])+1,'0'));
-                // Une chaine est également un tableau
-                $return[1] = ".";
-                $result = $return . str_replace('.','',$buffer[0]);
-            }
-            return $result;
         }
 
         protected function start() {
@@ -124,19 +211,9 @@ namespace LibreMVC\Helpers {
                     $this->callback->__invoke();
                 }
             }
-            $this->timeEnd =  self::getCleanMicrotime();
-            //Hack pour les résultats negatifs. Fausse les résultats d'une nanoseconde.
-            time_nanosleep( 0, 100 );
-            $this->elapsedTime = $this->timeEnd - $this->timeStart;
-            $this->memory      = memory_get_usage() - $this->memoryStart;
-        }
-
-        /**
-         * @param $floatToString bool
-         * @return float|string
-         */
-        public function getElapsedTime( $floatToString = true) {
-            return $this->nanoSecondesToSeconde($floatToString);
+            $this->timeEnd      = microtime(true);
+            $this->elapsedTime  = rtrim(sprintf('%.53F',$this->timeEnd - $this->timeStart),'0');
+            $this->memory       = memory_get_usage() - $this->memoryStart;
         }
 
         /**
