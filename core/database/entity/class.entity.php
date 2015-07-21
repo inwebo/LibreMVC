@@ -6,6 +6,8 @@ namespace LibreMVC\Database {
     use LibreMVC\Database\Entity\IModelable;
     use LibreMVC\Database\Entity\EntityConfiguration;
 
+    class EntityException extends \Exception{}
+
     abstract class Entity implements IModelable {
 
         const SQL_LOAD ='Select * from `%s` WHERE %s=? LIMIT 1';
@@ -28,7 +30,7 @@ namespace LibreMVC\Database {
             //$this->_loaded = true;
             $this->init();
         }
-
+        
         protected function init() {
             $pk = static::$_entityConfiguration->primaryKey;
             if( !is_null($this->$pk) ) {
@@ -64,10 +66,6 @@ namespace LibreMVC\Database {
             }
         }
 
-        public function update() {
-
-        }
-
         public function save(){
             $conf       = static::$_entityConfiguration;
             $toBind     = $this->getValues();
@@ -86,10 +84,6 @@ namespace LibreMVC\Database {
                 catch(\Exception $e) {
                     throw $e;
                 }
-
-                //var_dump($sqlKeys,$sqlValues,$sqlUpdateQuery);
-                //var_dump($conf->toColsName($toBindKeys));
-                //var_dump($toInject);
             }
             else {
                 // Insert
@@ -108,11 +102,6 @@ namespace LibreMVC\Database {
             $this->getConf()->driver->query($sqlDelete,array($this->id));
         }
 
-        static public function deleteByIds($array){
-            $conf = static::$_entityConfiguration;
-            $sqlDelete =sprintf(self::SQL_DELETE_MULTIPLE, $conf->table,$conf->primaryKey,$conf->aggregateCols($array));
-        }
-
         static public function load($id, $by = null) {
             $conf = static::$_entityConfiguration;
             // Est-il configuré ?
@@ -126,7 +115,7 @@ namespace LibreMVC\Database {
                     return $obj;
                 }
             } else {
-                throw new Exception("Bind model first");
+                throw new EntityException("Bind model first");
             }
         }
 

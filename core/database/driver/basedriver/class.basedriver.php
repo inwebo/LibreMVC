@@ -11,36 +11,54 @@ namespace LibreMVC\Database\Driver {
         /**
          * @var IDriver
          */
-        protected $driver;
+        protected $_driver;
 
         /**
          * @var array
          */
-        protected $tables = array();
+        protected $_tables = array();
 
-        protected $toObject;
+        /**
+         * @var string
+         */
+        protected $_toObject;
 
-        public function __construct(){}
-
+        /**
+         * @return IDriver
+         */
         public function getDriver() {
-            return $this->driver;
+            return $this->_driver;
         }
 
+        public function setDriver( $driver ) {
+            $this->_driver = $driver;
+        }
+
+        /**
+         * @return $this
+         */
         public function toAssoc() {
-            $this->toObject = null;
-            $this->driver->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE,\PDO::FETCH_ASSOC);
+            $this->_toObject = null;
+            $this->_driver->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE,\PDO::FETCH_ASSOC);
             return $this;
         }
 
+        /**
+         * @return $this
+         */
         public function toStdClass() {
-            $this->toObject = null;
-            $this->driver->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE,\PDO::FETCH_OBJ);
+            $this->_toObject = null;
+            $this->_driver->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE,\PDO::FETCH_OBJ);
             return $this;
         }
 
+        /**
+         * @param $class_name Bind Class to database cols
+         * @return $this
+         */
         public function toObject( $class_name ) {
-            if(class_exists($class_name) ) {
-                $this->toObject = $class_name;
+            if(class_exists($class_name)) {
+                $this->_toObject = $class_name;
             }
             else {
                 trigger_error( "Unknown class : " . $class_name );
@@ -48,7 +66,12 @@ namespace LibreMVC\Database\Driver {
             return $this;
         }
 
-        public function filterColumnInfo($_table, $col_filter) {
+        /**
+         * @param $_table
+         * @param $col_filter
+         * @return array
+         */
+        protected function filterColumnInfo($_table, $col_filter) {
             $selectKeys = array($col_filter);
             $buffer = array();
             $j = 0;
@@ -61,12 +84,16 @@ namespace LibreMVC\Database\Driver {
             return $buffer;
         }
 
-        public function getTableInfos($table) {
-            if( isset($this->tables[$table]) ) {
-                return $this->tables[$table];
+        /**
+         * @param $table
+         * @return mixed
+         */
+        protected function getTableInfos($table) {
+            if( isset($this->_tables[$table]) ) {
+                return $this->_tables[$table];
             }
             else {
-                $this->tables[$table] = $this->driver->getTableInfos($table);
+                $this->_tables[$table] = $this->_driver->getTableInfos($table);
             }
         }
 
@@ -74,7 +101,7 @@ namespace LibreMVC\Database\Driver {
             return $this->filterColumnInfo($_table, static::COLS_NAME);
         }
 
-        public function getColumnsNullable($_table) {
+        protected function getColumnsNullable($_table) {
             return $this->filterColumnInfo($_table, static::COLS_NULLABLE);
         }
 

@@ -16,23 +16,23 @@ namespace LibreMVC\Database\Driver {
         /**
          * @var string
          */
-        protected $host;
+        protected $_host;
         /**
          * @var string
          */
-        protected $database;
+        protected $_database;
         /**
          * @var string
          */
-        protected $username;
+        protected $_username;
         /**
          * @var string
          */
-        protected $password;
+        protected $_password;
         /**
          * @var array
          */
-        protected $options;
+        protected $_options;
 
         /**
          * @param string $host Database server
@@ -43,22 +43,19 @@ namespace LibreMVC\Database\Driver {
          * @throws
          */
         public function __construct($host, $database, $username, $password, $options = array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")) {
-            parent::__construct();
             try {
                 $dsn = 'mysql:host=' . $host . ';dbname=' . $database;
-                $this->driver = new \PDO($dsn, $username, $password, $options);
-                $this->driver->setAttribute(\PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION);
-                $this->host = $host;
-                $this->database = $database;
-                $this->username = $username;
+                $this->_driver = new \PDO($dsn, $username, $password, $options);
+                $this->_driver->setAttribute(\PDO::ATTR_ERRMODE,\PDO::ERRMODE_EXCEPTION);
+                $this->_host = $host;
+                $this->_database = $database;
+                $this->_username = $username;
                 $this->passwd = $password;
-                $this->options = $options;
-
-                return $this->driver;
-
+                $this->_options = $options;
             } catch (\Exception $e) {
                 throw $e;
             }
+            return $this->_driver;
         }
 
         /**
@@ -66,7 +63,7 @@ namespace LibreMVC\Database\Driver {
          * @return array All table's columns.
          */
         public function getTableInfos( $table ) {
-            $info = $this->driver->query( 'SHOW COLUMNS FROM ' . $table );
+            $info = $this->_driver->query( 'SHOW COLUMNS FROM ' . $table );
             $info->setFetchMode(\PDO::FETCH_OBJ);
             return $info->fetchAll();
         }

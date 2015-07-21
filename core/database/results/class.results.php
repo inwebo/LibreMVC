@@ -1,44 +1,52 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: inwebo
- * Date: 13/10/13
- * Time: 18:02
- * To change this template use File | Settings | File Templates.
- */
+namespace LibreMVC\Database {
 
-namespace LibreMVC\Database;
+    class Results {
+        /**
+         * @var \PDOStatement
+         */
+        protected $_pdoStatement;
+        /**
+         * @var \ArrayIterator
+         */
+        protected $_rows;
 
+        /**
+         * @return \ArrayIterator
+         */
+        public function getRows()
+        {
+            return $this->_rows;
+        }
 
-class Results {
+        public function __construct(\PDOStatement $pdoStatement) {
+            $this->_pdoStatement = $pdoStatement;
+            $this->_rows = ($this->gotResults()) ? new \ArrayIterator( $this->_pdoStatement->fetchAll() ) :  new \ArrayIterator();
+            $this->_rows->rewind();
+        }
 
-    protected $pdoStatement;
-    protected $rows;
-    protected $totalRows;
+        public function gotResults() {
+            return ( $this->_pdoStatement->columnCount() === 0 ) ? false : true;
+        }
 
-    public function __construct(\PDOStatement $pdoStatement) {
-        $this->pdoStatement = $pdoStatement;
-        $this->rows = ($this->returnResults()) ? new \ArrayIterator( $this->pdoStatement->fetchAll() ) :  new \ArrayIterator();
-        $this->rows->rewind();
-    }
+        public function all(){
+            return $this->_rows;
+        }
 
-    public function returnResults() {
-        return ( $this->pdoStatement->columnCount() === 0 ) ? false : true;
-    }
+        public function first(){
+            return $this->getOffset(0);
+        }
 
-    public function all() {
-        return $this->rows;
-    }
+        public function last(){
+            return $this->getOffset($this->count()-1);
+        }
 
-    public function first() {
-        return ( isset($this->rows[0]) && !empty($this->rows) ) ? $this->rows[0] : null;
-    }
+        public function getOffset($offset){
+            return ( isset($this->_rows[$offset]) && !empty($this->_rows[$offset]) ) ? $this->_rows[$offset] : null;
+        }
 
-    public function last() {
-        return ( isset($this->rows[0]) && !empty($this->rows) ) ? $this->rows[0] : null;
-    }
-
-    public function count(){
-        return $this->pdoStatement->rowCount();
+        public function count(){
+            return $this->_pdoStatement->rowCount();
+        }
     }
 }
