@@ -64,7 +64,7 @@ class File {
      */
     public function getDestination()
     {
-        return $this->_destination;
+        return $this->_destination . $this->_name;
     }
 
     public function getStatement() {

@@ -87,7 +87,7 @@ namespace LibreMVC\Helpers {
         }
 
         public function getUploadedFiles($statement) {
-            $filtered = new Filter\Uploaded($this->_iterator->getIterator(), $statement);
+            $filtered = new Filter\Uploaded($this->_iterator->getIterator(),$statement);
             $filtered->rewind();
             return $filtered;
         }
