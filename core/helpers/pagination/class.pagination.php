@@ -236,9 +236,11 @@ namespace LibreMVC\Helpers {
          * @return Pagination
          */
         static public function dummyPagination($items, $page = 1, $limit = 20) {
-            $subject = array_fill(0, $items, null);
-            $pagination = new Pagination( $subject, $page, $limit );
-            return $pagination;
+            if($items!=0) {
+                $subject = array_fill(0, $items, null);
+                $pagination = new Pagination($subject, $page, $limit);
+                return $pagination;
+            }
         }
 
         public function __set($attribut, $value) {
