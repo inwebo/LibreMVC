@@ -102,7 +102,7 @@ function getHtmlCssScriptTags($nocache = true, $echo = false) {
     $buffer = "";
     $cache = ($nocache) ? '?t='. time() : '';
     foreach($js as $v) {
-        $buffer .= '<link type="text/css" href="'.$v . $cache .'"/>'. "\n";
+        $buffer .= '<link rel="stylesheet" href="'.$v . $cache .'"/>'. "\n";
     }
     if($echo) {
         echo $buffer;
