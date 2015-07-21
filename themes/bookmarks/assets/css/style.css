@@ -1,0 +1,70 @@
+.tagsList{
+    line-height: 2em;
+    text-align: justify;
+    padding: 0;
+    margin: 0;
+}
+
+.tagsList li{
+    margin: 0.25em;
+    padding: 0.25em;
+    background-color: rgba(0,0,0,0.05);
+    display: inline-block;
+
+}
+
+ul li a{
+    display: inline-block;
+}
+
+ul li {
+    list-style: none;
+}
+#bookmarks-list{
+    padding: 0;
+}
+.pagination{
+    left: -25%;
+    margin: 0 auto 0 50%;
+    position: relative;
+    text-align: center;
+}
+#bookmark-save{
+    width: 100%;
+}
+#_bookmark{
+
+}
+
+#_bookmark textarea{
+    width: 100%;
+}
+
+#_bookmark>.input-group-addon{
+    min-width: 100%;
+}
+
+#bookmarkFormLoader{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 999999;
+    text-align: center;
+    line-height: 50%;
+    display: none;
+}
+
+#bookmarkFormResponseText{
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 1999999;
+    font-size: large;
+    display: none;
+}
