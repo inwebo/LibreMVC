@@ -21,7 +21,7 @@ namespace LibreMVC\Modules\Playlist\Models {
             $conf = static::$_entityConfiguration;
             $conf->driver->toObject("\\LibreMVC\\Modules\\Playlist\\Models\\Song");
             $this->_songs = $conf->driver->query("SELECT S.id, S.title FROM ".self::SQL_TABLE_SONGS." AS S JOIN ".$conf->table." as P WHERE P.id = ?",array($this->id))->all();
-            var_dump($this->_songs->count());
+            //var_dump($this->_songs->count());
         }
 
         public function getSongs(){

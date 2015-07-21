@@ -1,4 +1,4 @@
 <?php
 
 registerModule();
-addRoute("playlist/",'\\LibreMVC\\Modules\\Playlist\\Controllers\\HomeController','index');
+addRoute("",'\\LibreMVC\\Modules\\Playlist\\Controllers\\HomeController','index');

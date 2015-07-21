@@ -15,6 +15,14 @@ class Song extends Entity{
     public $id;
     public $title;
 
+    public $pathSrc;
+    public $pathSpectrum;
+
+    public $type;
+
+    public $artist;
+    public $album;
+
     protected $_moods = array();
 
     public function init() {
