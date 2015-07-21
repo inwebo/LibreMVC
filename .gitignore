@@ -1,3 +1,5 @@
+/modules/bookmarks/config/prod.config.ini
+/modules/authuser/config/prod.config.ini
 /core/mvc/controller.bak.zip
 /sites/bookmarks.inwebo.dev/autoload.php
 /sites/bookmarks.inwebo.dev/config/config.ini
